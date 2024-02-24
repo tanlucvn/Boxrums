@@ -7,7 +7,7 @@ import { counter, declOfNum, dateFormat, formatBytes, deletedUser } from '@/supp
 import { BACKEND, Strings, imageTypes, videoTypes, fileExt } from '@/support/Constants';
 
 import Markdown from '@/components/Markdown';
-import Dropdown from '@/components/Card/Dropdown';
+import Dropdown from '@/components/Dropdown';
 import { UserRole, UserStatus } from '@/components/UserBadge';
 
 const FileContent = ({ data, user, token, lang, deleteFile, editFile }) => {
@@ -132,7 +132,13 @@ const FileContent = ({ data, user, token, lang, deleteFile, editFile }) => {
                             </div>
 
                             {user && (
-                                <Dropdown>
+                                <>
+                                    <Dropdown lang={lang}>
+                                        <div onClick={() => copyLink(BACKEND + data.file.url)} className="flex gap-3 items-center px-4 py-2 text-sm text-dark-grey rounded-md cursor-pointer hover:bg-dark-grey/60 hover:text-black">
+                                            {Strings.copyFileLink[lang]}
+                                        </div>
+                                    </Dropdown>
+                                    {/* <Dropdown>
                                     <div onClick={() => copyLink(BACKEND + data.file.url)} className="dropdown_item">
                                         {Strings.copyFileLink[lang]}
                                     </div>
@@ -142,7 +148,8 @@ const FileContent = ({ data, user, token, lang, deleteFile, editFile }) => {
                                     {user.id === data.author._id || user.role >= 2 ? (
                                         <div onClick={() => editFile()} className="dropdown_item">{Strings.edit[lang]}</div>
                                     ) : null}
-                                </Dropdown>
+                                </Dropdown> */}
+                                </>
                             )}
                         </header>
 

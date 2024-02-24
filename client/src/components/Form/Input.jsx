@@ -23,7 +23,7 @@ export const InputBox = ({ name, type, id, value, placeholder, icon, disable = f
                 defaultValue={value}
                 id={id}
                 disabled={disable}
-                className={`input-box ${className}`}
+                className={`input-box ${className} ${!icon && 'pl-4'}`}
                 onChange={onChange}
                 autoFocus={autoFocus}
             />

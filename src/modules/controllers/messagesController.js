@@ -272,14 +272,14 @@ const deleteMessage = async (req, res, next) => {
             })
         }
 
-        await message.delete()
+        await message.deleteOne()
 
         const messages = await Message.find({ dialogueId: new Types.ObjectId(dialogueId) }).sort({ createdAt: -1 })
         if (messages.length) {
             await Dialogue.updateOne({ _id: new Types.ObjectId(dialogueId) }, { lastMessage: messages[0]._id, updatedAt: messages[0].createdAt })
         } else {
             const dialogue = await Dialogue.findById(dialogueId)
-            await dialogue.delete()
+            await dialogue.deleteOne()
         }
 
         res.json({ message: 'Message successfully deleted' })

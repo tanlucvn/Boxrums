@@ -1,76 +1,135 @@
-import { useContext, useEffect, useLayoutEffect, useState } from 'react';
-import { useParams } from "react-router-dom";
+import axios from 'axios'
+import React, { createContext, useContext, useEffect, useLayoutEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import AnimationWrapper from '@/common/page-animation'
+import Loader from '@/components/loader.component'
+import { getDay } from '@/common/date'
+import BlogInteraction from '@/components/blog-interaction.component'
+import BlogPostCard from '@/components/blog-post.component'
+import BlogContent from '@/components/blog-content.component'
+import CommentContainer from '@/components/comments.component'
+import { StoreContext } from '@/stores/Store'
+import { BACKEND, Strings } from '@/support/Constants'
 
-import { StoreContext } from '@/stores/Store';
+import Avatar from 'boring-avatars';
+import Markdown from '@/components/Markdown'
+import LeftSidebar from './LeftSidebar'
+import RightSidebar from './RightSidebar'
+import Errorer from '@/components/Errorer'
 
-import { BACKEND, Strings } from '@/support/Constants';
-import Socket, { joinToRoom, leaveFromRoom } from '@/support/Socket';
+export const blogStructure = {
+    title: '',
+    des: '',
+    content: [],
+    author: {
+        personal_info: {},
+    },
+    banner: '',
+    publishedAt: '',
+}
 
-import { Section } from '@/components/Section';
-import { Card } from '@/components/Card';
-import Loader from '@/components/Loader';
-import Errorer from '@/components/Errorer';
-
-import Answers from './Answers';
-import RightSidebar from './RightSidebar';
-
-import './style.scss'
-import LeftSidebar from './LeftSidebar';
+export const ThreadContext = createContext({})
 
 const Thread = () => {
-    const { user, token, setPostType, setFabVisible, lang } = useContext(StoreContext)
+    const { user, lang } = useContext(StoreContext)
     const { threadId } = useParams();
+
     const [headings, setHeadings] = useState([]);
     const [rightSidebarLoading, setRightSidebarLoading] = useState(true);
 
-    useEffect(() => {
-        setPostType({
-            type: 'answer',
-            id: threadId
-        })
-        // eslint-disable-next-line
-    }, [threadId])
+    /* const [blog, setBlog] = useState */
+    // const [board, setBoard] = useState
+    const [thread, setThread] = useState()
+    const [answers, setAnswers] = useState([])
 
-    const [joined, setJoined] = useState([])
-    const [board, setBoard] = useState({})
-    const [thread, setThread] = useState({})
+    const [likes, setLikes] = useState(thread?.likes)
+    const [liked, setLiked] = useState(user ? !!thread?.likes?.find(i => i === user.id) : false)
+
+    const [similarBlog, setSimilarBlog] = useState([])
     const [loading, setLoading] = useState(true)
     const [noData, setNoData] = useState(false)
-    const [likes, setLikes] = useState(thread.likes || 0);
-    const [answersSubscribed, setAnswersSubscribed] = useState({})
-    const [scrollAmount, setScrollAmount] = useState(0);
+    const [commentsWrapper, setCommentsWrapper] = useState(false);
 
-    useEffect(() => {
-        const threadTitle = thread.title || Strings.thread[lang]
-        document.title = 'Forum | ' + threadTitle
-    }, [thread, lang])
+    const filteredSimilarBlog = similarBlog.filter(blog => blog._id !== threadId);
+    // let { title, content, banner, author: { personal_info: { username: author_username, fullname, profile_img } }, publishedAt } = blog
 
-    const updateLikes = (newLikes) => {
-        setLikes(newLikes);
-    };
+    /* const fetchBlog = () => {
+        axios.post(import.meta.env.VITE_SERVER_DOMAIN + '/get-blog', { blog_id })
+            .then(async ({ data: { blog } }) => {
+                blog.comments = await fetchComment({ blog_id: blog._id, setParentCommentCountFun: setTotalCommentsLoaded })
 
+                setBlog(blog)
 
-    useEffect(() => {
-        const fetchThread = async () => {
-            try {
-                const data = await fetch(`${BACKEND}/api/thread?threadId=${threadId}`)
-                const response = await data.json()
-
-                if (!response.error) {
-                    setBoard(response.board)
-                    setThread(response.thread)
-                    setLoading(false)
-                    setNoData(false)
-
-                } else throw Error(response.error?.message || 'Error')
-            } catch (err) {
-                setNoData(true)
+                axios.post(import.meta.env.VITE_SERVER_DOMAIN + '/search-blogs', { tag: blog.tags[0], limit: 6, eliminate_blog: blog_id })
+                    .then(({ data: { blogs } }) => {
+                        setSimilarBlog(blogs)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
                 setLoading(false)
-            }
-        }
+            })
+            .catch(err => {
+                console.log(err);
+                setLoading(false)
+            })
+    } */
 
+    const fetchThreads = async () => {
+        try {
+            const data = await fetch(`${BACKEND}/api/threads/recently?limit=${5}`)
+            const response = await data.json()
+
+            if (!response.error) {
+                if (response.docs.length) {
+                    setSimilarBlog(response.docs)
+                }
+            } else throw Error(response.error?.message || 'Error')
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    const fetchThread = async () => {
+        try {
+            const data = await fetch(`${BACKEND}/api/thread?threadId=${threadId}`)
+            const response = await data.json()
+
+            if (!response.error) {
+                setThread(response.thread)
+                setLoading(false)
+                setNoData(false)
+                await fetchAnswers()
+            } else throw Error(response.error?.message || 'Error')
+        } catch (err) {
+            setNoData(true)
+            setLoading(false)
+        }
+    }
+
+    const fetchAnswers = async () => {
+        try {
+            const data = await fetch(`${BACKEND}/api/answers?threadId=${threadId}&pagination=false`)
+            const response = await data.json()
+
+            if (!response.error) {
+                setAnswers(response.docs)
+                setLoading(false)
+            } else throw Error(response.error?.message || 'Error')
+        } catch (err) {
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        fetchThreads()
         fetchThread()
     }, [threadId])
+
+    useEffect(() => {
+        setLikes(thread?.likes)
+        setLiked(user ? !!thread?.likes?.find(i => i === user.id) : false)
+    }, [user, thread?.likes])
 
     useLayoutEffect(() => {
         const searchHeadings = setTimeout(() => {
@@ -98,96 +157,120 @@ const Thread = () => {
         return () => clearTimeout(searchHeadings);
     }, [threadId]);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            const windowScroll = document.documentElement.scrollTop;
-            const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const newScrollAmount = (windowScroll / windowHeight) * 100;
-            setScrollAmount(newScrollAmount);
-        };
-
-        window.addEventListener('scroll', handleScroll);
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
-
-    useEffect(() => {
-        if (thread._id) joinToRoom('thread:' + thread._id, { token })
-        return () => {
-            if (thread._id) leaveFromRoom('thread:' + thread._id)
-        }
-    }, [thread._id, token])
-
-    useEffect(() => {
-        Socket.on('threadDeleted', (data) => {
-            setFabVisible(false)
-        })
-        Socket.on('threadEdited', (data) => {
-            setThread(data)
-        })
-        Socket.on('threadLiked', (data) => {
-            setThread(data)
-        })
-        Socket.on('joinedList', (data) => {
-            setJoined(data)
-        })
-        Socket.on('answerCreated', (data) => {
-            setAnswersSubscribed({ type: 'answerCreated', payload: data })
-        })
-        Socket.on('answerDeleted', (data) => {
-            setAnswersSubscribed({ type: 'answerDeleted', payload: data })
-        })
-        Socket.on('answerEdited', (data) => {
-            setAnswersSubscribed({ type: 'answerEdited', payload: data })
-        })
-        Socket.on('answerLiked', (data) => {
-            setAnswersSubscribed({ type: 'answerLiked', payload: data })
-        })
-        Socket.on('threadCleared', (data) => {
-            setAnswersSubscribed({ type: 'threadCleared', payload: data })
-        })
-        // eslint-disable-next-line
-    }, [])
-
     return (
-        <Section>
-            {!noData ? (
-                !loading ? (
-                    <>
-                        <div class="progress-bar" style={{ width: `${scrollAmount}%` }}></div>
+        <AnimationWrapper>
+            {
+                !noData ? (
+                    !loading ? <>
+                        <ThreadContext.Provider value={{ thread, setThread, likes, setLikes, liked, setLiked, loading, setLoading, answers, setAnswers, commentsWrapper, setCommentsWrapper }}>
+                            <div className='thread-container grid grid-cols-12 gap-3'>
+                                <div className='thread-leftSidebar col-span-3 sticky top-0 pl-6 pr-4 max-lg:px-[5vw] max-lg:col-span-6 max-lg:relative max-lg:top-6 max-sm:col-span-12 max-sm:top-8'>
+                                    <LeftSidebar data={thread} />
+                                </div>
 
-                        <div className='thread-container'>
-                            <div className='thread-leftSidebar'>
-                                <LeftSidebar data={thread} likes={likes} />
-                            </div>
-                            <div className="thread-content">
-                                <Card data={thread} full type="thread" onLikedResData={updateLikes} joinedList={joined} />
-                            </div>
-                            <div className='thread-rightSidebar'>
-                                <RightSidebar headings={headings} loading={rightSidebarLoading} />
-                            </div>
-                        </div>
+                                <div className="thread-content col-span-6 max-lg:col-span-12 max-lg:order-last">
+                                    <CommentContainer />
+                                    <div className='max-w-[900px] center py-10 max-lg:px-[5vw] rounded-2xl'>
+                                        <div className='p-10 rounded-2xl border-2 border-grey'>
+                                            {/* <img src={"banner"} alt="Banner" className='aspect-video' /> */}
+                                            <div className='aspect-video'>
+                                                {
+                                                    thread.banner ? thread.banner : <Avatar
+                                                        size={"100%"}
+                                                        name={thread.title}
+                                                        variant="marble"
+                                                        colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+                                                        square="true"
+                                                    />
+                                                }
+                                            </div>
+                                            <div className='mt-12'>
+                                                <div className='flex items-center gap-5'>
+                                                    <h2>
+                                                        {thread.title}
+                                                    </h2>
+                                                    <div className="flex ml-auto gap-3">
+                                                        {thread.pined &&
+                                                            <div className="w-10 h-10 rounded-full flex items-center justify-center bg-grey/80" title={Strings.pin[lang]}>
+                                                                {thread.pined && <i class="fi fi-sr-thumbtack text-xl"></i>}
+                                                            </div>
+                                                        }
 
-                        <br />
+                                                        {thread.closed &&
+                                                            <div className="w-10 h-10 rounded-full flex items-center justify-center bg-grey/80" title={Strings.close[lang]}>
+                                                                {thread.closed && <i class="fi fi-sr-lock text-xl"></i>}
+                                                            </div>
+                                                        }
+                                                    </div>
 
-                        <Answers
-                            lang={lang}
-                            user={user}
-                            thread={thread}
-                            subcribed={answersSubscribed}
-                            clearSubcribe={setAnswersSubscribed}
-                        />
-                    </>
-                ) : <Loader color="#64707d" />
-            ) : (
-                <>
-                    <Errorer message={Strings.threadNotFound[lang]} />
-                </>
-            )}
-        </Section>
+                                                </div>
+                                                <div className='flex max-sm:flex-col justify-between my-8'>
+                                                    <div className='flex gap-5 items-start '>
+                                                        {/* <img src={thread,author.} alt="Author" className='w-12 h-12 rounded-full' /> */}
+                                                        <Avatar
+                                                            size={40}
+                                                            name={thread.author.name}
+                                                            variant="marble"
+                                                            colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+                                                        />
+                                                        <p className='capitalize '>
+                                                            {thread.author.name}
+                                                            <br />
+                                                            @
+                                                            <Link className="underline" to={`/user/${thread.author.name}`}>{thread.author.name}</Link>
+                                                        </p>
+                                                    </div>
+                                                    <p className='text-dark-grey opacity-75 max-sm:mt-6 mx-sm:ml-12 max-sm:pl-5'>Published on {getDay(thread.createdAt)}</p>
+                                                </div>
+                                            </div>
+
+                                            <BlogInteraction dropdown="true" />
+
+                                            <div className='my-12 font-gelasio blog-page-content'>
+                                                {
+                                                    /* content[0].blocks.map((block, i) => {
+                                                        return <div className='my-4 md:my-8' key={i}>
+                                                            <BlogContent block={block} />
+                                                        </div>
+                                                    }) */
+                                                    <div className='my-4 md:my-8'>
+                                                        <Markdown source={thread.body} />
+                                                    </div>
+                                                }
+
+                                            </div>
+
+                                            <BlogInteraction share="true" />
+
+                                            {
+                                                filteredSimilarBlog !== null && filteredSimilarBlog.length ?
+                                                    <>
+                                                        <h1 className='font-medium text-2xl mt-14 mb-10'>Similar Blogs</h1>
+                                                        {
+                                                            filteredSimilarBlog && filteredSimilarBlog.map((blog, i) => {
+                                                                return <AnimationWrapper key={i} transition={{ duration: 1, delay: i * 0.08 }}>
+                                                                    <BlogPostCard data={blog} lang={lang} />
+                                                                </AnimationWrapper>
+                                                            })
+                                                        }
+                                                    </>
+                                                    : ""
+                                            }
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className='thread-rightSidebar col-span-3 sticky top-0 pl-4 pr-6 max-lg:px-[5vw] max-lg:col-span-6 max-lg:relative max-lg:top-6 max-sm:col-span-12 max-sm:top-8'>
+                                    <RightSidebar headings={headings} loading={rightSidebarLoading} />
+                                </div>
+                            </div>
+                        </ThreadContext.Provider>
+                    </> : <Loader />
+                ) : <Errorer message={Strings.threadNotFound[lang]} />
+            }
+        </AnimationWrapper>
     )
 }
 
-export default Thread;
+export default Thread

@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
-import { BACKEND } from '@/support/Constants';
+import { BACKEND, Strings } from '@/support/Constants';
 import { LabelInputBox, TextareaBox } from '../Form/Input';
 import { StoreContext } from '@/stores/Store';
 import AnimationWrapper from '@/common/page-animation';
+import { SentenceContext } from '../comment-field.component';
 
 const RegEmailVerifications = ({ open, data }) => {
     const [openModalPopup, setOpenModalPopup] = useState(open)
@@ -224,7 +225,8 @@ const Terms = ({ open }) => {
 }
 
 const AIWriter = ({ open, close }) => {
-    const { lang, modalBody, setModalBody } = useContext(StoreContext)
+    const { lang } = useContext(StoreContext)
+    const { setStc } = useContext(SentenceContext)
     const modalRef = useRef();
     const [sentence, setSentence] = useState('');
     const [isRewriting, setIsRewriting] = useState(false);
@@ -269,7 +271,8 @@ const AIWriter = ({ open, close }) => {
     };
 
     const handleApply = () => {
-        setModalBody({ sentence: sentence })
+        setStc(sentence)
+        setSentence("")
         close()
     }
 
@@ -308,25 +311,26 @@ const AIWriter = ({ open, close }) => {
                         <div class="relative bg-white rounded-lg overflow-hidden shadow-xl max-w-screen-md w-full m-4 max-sm:h-full max-sm:m-0" ref={modalRef}>
                             <div class="flex items-center justify-between px-6 py-4">
                                 <h3 class="text-lg leading-6 font-medium text-black">
-                                    Assistant Writing
+                                    {Strings.aiWriterTitle[lang]}
                                 </h3>
                                 <button class="flex justify-center items-center w-12 h-12 rounded-full bg-grey" onClick={() => close()}>
-                                    <i class="fi fi-br-cross text-2xl mt-1"></i>
+                                    <i class="fi fi-rr-cross text-2xl mt-1"></i>
                                 </button>
                             </div>
                             <div class="prose p-6 overflow-y-auto max-h-[35rem] border border-dark-grey/10 shadow-md max-sm:max-h-[40rem]">
-                                <p class="text-lg font-bold mb-4 select-none">Transform your content with our AI sentence rewriter and create fresh, unique text.</p>
-                                <p>Instructions</p>
-                                <p>1. Paste in your sentence that you want to rewrite or rephrase.</p>
-                                <p>2. Press "Rewrite" and Typli will reword your sentence keeping the same meaning.</p>
-                                <LabelInputBox text="Sentence you want to rewrite" />
+                                <p class="text-lg font-bold mb-4">{Strings.aiWriterSubtitle[lang]}</p>
+                                <p>{Strings.instructions[lang]}</p>
+                                <p>{Strings.aiWriterStep1[lang]}</p>
+                                <p>{Strings.aiWriterStep2[lang]}</p>
+                                <p>{Strings.aiWriterStep3[lang]}</p>
+                                <LabelInputBox text={Strings.sentenceRewrite[lang]} />
                                 <TextareaBox value={sentence} onChange={(e) => setSentence(e.target.value)} />
-                                <button onClick={handleRewrite} type="button" disabled={isRewriting || cooldown > 0} className={`inline-flex justify-center rounded-md border border-transparent shadow-sm my-5 px-4 py-2 bg-black text-base font-medium text-white sm:w-auto sm:text-sm ${isRewriting || cooldown > 0 ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                                    {isRewriting ? 'Rewriting...' : cooldown > 0 ? `Please wait ${cooldown}s` : 'Rewrite'}
+                                <button onClick={handleRewrite} type="button" disabled={isRewriting || cooldown > 0} className={`inline-flex justify-center rounded-md border border-transparent shadow-sm my-5 px-4 py-2 bg-black text-base text-white sm:w-auto sm:text-sm ${isRewriting || cooldown > 0 ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                                    {isRewriting ? Strings.rewriting[lang] : cooldown > 0 ? `${Strings.pleaseWait[lang]} ${cooldown}s` : Strings.rewrite[lang]}
                                 </button>
                             </div>
                             <div class="bg-white px-4 py-3 sm:px-6 flex align-items justify-end p-4 gap-4 flex-row">
-                                <button onClick={() => handleApply()} type="button" class="btn-dark mt-5 px-10">Apply</button>
+                                <button onClick={() => handleApply()} type="button" class="btn-dark px-10">{Strings.apply[lang]}</button>
                             </div>
                         </div>
                     </div>
@@ -335,4 +339,37 @@ const AIWriter = ({ open, close }) => {
         </AnimationWrapper>
     )
 }
-export { RegEmailVerifications, LogEmailNotVerified, Terms, AIWriter }
+
+const DeleteThread = ({ open, close, onConfirmed }) => {
+
+    return (
+        <AnimationWrapper>
+            {open === true &&
+                <div class="font-sans bg-gray flex items-center justify-center h-screen">
+                    <div class="fixed z-10 inset-0 flex items-center justify-center">
+                        <div class="absolute inset-0 bg-gray-500 opacity-75" />
+                        <div class="relative bg-white rounded-lg overflow-hidden shadow-xl max-w-screen-md w-full m-4 max-sm:h-full max-sm:m-0">
+                            <div class="flex items-center justify-between px-6 py-4">
+                                <h3 class="text-lg leading-6 font-medium text-black">
+                                    Clear Thread
+                                </h3>
+                                <button class="flex justify-center items-center w-12 h-12 rounded-full bg-grey" onClick={() => close()}>
+                                    <i class="fi fi-rr-cross text-2xl mt-1"></i>
+                                </button>
+                            </div>
+                            <div class="prose p-6 overflow-y-auto max-h-[35rem] border border-dark-grey/10 shadow-md max-sm:max-h-[40rem]">
+                                Are you sure you want to clear this thread?
+                            </div>
+                            <div class="bg-white px-4 py-3 sm:px-6 flex align-items justify-end p-4 gap-4 flex-row">
+                                <button onClick={onConfirmed} type="button" class="text-lg text-black font-medium px-10 bg-transparent">Confirm</button>
+                                <button onClick={() => close()} type="button" class="btn-dark px-10">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </AnimationWrapper>
+    )
+}
+
+export { RegEmailVerifications, LogEmailNotVerified, Terms, AIWriter, DeleteThread }

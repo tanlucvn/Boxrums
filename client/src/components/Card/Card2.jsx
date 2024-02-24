@@ -167,7 +167,7 @@ export const FolderCard = ({ data }) => {
                     {/* <span className='btn-light py-1 px-4'>{tags[0]}</span> */}
                     <span className='ml-3 flex items-center gap-2 text-dark-grey'>
                         <i class="fi fi-rr-file text-xl"></i>
-                        {counter(data.filesCount)} {declOfNum(data.threadsCount, [Strings.file1[lang], Strings.file2[lang], Strings.file3[lang]])}
+                        {counter(data.filesCount)} {declOfNum(data.threadsCount, [Strings.file[lang], Strings.files[lang]])}
                     </span>
                 </div>
             </div>

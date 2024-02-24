@@ -247,7 +247,7 @@ const createFile = async (req, res, next) => {
                 return next(createHttpError.BadRequest('File upload failed'))
             }
 
-            const { folderId, title, body } = JSON.parse(req.body.postData)
+            const { folderId, title, body } = req.body
 
             if (!folderId) return next(createHttpError.BadRequest('folderId must not be empty'))
             if (title.trim() === '') return next(createHttpError.BadRequest('File title must not be empty'))
@@ -549,7 +549,7 @@ const deleteComment = async (req, res, next) => {
             }
         }
         if (req.payload.id === comment.author._id || req.payload.role >= comment.author.role) {
-            await comment.delete()
+            await comment.deleteOne()
 
             await File.updateOne({ _id: new Types.ObjectId(comment.fileId) }, { $inc: { commentsCount: -1 } })
 

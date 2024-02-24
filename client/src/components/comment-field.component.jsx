@@ -1,16 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { Toaster, toast } from 'react-hot-toast'
 import FileUploadForm from './Form/FileUploadForm'
 import { BACKEND, Strings } from '@/support/Constants'
 import { StoreContext } from '@/stores/Store'
-import { ThreadContext } from '@/pages/Forum/Thread/index_test'
+import { ThreadContext } from '@/pages/Forum/Thread'
 import { AIWriter } from './ModalPopup'
 
+export const SentenceContext = createContext({});
 const CommentField = ({ action, index = undefined, replyingTo = undefined, setReplying, placeholder, defaultValue, type }) => {
-  const { user, token, lang, modalBody, setModalBody } = useContext(StoreContext)
+  const { user, token, lang } = useContext(StoreContext)
   const { thread, answers, setAnswers } = useContext(ThreadContext)
-  const [comment, setComment] = useState(modalBody.sentence ? modalBody.sentence : "")
   const [open, setOpen] = useState(false)
+  const [stc, setStc] = useState()
+  const [comment, setComment] = useState(stc ? stc : "")
 
   const [files, setFiles] = useState([])
   const [clearFiles, setClearFiles] = useState(false)
@@ -112,20 +114,21 @@ const CommentField = ({ action, index = undefined, replyingTo = undefined, setRe
   }, [clearFiles])
 
   useEffect(() => {
-    if (modalBody.sentence) {
-      setComment(modalBody.sentence);
+    if (stc) {
+      setComment(stc);
+      setStc("")
     }
-  }, [modalBody.sentence]);
+  }, [stc]);
   return (
-    <>
+    <SentenceContext.Provider value={{ stc, setStc }}>
       <Toaster />
       <button
         className="relative flex items-center justify-center font-medium gap-3 border-2 border-grey my-5 px-4 py-2 w-max min-w-[20px] h-9 text-black bg-transparent text-sm rounded-md cursor-pointer select-none"
         onClick={() => setOpen(true)}
-        title="Open AI Writer"
+        title={Strings.aiWriter[lang]}
       >
         <i class="fi fi-rr-magic-wand"></i>
-        <p>Tạo bằng AI</p>
+        <p>{Strings.aiWriter[lang]}</p>
       </button>
 
       <AIWriter open={open} close={() => setOpen(false)} />
@@ -141,7 +144,7 @@ const CommentField = ({ action, index = undefined, replyingTo = undefined, setRe
         clearFiles={clearFiles}
       />
       <button className='btn-dark mt-5 px-10' onClick={type === "editing" ? editAnswer : createAnswer}>{action}</button>
-    </>
+    </SentenceContext.Provider>
   )
 }
 

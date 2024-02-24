@@ -508,7 +508,7 @@ const clearThread = async (req, res, next) => {
                 })
             }
 
-            await answer.delete()
+            await answer.deleteOne()
         }))
 
         await Thread.updateOne({ _id: new Types.ObjectId(threadId) }, { answersCount: 0 })

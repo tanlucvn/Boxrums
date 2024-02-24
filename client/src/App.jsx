@@ -18,10 +18,13 @@ import ManageBlog from "@/pages/manage-blogs.page";
 import Register from "@/pages/Auth/Register";
 import BannerEditor from "./components/BannerEditor";
 import SideNav2 from "@/components/sidenav2";
-import Thread from "@/pages/Forum/Thread/index_test";
+import Thread from "@/pages/Forum/Thread";
 import Folders from "./pages/Uploads/Folders";
 import Folder from "./pages/Uploads/Folder";
 import File from "./pages/Uploads/File";
+import Boards from "./pages/Forum/Boards";
+import Dashboard from "./pages/Dashboard";
+import FilePage from "./pages/Uploads/File/FilePage";
 
 export const UserContext = createContext({})
 
@@ -62,16 +65,20 @@ const App = () => {
                         <Route path="/" element={<Layout />}>
                             <Route element={<SideNav2 />}>
                                 <Route index element={<Home />} />
-                                <Route path="boards" element={<Home />} />
+                                <Route path="boards" element={<Boards />} />
 
                                 <Route path="uploads" element={<Folders />} />
                                 <Route path="uploads/:folderName" element={<Folder />} />
-                                <Route path="/file/:fileId" element={<File />} />
+                                {/* <Route path="/file/:fileId" element={<File />} /> */}
+
+
+                                <Route path="/dashboard/*" element={<Dashboard />} />
                             </Route>
 
                             <Route path="/thread/:threadId" element={<Thread />} />
+                            <Route path="/file/:fileId" element={<FilePage />} />
                             <Route path="/banner" element={<BannerEditor />} />
-                            <Route path="dashboard" element={<SideNav />}>
+                            <Route /* path="dashboard" */ element={<SideNav />}>
                                 <Route path="notifications" element={<Notification />} />
                                 <Route path="blogs" element={<ManageBlog />} />
                             </Route>

@@ -13,6 +13,7 @@ import { StoreContext } from "@/stores/Store";
 import Boards from "./Boards";
 import { useMoreFetch } from "@/hooks/useMoreFetch";
 import { Strings } from "@/support/Constants";
+import Uploads from "./Uploads";
 
 const Home = () => {
   const { lang } = useContext(StoreContext)
@@ -114,6 +115,7 @@ const Home = () => {
               <LoadMoreDataBtn state={blogs} fetchDataFun={(pageState === 'home' ? fetchLatestBlogs : fetchBlogByCategory)} /> */}
             <Boards lang={lang} />
             <Threads lang={lang} />
+            <Uploads lang={lang} />
           </>
           {/* {items === null ? (
             <><p>popular boards null</p></>

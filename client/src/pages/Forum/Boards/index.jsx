@@ -1,11 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
 
-import { StoreContext } from 'stores/Store';
+import { StoreContext } from '@/stores/Store';
 
-import { Strings } from 'utils/Constants';
-
-import { Section } from 'components/Section';
-import SortNav from 'components/SortNav';
+import { Section } from '@/components/Section';
+import SortNav from '@/components/SortNav';
 
 import Default from './Default';
 import Popular from './Popular';

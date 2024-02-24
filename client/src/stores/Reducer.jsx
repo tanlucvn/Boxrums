@@ -35,11 +35,6 @@ const Reducer = (state, action) => {
                 ...state,
                 fab: action.payload
             }
-        case 'SET_SIDEBAR_COLLAPSED':
-            return {
-                ...state,
-                sidebarCollapsed: action.payload
-            }
         default:
             return state
     }

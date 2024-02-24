@@ -127,7 +127,7 @@ const File = ({ history, match }) => {
                             clearSubcribe={setCommentsSubscribed}
                         />
                     </>
-                ) : <Loader color="#64707d" />
+                ) : <Loader />
             ) : (
                 <>
                     <Errorer

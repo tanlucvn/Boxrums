@@ -27,7 +27,7 @@ const RightSidebar = ({ headings, loading }) => {
     }, []);
 
     return (
-        <div className='sticky border-l border-grey p-10 top-[115px] rounded-2xl shadow-sm bg-grey max-lg:h-full'>
+        <div className='sticky border-2 border-grey p-10 top-[115px] rounded-2xl shadow-sm max-lg:h-full'>
             <p className='text-2xl font-semibold mb-4'>CÁC NỘI DUNG CHÍNH</p>
             <ul className='right-container__text text-dark-grey cursor-pointer mb-4'>
                 {loading ? <Loader color='#64707d' /> : headings.map(({ id, text }) => (

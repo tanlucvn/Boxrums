@@ -1,9 +1,7 @@
-import { useMoreFetch } from 'hooks/useMoreFetch';
+import { useMoreFetch } from '@/hooks/useMoreFetch';
 
-import { Strings } from 'utils/Constants';
-
-import DataView from 'components/DataView';
-import { BoardCard } from 'components/Card';
+import DataView from '@/components/DataView';
+import { BoardCard } from '@/components/Card';
 
 export default function NewestAnswer({ lang }) {
     const { loading, moreLoading, noData, items } = useMoreFetch({ method: 'boards', sort: 'newestAnswer' })

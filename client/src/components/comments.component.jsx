@@ -4,7 +4,7 @@ import axios from 'axios';
 import NoDataMessage from './nodata.component';
 import AnimationWrapper from '../common/page-animation';
 import CommentCard from './comment-card.component';
-import { ThreadContext } from '@/pages/Forum/Thread/index_test';
+import { ThreadContext } from '@/pages/Forum/Thread';
 import { Strings } from '@/support/Constants';
 import { StoreContext } from '@/stores/Store';
 
@@ -24,7 +24,7 @@ const CommentContainer = () => {
                 <h1 className='text-xl font-medium'>Comments</h1>
                 <p className='text-lg mt-2 w-[70&] text-dark-grey line-clamp-1 '>{thread.title}</p>
                 <button onClick={() => setCommentsWrapper(preVal => !preVal)} className='absolute top-0 right-0 flex justify-center items-center w-12 h-12 rounded-full bg-grey'>
-                    <i className='fi fi-br-cross text-2xl mt-1'></i>
+                    <i className='fi fi-rr-cross text-2xl mt-1'></i>
                 </button>
                 <hr className='border-grey my-8 w-[120%] -ml-10' />
                 <CommentField action={Strings.comment[lang]} />

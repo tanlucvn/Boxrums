@@ -21,7 +21,7 @@ export default function LeftSidebar({ data, likes }) {
     }
 
     return (
-        <div className='sticky border-l border-grey p-10 top-[115px] text-center rounded-2xl shadow-sm bg-grey max-lg:h-full'>
+        <div className='sticky border-2 border-grey p-10 top-[115px] text-center rounded-2xl shadow-sm max-lg:h-full'>
             <div className='text-2xl font-semibold mb-4'>
                 <i class="fi fi-br-undo pl-3 pr-3 cursor-pointer" onClick={() => navigate(-1)} />
                 {data.title}

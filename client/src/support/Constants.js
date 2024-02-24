@@ -271,10 +271,6 @@ const Strings = {
         vi: 'Xoá tất cả',
         en: 'Delete all',
     },
-    "Edit": {
-        vi: "Chỉnh sửa",
-        en: "Edit",
-    },
     "answer": {
         vi: "trả lời",
         en: "answer",
@@ -282,6 +278,298 @@ const Strings = {
     "answers": {
         vi: "trả lời",
         en: "answers",
+    },
+    "aiWriter": {
+        vi: "Tạo bằng AI",
+        en: "AI Writer",
+    },
+    "aiWriterTitle": {
+        vi: "Tạo nội dung với AI",
+        en: "Create content with AI",
+    },
+    "aiWriterSubtitle": {
+        vi: "Viết lại nội dung của bạn bằng trí tuệ nhân tạo và tạo thành nội dung mới, độc đáo.",
+        en: "Transform your content with our AI sentence rewriter and create fresh, unique text.",
+    },
+    "instructions": {
+        vi: "Hướng dẫn",
+        en: "Instructions",
+    },
+    "aiWriterStep1": {
+        vi: "1. Điền hoặc dán nội dung bạn muốn viết lại vào đây.",
+        en: "1. Transform your content with our AI sentence rewriter and create fresh, unique text.",
+    },
+    "aiWriterStep2": {
+        vi: "2. Nhấn 'Viết lại' và AI sẽ đổi lời câu của bạn nhưng vẫn giữ nguyên ý nghĩa.",
+        en: "3. Press 'Rewrite' and AI will reword your sentence keeping the same meaning.",
+    },
+    "aiWriterStep3": {
+        vi: "3. Nội dung được tạo có thể được dịch sang ngôn ngữ hiện tại của bạn và có thể có những câu từ không chính xác.",
+        en: "3. The generated content may be translated into your current language and may contain inaccuracies.",
+    },
+    "sentenceRewrite": {
+        vi: "Nội dung muốn viết lại",
+        en: "Sentence you want to rewrite",
+    },
+    "rewrite": {
+        vi: "Viết lại",
+        en: "Rewrite",
+    },
+    "rewriting": {
+        vi: "Đang viết lại...",
+        en: "Rewriting...",
+    },
+    "pleaseWait": {
+        vi: "Vui lòng chờ",
+        en: "Please wait",
+    },
+    "apply": {
+        vi: "Áp dụng",
+        en: "Apply",
+    },
+    "options": {
+        vi: "Tuỳ chỉnh",
+        en: "Options",
+    },
+    "pin": {
+        vi: "Ghim",
+        en: "Pin",
+    },
+    "unpin": {
+        vi: "Huỷ ghim",
+        en: "Unpin",
+    },
+    "open": {
+        vi: "Mở",
+        en: "Open",
+    },
+    "close": {
+        vi: "Đóng",
+        en: "Close",
+    },
+    "unbanUser": {
+        vi: "Mở cấm người dùng",
+        en: "Unban user",
+    },
+    "banUser": {
+        vi: "Chặn người dùng",
+        en: "Ban user",
+    },
+    "deleteAllAnswers": {
+        vi: "Xoá tất cả bình luận",
+        en: "Delete all answers",
+    },
+    "filesUploads": {
+        vi: "Tệp tin/Tải lên",
+        en: "Files/Uploads",
+    },
+    "manageBoards": {
+        vi: "Quản lý chủ đề",
+        en: "Manage boards",
+    },
+    "createNewBoard": {
+        vi: "Tạo chủ đề mới",
+        en: "Create new board",
+    },
+    "noBoardsYet": {
+        vi: "Chưa có chủ đề",
+        en: "No boards yet",
+    },
+    "unableToDisplayBoards": {
+        vi: "Không thể hiển thị chủ đề",
+        en: "Unable to display boards",
+    },
+    "enterShortName": {
+        vi: "Nhập tên phụ",
+        en: "Enter short name",
+    },
+    "enterTitle": {
+        vi: "Nhập tên",
+        en: "Enter title",
+    },
+    "enterPosition": {
+        vi: "Nhập vị trí",
+        en: "Enter position",
+    },
+    "boards": {
+        vi: "Chủ đề",
+        en: "Boards",
+    },
+    "admins": {
+        vi: "Quản trị",
+        en: "Admins",
+    },
+    "reports": {
+        vi: "Báo cáo",
+        en: "Reports",
+    },
+    "bans": {
+        vi: "Cấm chặn",
+        en: "Bans",
+    },
+    "thread": {
+        vi: "bài đăng",
+        en: "thread",
+    },
+    "threads": {
+        vi: "bài đăng",
+        en: "threads",
+    },
+    "adminDashboard": {
+        vi: "Quản trị viên",
+        en: "Admin dashboard",
+    },
+    "uploadsFolders": {
+        vi: "Thư mục tải lên",
+        en: "Uploads folders",
+    },
+    "moderateFiles": {
+        vi: "Kiểm duyệt tệp tin",
+        en: "Moderate files",
+    },
+    "authorizationsHistory": {
+        vi: "Lịch sử đăng nhập",
+        en: "Authorizations history",
+    },
+    "boardShortName": {
+        vi: "Tên ngắn",
+        en: "Board short name",
+    },
+    "boardTitle": {
+        vi: "Tiêu hiển thị chủ đề",
+        en: "Board title",
+    },
+    "boardDescription": {
+        vi: "Mô tả",
+        en: "Board description",
+    },
+    "enterDescription": {
+        vi: "Nhập mô tả",
+        en: "Enter description",
+    },
+    "boardPosition": {
+        vi: "Vị trí chủ đề",
+        en: "Boards position",
+    },
+    "save": {
+        vi: "Lưu",
+        en: "Save",
+    },
+    "create": {
+        vi: "Tạo",
+        en: "Create",
+    },
+    "cancel": {
+        vi: "Huỷ",
+        en: "Cancel",
+    },
+    "unread": {
+        vi: "Chưa đọc",
+        en: "Unread",
+    },
+    "read": {
+        vi: "Đọc",
+        en: "Read",
+    },
+    "noReportsYet": {
+        vi: "Chưa có báo cáo",
+        en: "No reports yet",
+    },
+    "unableToDisplayReports": {
+        vi: "Không thể hiển thị báo cáo",
+        en: "Unable to display reports",
+    },
+    "byNewest": {
+        vi: "Mới nhất",
+        en: "By newest",
+    },
+    "byAnswersCount": {
+        vi: "Số lượng bình luận",
+        en: "By answers count",
+    },
+    "noBansYet": {
+        vi: "Không có người dùng bị cấm chặn",
+        en: "No bans yet",
+    },
+    "unableToDisplayBans": {
+        vi: "Không thể hiển thị cấm chặn",
+        en: "Unable to display bans",
+    },
+    "createNewFolder": {
+        vi: "Tạo thư mục mới",
+        en: "Create new folder",
+    },
+    "file": {
+        vi: "tệp tin",
+        en: "file",
+    },
+    "files": {
+        vi: "tệp tin",
+        en: "files",
+    },
+    "noFoldersYet": {
+        vi: "Không có thư mục",
+        en: "No folders yet",
+    },
+    "manageUploadsFolders": {
+        vi: "Quản lý thư mục",
+        en: "Manage uploads folders",
+    },
+    "folderShortName": {
+        vi: "Tên thư mục",
+        en: "Folder short name",
+    },
+    "folderTitle": {
+        vi: "Tiêu đề thư mục",
+        en: "Folder title",
+    },
+    "folderDescription": {
+        vi: "Mô tả thư mục",
+        en: "Folder description",
+    },
+    "folderPosition": {
+        vi: "Vị trí thư mục",
+        en: "Folder position",
+    },
+    "unableToDisplayFolders": {
+        vi: "Không thể hiển thị thư mục",
+        en: "Unable to display folders",
+    },
+    "unableToDisplayFolder": {
+        vi: "Không thể hiển thị thư mục",
+        en: "Unable to display folder",
+    },
+    "noFilesYet": {
+        vi: "Không có tệp tin",
+        en: "No files yet",
+    },
+    "unableToDisplayFiles": {
+        vi: "Không thể hiển thị tệp tin",
+        en: "Unable to display files",
+    },
+    "needToModerate": {
+        vi: "Chưa duyệt",
+        en: "Need to moderate",
+    },
+    "download": {
+        vi: "Tải xuống",
+        en: "Download",
+    },
+    "publish": {
+        vi: "Duyệt",
+        en: "Publish",
+    },
+    "onModeration": {
+        vi: "Đang chờ duyệt",
+        en: "On moderation",
+    },
+    "theFileWillBePublishedAfterModeration": {
+        vi: "Tệp tin sẽ được xem sau khi kiểm duyệt",
+        en: "The file will be published after moderation",
+    },
+    "fileNotFound": {
+        vi: "Không tìm thấy tệp tin",
+        en: "File not found",
     },
     "": {
         vi: "",
@@ -307,6 +595,10 @@ const Strings = {
     "noUsersYet": {
         vi: "Chưa có người dùng",
         en: "No users yet"
+    },
+    "noUploadsYet": {
+        vi: "Chưa có tệp tin",
+        en: "No uploads yet",
     },
     /* 
     "unableToDisplayUsers": {
@@ -427,21 +719,6 @@ const Strings = {
         en: 'Recently threads',
         jp: '最近のスレッド'
     },
-    'filesUploads': {
-        ru: 'Файлы/Загрузки',
-        en: 'Files/Uploads',
-        jp: 'ファイル/アップロード'
-    },
-    'noUploadsYet': {
-        ru: 'Пока нет загрузок',
-        en: 'No uploads yet',
-        jp: 'まだアップロードはありません'
-    },
-    'thread': {
-        ru: 'Тред',
-        en: 'Thread',
-        jp: 'スレッド'
-    },
     'error': {
         ru: 'Ошибка',
         en: 'Error',
@@ -451,11 +728,6 @@ const Strings = {
         ru: 'Пока нет ответов',
         en: 'No answers yet',
         jp: 'まだ答えはありません'
-    },
-    'boards': {
-        ru: 'Доски',
-        en: 'Boards',
-        jp: 'ボード'
     },
     'default': {
         ru: 'По умолчанию',
@@ -471,26 +743,6 @@ const Strings = {
         ru: 'Недавно отвеченные',
         en: 'Recently answered',
         jp: '最近答えした'
-    },
-    'byNewest': {
-        ru: 'По новизне',
-        en: 'By newest',
-        jp: '最新のもの'
-    },
-    'byAnswersCount': {
-        ru: 'По числу ответов',
-        en: 'By answers count',
-        jp: '答え数で'
-    },
-    'noBoardsYet': {
-        ru: 'Пока нет досок',
-        en: 'No boards yet',
-        jp: 'ボードはまだありません'
-    },
-    'unableToDisplayBoards': {
-        ru: 'Невозможно отобразить доски',
-        en: 'Unable to display boards',
-        jp: 'ボードを表示できません'
     },
     'board': {
         ru: 'Доска',
@@ -512,115 +764,10 @@ const Strings = {
         en: 'Unable to display answers',
         jp: '答えを表示できません'
     },
-    'adminDashboard': {
-        ru: 'Панель администратора',
-        en: 'Admin dashboard',
-        jp: '管理ダッシュボード'
-    },
-    'admins': {
-        ru: 'Администраторы',
-        en: 'Admins',
-        jp: '管理者'
-    },
-    'reports': {
-        ru: 'Жалобы',
-        en: 'Reports',
-        jp: '苦情'
-    },
-    'bans': {
-        ru: 'Баны',
-        en: 'Bans',
-        jp: '禁止'
-    },
-    'manageBoards': {
-        ru: 'Управление досками',
-        en: 'Manage boards',
-        jp: 'ボードを管理する'
-    },
-    'createNewBoard': {
-        ru: 'Создать новую доску',
-        en: 'Create new board',
-        jp: '新しいボードを作成する'
-    },
-    'enterShortName': {
-        ru: 'Введите короткое имя',
-        en: 'Enter short name',
-        jp: '短い名前を入力してください'
-    },
-    'enterTitle': {
-        ru: 'Введите название',
-        en: 'Enter title',
-        jp: 'タイトルを入力してください'
-    },
-    'enterPosition': {
-        ru: 'Введите позицию',
-        en: 'Enter position',
-        jp: '位置を入力してください'
-    },
-    'thread1': {
-        ru: 'тред',
-        en: 'thread',
-        jp: 'スレッド'
-    },
-    'thread2': {
-        ru: 'треда',
-        en: 'threads',
-        jp: 'スレッド'
-    },
     'thread3': {
         ru: 'тредов',
         en: 'threads',
         jp: 'スレッド'
-    },
-    'boardShortName': {
-        ru: 'Короткое имя доски',
-        en: 'Board short name',
-        jp: 'ボードの短縮名'
-    },
-    'boardTitle': {
-        ru: 'Название доски',
-        en: 'Board title',
-        jp: 'ボードタイトル'
-    },
-    'boardDescription': {
-        ru: 'Описание доски',
-        en: 'Board description',
-        jp: 'ボードの説明'
-    },
-    'enterDescription': {
-        ru: 'Ведите описание',
-        en: 'Enter description',
-        jp: '説明を入力してください'
-    },
-    'boardPosition': {
-        ru: 'Позиция доски',
-        en: 'Boards position',
-        jp: 'ボードの位置'
-    },
-    'save': {
-        ru: 'Сохранить',
-        en: 'Save',
-        jp: 'セーブ'
-    },
-    'create': {
-        ru: 'Создать',
-        en: 'Create',
-        jp: '作成する'
-    },
-    'cancel': {
-        ru: 'Отменить',
-        en: 'Cancel',
-        jp: 'キャンセル'
-    },
-    'noBansYet': {
-        ru: 'Пока нет банов',
-        en: 'No bans yet',
-        jp: 'まだ禁止はありません'
-    },
-    'unableToDisplayBans': {
-        ru: 'Невозможно отобразить баны',
-        en: 'Unable to display bans',
-        jp: '禁止を表示できません'
     },
     'signIn': {
         ru: 'Войти',
@@ -757,11 +904,6 @@ const Strings = {
         en: 'Answer in thread',
         jp: 'スレッドに答え'
     },
-    'banUser': {
-        ru: 'Забанить',
-        en: 'Ban user',
-        jp: '禁止'
-    },
     'reason': {
         ru: 'Причина',
         en: 'Reason',
@@ -840,31 +982,6 @@ const Strings = {
         en: 'Text field supports Markdown',
         jp: 'テキストフィールドはMarkdownをサポートします'
     },
-    'pin': {
-        ru: 'Закрепить',
-        en: 'Pin',
-        jp: 'ピン'
-    },
-    'unpin': {
-        ru: 'Открепить',
-        en: 'Unpin',
-        jp: '固定を解除する'
-    },
-    'open': {
-        ru: 'Открыть',
-        en: 'Open',
-        jp: '開いた'
-    },
-    'close': {
-        ru: 'Закрыть',
-        en: 'Close',
-        jp: '閉じる'
-    },
-    'unbanUser': {
-        ru: 'Разбанить',
-        en: 'Unban user',
-        jp: '禁止を解除する'
-    },
     'report': {
         ru: 'Пожаловаться',
         en: 'Report',
@@ -887,26 +1004,6 @@ const Strings = {
         ru: 'Пользователь забанен',
         en: 'User banned',
         jp: 'ユーザー禁止'
-    },
-    'unread': {
-        ru: 'Непрочитанные',
-        en: 'Unread',
-        jp: 'すでに読んだ'
-    },
-    'read': {
-        ru: 'Прочитанные',
-        en: 'Read',
-        jp: '読む'
-    },
-    'noReportsYet': {
-        ru: 'Пока нет жалоб',
-        en: 'No reports yet',
-        jp: 'まだ苦情はありません'
-    },
-    'unableToDisplayReports': {
-        ru: 'Невозможно отобразить жалобы',
-        en: 'Unable to display reports',
-        jp: '苦情を表示できません'
     },
     'reportSent': {
         ru: 'Жалоба отправлена',
@@ -938,91 +1035,15 @@ const Strings = {
         en: 'Show less',
         jp: '表示を減らす'
     },
-    'threads': {
-        ru: 'Треды',
-        en: 'Threads',
-        jp: 'スレッド'
-    },
     'folder': {
         ru: 'Папка',
         en: 'Folder',
         jp: 'フォルダ'
     },
-    'uploadsFolders': {
-        ru: 'Папки загрузок',
-        en: 'Uploads folders',
-        jp: 'フォルダをアップロードします'
-    },
-    'manageUploadsFolders': {
-        ru: 'Управление папками загрузок',
-        en: 'Manage uploads folders',
-        jp: 'アップロードフォルダを管理する'
-    },
-    'createNewFolder': {
-        ru: 'Создать новую папку',
-        en: 'Create new folder',
-        jp: '新しいフォルダを作成します'
-    },
-    'file1': {
-        vi: 'tệp',
-        en: 'file',
-    },
-    'file2': {
-        ru: 'tệp tin',
-        en: 'files',
-    },
-    'file3': {
-        ru: 'tệp tin',
-        en: 'files',
-    },
-    'folderShortName': {
-        ru: 'Короткое имя папки',
-        en: 'Folder short name',
-        jp: 'フォルダの短縮名'
-    },
-    'folderTitle': {
-        ru: 'Название папки',
-        en: 'Folder title',
-        jp: 'フォルダータイトル'
-    },
-    'folderDescription': {
-        ru: 'Описание папки',
-        en: 'Folder description',
-        jp: 'フォルダの説明'
-    },
-    'folderPosition': {
-        ru: 'Позиция папки',
-        en: 'Folder position',
-        jp: 'フォルダの位置'
-    },
-    'noFoldersYet': {
-        ru: 'Пока нет папок',
-        en: 'No folders yet',
-        jp: 'まだフォルダはありません'
-    },
-    'unableToDisplayFolders': {
-        ru: 'Невозможно отобразить папки',
-        en: 'Unable to display folders',
-        jp: 'フォルダを表示できません'
-    },
-    'unableToDisplayFolder': {
-        vi: 'Không thể hiển thị',
-        en: 'Unable to display folder',
-    },
     'newFile': {
         ru: 'Новый файл',
         en: 'New file',
         jp: '新しいファイル'
-    },
-    'noFilesYet': {
-        ru: 'Пока нет файлов',
-        en: 'No files yet',
-        jp: 'まだファイルはありません'
-    },
-    'unableToDisplayFiles': {
-        ru: 'Невозможно отобразить файлы',
-        en: 'Unable to display files',
-        jp: 'ファイルを表示できません'
     },
     'download1': {
         ru: 'скачивание',
@@ -1063,46 +1084,6 @@ const Strings = {
         ru: 'Папки не загружены',
         en: 'Folders not loaded',
         jp: 'フォルダーがロードされていません'
-    },
-    'moderateFiles': {
-        ru: 'Модерировать файлы',
-        en: 'Moderate files',
-        jp: '中程度のファイル'
-    },
-    'needToModerate': {
-        ru: 'Нужно модерировать',
-        en: 'Need to moderate',
-        jp: 'モデレートする必要があります'
-    },
-    'download': {
-        ru: 'Скачать',
-        en: 'Download',
-        jp: 'ダウンロード'
-    },
-    'publish': {
-        ru: 'Опубликовать',
-        en: 'Publish',
-        jp: '公開する'
-    },
-    'onModeration': {
-        ru: 'На модерации',
-        en: 'On moderation',
-        jp: '節度について'
-    },
-    'theFileWillBePublishedAfterModeration': {
-        ru: 'Файл будет опубликован после модерации',
-        en: 'The file will be published after moderation',
-        jp: 'ファイルはモデレート後に公開されます'
-    },
-    'fileNotFound': {
-        ru: 'Файл не найден',
-        en: 'File not found',
-        jp: 'ファイルが見つかりません'
-    },
-    'file': {
-        ru: 'Файл',
-        en: 'File',
-        jp: 'ファイル'
     },
     'fileDeleted': {
         ru: 'Файл удален',
@@ -1239,11 +1220,6 @@ const Strings = {
         en: 'Search in',
         jp: 'で検索'
     },
-    'authorizationsHistory': {
-        ru: 'История авторизаций',
-        en: 'Authorizations history',
-        jp: '承認履歴'
-    },
     'userHasNotLoggedInYet': {
         ru: 'Пользователь еще не авторизовывался',
         en: 'User has not logged in yet',
@@ -1253,11 +1229,6 @@ const Strings = {
         ru: 'Невозможно отобразить историю авторизаций',
         en: 'Unable to display authorizations history',
         jp: '承認履歴を表示できません'
-    },
-    'deleteAllAnswers': {
-        ru: 'Удалить все ответы',
-        en: 'Delete all answers',
-        jp: 'すべての回答を削除する'
     },
     'isViewing': {
         ru: 'в треде',

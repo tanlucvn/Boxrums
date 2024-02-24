@@ -124,7 +124,7 @@ const editPassword = async (req, res, next) => {
         if (!password) return next(createHttpError.BadRequest('Password must not be empty'))
         if (!newPassword) return next(createHttpError.BadRequest('newPassword must not be empty'))
 
-        const user = await User.findOne({ _id: Types.ObjectId(req.payload.id) })
+        const user = await User.findOne({ _id: new Types.ObjectId(req.payload.id) })
 
         if (!user) return next(createHttpError.BadRequest('User not found'))
 
@@ -134,7 +134,7 @@ const editPassword = async (req, res, next) => {
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(newPassword, salt)
 
-        await User.updateOne({ _id: Types.ObjectId(req.payload.id) }, { password: hashedPassword })
+        await User.updateOne({ _id: new Types.ObjectId(req.payload.id) }, { password: hashedPassword })
 
         res.json({ message: 'Password successfully changed' })
     } catch (err) {

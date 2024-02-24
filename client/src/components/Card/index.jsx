@@ -644,7 +644,7 @@ export const BoardCard = ({ data }) => {
                     <ChatText weight='bold' />
                     <span className="card_count">{counter(data.answersCount)}</span>
                     <span className="count_title">
-                        {declOfNum(data.answersCount, [Strings.answer1[lang], Strings.answer2[lang], Strings.answer3[lang]])}
+                        {declOfNum(data.answersCount, [Strings.answer[lang], Strings.answers[lang]])}
                     </span>
                 </div>
             </footer>
@@ -990,7 +990,7 @@ export const FileCard = ({ data, deleteFile }) => {
                                 <Heart weight='bold' />
                                 <span className="card_count">{counter(data.likes.length)}</span>
                                 <span className="hidden">
-                                    {declOfNum(data.likes.length, [Strings.like1[lang], Strings.like2[lang], Strings.like3[lang]])}
+                                    {declOfNum(data.likes.length, [Strings.like[lang], Strings.likes[lang]])}
                                 </span>
                             </div>
 

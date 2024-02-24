@@ -262,7 +262,7 @@ const deleteBan = async (req, res, next) => {
         if (!banId) return next(createHttpError.BadRequest('banId must not be empty'))
 
         const ban = await Ban.findById(banId)
-        await ban.delete()
+        await ban.deleteOne()
 
         res.json('Ban successfully deleted')
     } catch (err) {
@@ -534,7 +534,7 @@ const deleteUser = async (req, res, next) => {
         })
         await Promise.all(dialogues.map(async (item) => {
             const dialogue = await Dialogue.findById(item._id)
-            await dialogue.delete()
+            await dialogue.deleteOne()
         }))
 
         const messages = await Message.find({
@@ -568,10 +568,10 @@ const deleteUser = async (req, res, next) => {
                 })
             }
 
-            await messages.delete()
+            await messages.deleteOne()
         }))
 
-        await user.delete()
+        await user.deleteOne()
 
         res.json({ message: 'User successfully deleted' })
     } catch (err) {

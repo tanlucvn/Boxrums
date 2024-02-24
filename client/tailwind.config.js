@@ -19,7 +19,8 @@ export default {
             fontFamily: {
                 inter: ["'Inter'", "sans-serif"],
                 gelasio: ["'Gelasio'", "serif"],
-                sourcecodepro: ['Source Code Pro', 'monospace']
+                sourcecodepro: ['Source Code Pro', 'monospace'],
+                worksans: ["Work Sans", "sans-serif"]
             },
             fontSize: {
                 '9xl': '112px',
@@ -34,6 +35,7 @@ export default {
                 'grey': '#F3F3F3',
                 'dark-grey': '#6B6B6B',
                 'red': '#E53935',
+                'green': '#4CAF50',
                 'transparent': 'transparent',
                 'twitter': '#1DA1F2',
                 'purple': '#916bc2'
@@ -44,6 +46,7 @@ export default {
                 'grey': '#2A2A2A',
                 'dark-grey': '#E7E7E7',
                 'red': '#E53935',
+                'green': '#4CAF50',
                 'transparent': 'transparent',
                 'twitter': '#0E71A8',
                 'purple': 'hsl(266, 42%, 53%)'

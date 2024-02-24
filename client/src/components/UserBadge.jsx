@@ -4,11 +4,10 @@ export const UserRole = ({ role }) => {
     return (
         <>
             {role === 3 && (
-                <span className="user_status ic adm">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 850">
-                        <path d="M65.4,417.85c0.9,0,1.7,0,2.6-0.1l87.2,315.6H491h335.7l87.2-315.6c0.899,0,1.699,0.1,2.6,0.1c36.1,0,65.4-29.3,65.4-65.4 s-29.301-65.4-65.4-65.4s-65.4,29.3-65.4,65.4c0,7,1.101,13.8,3.2,20.1l-157.7,92.2l-169.5-281 c17.601-11.7,29.301-31.8,29.301-54.5c0-36.1-29.301-65.4-65.4-65.4s-65.4,29.3-65.4,65.4c0,22.8,11.601,42.8,29.301,54.5 l-169.5,281l-157.7-92.2c2-6.3,3.2-13.1,3.2-20.1c0-36.1-29.3-65.4-65.4-65.4c-36.2,0-65.5,29.3-65.5,65.4S29.3,417.85,65.4,417.85 z" />
-                    </svg>
+                <span class="inline-flex items-center justify-center w-6 h-6 me-2 text-sm mx-2 font-semibold text-[#ffffff]] bg-red rounded-full light:text-[#ffffff]">
+                    <i class="fi fi-rr-chess-king text-sm"></i>
                 </span>
+
             )}
             {role === 2 && (
                 <span className="user_status ic mod">

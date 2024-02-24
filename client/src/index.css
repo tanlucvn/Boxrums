@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Gelasio&family=Inter:wght@400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 @import "@flaticon/flaticon-uicons/css/all/all";
 @import './editor-theme.scss';
 
@@ -17,7 +18,7 @@
     }
 
     body {
-        @apply font-inter font-normal text-black bg-white;
+        @apply font-worksans font-normal text-black bg-white;
     }
 
     i {
@@ -52,7 +53,7 @@
     }
 
     .btn-dark{
-        @apply whitespace-nowrap bg-black text-white rounded-full py-3 px-6 text-xl hover:bg-opacity-80;
+        @apply whitespace-nowrap bg-black text-white rounded-full py-3 px-6 text-xl hover:bg-opacity-80 cursor-pointer;
     }
 
     .btn-light{
@@ -92,11 +93,11 @@
     }
 
     #textEditor h2, h2{
-        @apply font-inter text-4xl leading-normal font-bold max-md:text-3xl max-md:leading-snug !important;
+        @apply font-worksans text-4xl leading-normal font-bold max-md:text-3xl max-md:leading-snug !important;
     }
 
     #textEditor h3, h3 {
-        @apply font-inter text-3xl leading-loose max-md:text-2xl max-md:leading-normal !important;
+        @apply font-worksans text-3xl leading-loose max-md:text-2xl max-md:leading-normal !important;
     }
 
     #textEditor *, .blog-page-content *{
@@ -130,14 +131,71 @@
     .card_left{
         @apply flex relative bg-grey bg-cover bg-center m-1 w-[74px] h-[74px] rounded-xl
     }
+
+    .card_right{
+        @apply w-[calc(100%-88px)] overflow-hidden
+    }
     .card_item{
         @apply flex flex-wrap items-start
+    }
+    .card_head{
+        @apply flex items-start py-1 px-3 mt-1 text-sm relative
+    }
+    .card_head_inner{
+        @apply flex flex-col w-full leading-relaxed
+    }
+    .card_head_inner.row{
+        @apply flex-row
+    }
+    .card_body{
+        @apply flex-[1_auto] min-w-0
+    }
+    .card_body.row{
+        @apply flex items-center
+    }
+    .card_block{
+        @apply relative border-2 border-grey my-5 p-2 rounded-lg shadow-sm max-w-[650px] max-sm:w-full
+    }
+    .form_error{
+        @apply text-red text-sm font-normal ml-2
     }
     .boards_slide_nav{
         @apply absolute h-full flex justify-center items-center
     }
     .remove_file{
         @apply flex absolute w-6 h-6 top-[.2rem] right-[.2rem] rounded-full bg-red/30 text-red cursor-pointer justify-center z-[1]
+    }
+
+    .sort_item{
+        @apply p-3 bg-grey rounded-full px-6 capitalize mr-2 snap-start snap-always cursor-pointer select-none
+    }
+
+    .admin_nav_item{
+        @apply relative bg-grey text-black rounded-lg flex items-center justify-center flex-col h-[142px] text-xl select-none
+    }
+
+    .card_foot{
+        @apply m-1.5 flex items-center gap-3
+    }
+    .foot_btn{
+        @apply flex items-center p-2 px-3 rounded-md border border-grey gap-3 cursor-pointer hover:bg-grey
+    }
+    .card_title{
+        @apply text-xl font-medium w-full sm:w-auto sm:max-w-[calc(100%-2rem)] text-black hover:text-purple
+    }
+
+    .card_info{
+        @apply mt-1 flex items-center w-max
+    }
+
+    .head_text{
+        @apply flex items-center text-dark-grey/80 break-words
+    }
+    .bullet{
+        @apply mr-2
+    }
+    .form_inner{
+        @apply w-full max-w-[480px] mx-4 mt-4 max-sm:w-full m-[1rem_auto_0]
     }
 }
 

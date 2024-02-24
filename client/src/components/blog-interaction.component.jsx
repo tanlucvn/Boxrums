@@ -1,15 +1,20 @@
-import React, { useContext } from 'react'
-import { Link } from 'react-router-dom';
+import React, { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast'
-import { ThreadContext } from '@/pages/Forum/Thread/index_test';
+import { ThreadContext } from '@/pages/Forum/Thread';
 import { counter, declOfNum } from '@/support/Utils';
 import { BACKEND, Strings } from '@/support/Constants';
 import { StoreContext } from '@/stores/Store';
+import Dropdown from './Dropdown';
+import { DeleteThread } from './ModalPopup';
 
-const BlogInteraction = () => {
+const BlogInteraction = ({ dropdown = false, share = false }) => {
     const threadContextData = useContext(ThreadContext);
     const { user, lang, token } = useContext(StoreContext)
-    const { thread, likes, setLikes, liked, setLiked, setCommentsWrapper, answers } = threadContextData
+    const { thread, setThread, likes, setLikes, liked, setLiked, setCommentsWrapper, answers, setAnswers } = threadContextData
+    const [banned, setBanned] = useState(thread.author?.ban)
+    const [open, setOpen] = useState(false)
+    const navigate = useNavigate()
 
     const likeThread = () => {
         if (!user) {
@@ -34,6 +39,130 @@ const BlogInteraction = () => {
             .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message))
     }
 
+    const pinThread = () => {
+        const formData = new FormData()
+        formData.append('threadId', thread._id)
+        formData.append('title', thread.title)
+        formData.append('body', thread.body)
+        formData.append('pined', !thread.pined)
+
+        fetch(BACKEND + '/api/thread/adminedit', {
+            method: 'PUT',
+            headers: {
+                Authorization: 'Bearer ' + token
+            },
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.error) {
+                    setThread({ ...thread, ...data });
+                }
+                if (data.error) throw Error(data.error?.message || 'Error')
+            })
+            .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message))
+
+    }
+
+    const closeThread = () => {
+        const editApi = user.role >= 2 ? 'adminedit' : 'edit'
+
+        const formData = new FormData()
+        formData.append('threadId', thread._id)
+        formData.append('title', thread.title)
+        formData.append('body', thread.body)
+        formData.append('closed', !thread.closed)
+
+        fetch(BACKEND + '/api/thread/' + editApi, {
+            method: 'PUT',
+            headers: {
+                Authorization: 'Bearer ' + token
+            },
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.error) {
+                    setThread({ ...thread, ...data })
+                }
+                if (data.error) throw Error(data.error?.message || 'Error')
+            })
+            .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message))
+    }
+
+    const deleteThread = () => {
+        fetch(BACKEND + '/api/thread/delete', {
+            method: 'DELETE',
+            headers: {
+                Authorization: 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ threadId: thread._id })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.error) {
+                    setThread({ ...thread, ...data })
+                }
+                if (data.message) {
+                    toast.success(data.message)
+                    navigate('/')
+                } else throw Error(data.error?.message || 'Error')
+            })
+            .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message))
+    }
+
+    const clearThread = () => {
+        setOpen(false)
+
+        fetch(BACKEND + '/api/thread/clear', {
+            method: 'DELETE',
+            headers: {
+                Authorization: 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ threadId: thread._id })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.error) {
+                    setAnswers({ ...answers, ...data })
+                    toast.success("Cleared successfully")
+                }
+                if (data.error) throw Error(data.error?.message || 'Error')
+            })
+            .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message))
+    }
+
+    const onBan = () => {
+        if (banned) {
+            fetch(BACKEND + '/api/ban/delete', {
+                method: 'DELETE',
+                headers: {
+                    Authorization: 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId: data.author._id })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.error) {
+                        setBanned(false)
+                    } else throw Error(data.error?.message || 'Error')
+                })
+                .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message))
+        } else {
+            setPostType({
+                type: 'ban',
+                id: data.author._id,
+                someData: {
+                    body: data.body
+                }
+            })
+            setModalOpen(true)
+        }
+    }
+
     return (
         <>
             <Toaster />
@@ -55,10 +184,47 @@ const BlogInteraction = () => {
                         thread === thread.author.name ?
                             <Link to={`/editor/${thread._id}`} className='underline hover:text-purple'>Edit</Link> : ""
                     }
-                    <Link to={`https://twitter.com/intent/tweet?text=Read ${thread.title}&url=${location.href}`}><i className="fi fi-brands-twitter text-xl hover:text-twitter"></i></Link>
+
+                    {share &&
+                        <Link to={`https://twitter.com/intent/tweet?text=Read ${thread.title}&url=${location.href}`}>
+                            <i className="fi fi-brands-twitter text-xl hover:text-twitter"></i>
+                        </Link>
+                    }
+
+                    {dropdown && user && user.role >= 2 &&
+                        <Dropdown lang={lang} closed={open}>
+                            <div onClick={pinThread} className="flex gap-3 items-center px-4 py-2 text-sm text-dark-grey rounded-md cursor-pointer hover:bg-dark-grey/60 hover:text-black">
+                                {thread.pined ? <i class="fi fi-rr-thumbtack"></i> : <i class="fi fi-sr-thumbtack"></i>}
+                                {thread.pined ? Strings.unpin[lang] : Strings.pin[lang]}
+                            </div>
+
+                            <div onClick={closeThread} className="flex gap-3 items-center px-4 py-2 text-sm text-dark-grey rounded-md cursor-pointer hover:bg-dark-grey/60 hover:text-black">
+                                {thread.closed ? <i class="fi fi-rr-lock"></i> : <i class="fi fi-sr-lock"></i>}
+                                {thread.closed ? Strings.open[lang] : Strings.close[lang]}
+                            </div>
+
+                            {user.role >= thread.author.role &&
+                                <div onClick={deleteThread} className="flex gap-3 items-center px-4 py-2 text-sm text-dark-grey rounded-md cursor-pointer hover:bg-dark-grey/60 hover:text-black">
+                                    <i class="fi fi-rr-trash"></i>
+                                    {Strings.delete[lang]}
+                                </div>
+                            }
+                            {user.role >= thread.author.role && (
+                                <div onClick={() => setOpen(true)} className="flex gap-3 items-center px-4 py-2 text-sm text-dark-grey rounded-md cursor-pointer hover:bg-dark-grey/60 hover:text-black">
+                                    <i class="fi fi-rs-trash"></i>
+                                    {Strings.deleteAllAnswers[lang]}
+                                </div>
+                            )}
+                            {thread.author.name !== 'deleted' && user.id !== thread.author._id && thread.author.role === 1 && (
+                                <div onClick={onBan} className="flex gap-3 items-center px-4 py-2 text-sm text-dark-grey rounded-md cursor-pointer hover:bg-dark-grey/60 hover:text-black">
+                                    {banned ? Strings.unbanUser[lang] : Strings.banUser[lang]}
+                                </div>
+                            )}
+                        </Dropdown>}
                 </div>
             </div>
 
+            <DeleteThread open={open} close={() => setOpen(false)} onConfirmed={clearThread} />
             <hr className='border-grey my-2' />
         </>
     )

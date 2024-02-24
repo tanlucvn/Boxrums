@@ -31,7 +31,6 @@ const initialState = {
         someData: null
     },
     fab: true,
-    sidebarCollapsed: false,
     lang
 }
 
@@ -40,7 +39,6 @@ export const StoreContext = createContext(initialState)
 const Store = ({ children }) => {
     const [state, dispatch] = useReducer(Reducer, initialState)
     const [modalOpen, setModalOpen] = useState(false)
-    const [modalBody, setModalBody] = useState({})
 
     const setLang = (payload) => {
         localStorage.setItem('lang', payload)
@@ -107,14 +105,10 @@ const Store = ({ children }) => {
         setUserPicture,
         modalOpen,
         setModalOpen,
-        modalBody,
-        setModalBody,
         postType: state.postType,
         setPostType,
         fab: state.fab,
         setFabVisible,
-        sidebarCollapsed: state.sidebarCollapsed,
-        setSiderbarCollapsed,
         login,
         logout
     }

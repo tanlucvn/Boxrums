@@ -2,17 +2,14 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import AnimationWrapper from '@/common/page-animation'
 import Loader from '@/components/loader.component'
-import { getDay } from '@/common/date'
-import BlogInteraction from '@/components/blog-interaction.component'
-import BlogPostCard from '@/components/blog-post.component'
-import BlogContent from '@/components/blog-content.component'
-import { BACKEND, Strings } from '@/support/Constants'
-import { dateFormat } from '@/support/Utils'
+import { BACKEND, Strings, fileExt } from '@/support/Constants'
+import { dateFormat, deletedUser, formatBytes } from '@/support/Utils'
 import FileCommentContainer from '@/components/fileComments.component'
 import FileInteraction from '@/components/file-interaction.component'
 import { StoreContext } from '@/stores/Store'
 import Avatar from 'boring-avatars'
 import Markdown from '@/components/Markdown'
+import Errorer from '@/components/Errorer'
 
 export const FileContext = createContext({})
 const FilePage = () => {
@@ -26,8 +23,8 @@ const FilePage = () => {
     const [loading, setLoading] = useState(true)
     const [noData, setNoData] = useState(false)
 
-    const [likes, setLikes] = useState(file?.likes)
-    const [liked, setLiked] = useState(user ? !!file?.likes?.find(i => i === user.id) : false)
+    const [likes, setLikes] = useState()
+    const [liked, setLiked] = useState()
 
     const [commentsWrapper, setCommentsWrapper] = useState(false);
     const [totalParentComentsLoaded, setTotalCommentsLoaded] = useState(0)
@@ -42,6 +39,7 @@ const FilePage = () => {
                 if (!response.message) {
                     setFile(response.file)
                     setNoData(false)
+                    setLikes(response.file.likes)
                     await fetchComment()
                 } else {
                     setOnModeration(true)
@@ -74,9 +72,8 @@ const FilePage = () => {
     }, [fileId])
 
     useEffect(() => {
-        setLikes(file?.likes)
-        setLiked(user ? !!file?.likes?.find(i => i === user.id) : false)
-    }, [user, file?.likes])
+        setLiked(user ? !!likes?.find(i => i._id === user.id) : false)
+    }, [user, likes])
 
     return (
         <AnimationWrapper>
@@ -86,12 +83,22 @@ const FilePage = () => {
                         <FileContext.Provider value={{ file, setFile, comment, setComment, likes, setLikes, liked, setLiked, commentsWrapper, setCommentsWrapper, totalParentComentsLoaded, setTotalCommentsLoaded }}>
                             <FileCommentContainer />
                             <div className='max-w-[900px] center py-10 max-lg:px-[5vw]'>
-                                {/* <img src={banner} alt="Banner" className='aspect-video' /> */}
+                                <div className='aspect-video'>
+                                    {
+                                        file.banner ? file.banner : <Avatar
+                                            size={"100%"}
+                                            name={file.title}
+                                            variant="marble"
+                                            colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+                                            square="true"
+                                        />
+                                    }
+                                </div>
                                 <div className='mt-12'>
                                     <h2>{file.title}</h2>
                                     <div className='flex max-sm:flex-col justify-between my-8'>
                                         <div className='flex gap-5 items-start '>
-                                            {file.author &&
+                                            {file.author ?
                                                 <>
                                                     <Avatar
                                                         size={40}
@@ -105,6 +112,20 @@ const FilePage = () => {
                                                         @
                                                         <Link className="underline" to={`/user/${file.author}`}>{file.author}</Link>
                                                     </p>
+                                                </> :
+                                                <>
+                                                    <Avatar
+                                                        size={40}
+                                                        name={deletedUser.name}
+                                                        variant="marble"
+                                                        colors={['#C20D90']}
+                                                    />
+                                                    <p className='capitalize '>
+                                                        {deletedUser.displayName}
+                                                        <br />
+                                                        @
+                                                        <Link className="underline" to={`/user/${deletedUser.name}`}>{deletedUser.name}</Link>
+                                                    </p>
                                                 </>
                                             }
 
@@ -113,15 +134,24 @@ const FilePage = () => {
                                     </div>
                                 </div>
 
-                                <FileInteraction />
+                                <FileInteraction dropdown="true" />
 
-                                <div className='my-12 font-gelasio blog-page-content'>
+                                <div className='my-12 blog-page-content'>
                                     {
                                         <div className='my-4 md:my-8'>
                                             <Markdown block={file.body} />
                                         </div>
                                     }
-
+                                    <div className='my-4 md:my-8'>
+                                        <div className='flex gap-3'>
+                                            <p>{Strings.extension[lang]}:</p>
+                                            <span>{fileExt.exec(file.file.url)[1]}</span>
+                                        </div>
+                                        <div className='flex gap-3'>
+                                            <p>{Strings.fileSize[lang]}:</p>
+                                            <span>{formatBytes(file.file.size)}</span>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <FileInteraction />

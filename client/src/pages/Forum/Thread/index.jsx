@@ -226,7 +226,7 @@ const Thread = () => {
 
                                             <BlogInteraction dropdown="true" />
 
-                                            <div className='my-12 font-gelasio blog-page-content'>
+                                            <div className='my-12 blog-page-content'>
                                                 {
                                                     /* content[0].blocks.map((block, i) => {
                                                         return <div className='my-4 md:my-8' key={i}>

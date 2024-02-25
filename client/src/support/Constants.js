@@ -555,6 +555,10 @@ const Strings = {
         vi: "Tải xuống",
         en: "Download",
     },
+    "downloads": {
+        vi: "Tải xuống",
+        en: "Downloads",
+    },
     "publish": {
         vi: "Duyệt",
         en: "Publish",
@@ -570,6 +574,26 @@ const Strings = {
     "fileNotFound": {
         vi: "Không tìm thấy tệp tin",
         en: "File not found",
+    },
+    "extension": {
+        vi: "Tệp mở rộng",
+        en: "Extension",
+    },
+    "fileSize": {
+        vi: "Khối lượng tệp",
+        en: "File size",
+    },
+    "copyFileLink": {
+        vi: "Sao chép đường dẫn",
+        en: "Copy file link",
+    },
+    "linkCopied": {
+        vi: "Đã sao chép",
+        en: "Link copied",
+    },
+    "failedToCopyLink": {
+        vi: "Sao chép thất bại",
+        en: "Failed to copy link",
     },
     "": {
         vi: "",
@@ -1094,31 +1118,6 @@ const Strings = {
         ru: 'Редактировать файл',
         en: 'Edit file',
         jp: 'ファイル編集'
-    },
-    'copyFileLink': {
-        ru: 'Копировать ссылку на файл',
-        en: 'Copy file link',
-        jp: 'ファイルリンクのコピー'
-    },
-    'linkCopied': {
-        ru: 'Ссылка скопирована',
-        en: 'Link copied',
-        jp: 'リンクがコピーされました'
-    },
-    'failedToCopyLink': {
-        ru: 'Ссылка скопирована',
-        en: 'Failed to copy link',
-        jp: 'リンクのコピーに失敗しました'
-    },
-    'extension': {
-        ru: 'Расширение',
-        en: 'Extension',
-        jp: '拡張子'
-    },
-    'fileSize': {
-        ru: 'Размер файла',
-        en: 'File size',
-        jp: 'ファイルサイズ'
     },
     'comments': {
         ru: 'Комментарии',

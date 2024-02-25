@@ -6,7 +6,7 @@ import { counter, declOfNum } from '@/support/Utils';
 import { BACKEND, Strings } from '@/support/Constants';
 import { StoreContext } from '@/stores/Store';
 import Dropdown from './Dropdown';
-import { DeleteThread } from './ModalPopup';
+import { DeletePopup } from './ModalPopup';
 
 const BlogInteraction = ({ dropdown = false, share = false }) => {
     const threadContextData = useContext(ThreadContext);
@@ -224,7 +224,7 @@ const BlogInteraction = ({ dropdown = false, share = false }) => {
                 </div>
             </div>
 
-            <DeleteThread open={open} close={() => setOpen(false)} onConfirmed={clearThread} />
+            <DeletePopup open={open} close={() => setOpen(false)} onConfirmed={clearThread} title="Clear" body="Clear answer" lang={lang} />
             <hr className='border-grey my-2' />
         </>
     )

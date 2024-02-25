@@ -23,7 +23,7 @@ const Dropdown = ({ children, lang, closed }) => {
             <div class="flex justify-center" ref={dropdown}>
                 <div class="relative">
                     <div className='flex gap-3 items-center'>
-                        <p>{Strings.options[lang]}</p>
+                        <p className='max-sm:hidden'>{Strings.options[lang]}</p>
                         <button onClick={() => setDropdownOpen(!dropdownOpen)} class="w-10 h-10 rounded-full flex items-center justify-center bg-grey/80">
                             <i class="fi fi-rr-menu-dots-vertical text-xl"></i>
                         </button>

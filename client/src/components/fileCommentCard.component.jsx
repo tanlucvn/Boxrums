@@ -53,7 +53,7 @@ const FileCommentCard = ({ index, leftVal, commentData }) => {
                     <p className='min-w-fit'>{dateFormat(commentData.createdAt)}</p>
                 </div>
 
-                <p className='text-xl font-gelasio ml-3'>{commentData.body}</p>
+                <p className='text-xl ml-3'>{commentData.body}</p>
 
                 {commentData.attach && <AttachCard data={commentData} />}
 

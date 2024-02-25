@@ -340,29 +340,29 @@ const AIWriter = ({ open, close }) => {
     )
 }
 
-const DeleteThread = ({ open, close, onConfirmed }) => {
+const DeletePopup = ({ open, close, onConfirmed, title, body, lang }) => {
 
     return (
         <AnimationWrapper>
             {open === true &&
                 <div class="font-sans bg-gray flex items-center justify-center h-screen">
-                    <div class="fixed z-10 inset-0 flex items-center justify-center">
+                    <div class="fixed z-[99] inset-0 flex items-center justify-center">
                         <div class="absolute inset-0 bg-gray-500 opacity-75" />
                         <div class="relative bg-white rounded-lg overflow-hidden shadow-xl max-w-screen-md w-full m-4 max-sm:h-full max-sm:m-0">
                             <div class="flex items-center justify-between px-6 py-4">
                                 <h3 class="text-lg leading-6 font-medium text-black">
-                                    Clear Thread
+                                    {title}
                                 </h3>
                                 <button class="flex justify-center items-center w-12 h-12 rounded-full bg-grey" onClick={() => close()}>
                                     <i class="fi fi-rr-cross text-2xl mt-1"></i>
                                 </button>
                             </div>
                             <div class="prose p-6 overflow-y-auto max-h-[35rem] border border-dark-grey/10 shadow-md max-sm:max-h-[40rem]">
-                                Are you sure you want to clear this thread?
+                                {body}
                             </div>
                             <div class="bg-white px-4 py-3 sm:px-6 flex align-items justify-end p-4 gap-4 flex-row">
-                                <button onClick={onConfirmed} type="button" class="text-lg text-black font-medium px-10 bg-transparent">Confirm</button>
-                                <button onClick={() => close()} type="button" class="btn-dark px-10">Cancel</button>
+                                <button onClick={onConfirmed} type="button" class="btn-dark px-7">Confirm</button>
+                                <button onClick={() => close()} type="button" class="btn-light px-7">{Strings.cancel[lang]}</button>
                             </div>
                         </div>
                     </div>
@@ -372,4 +372,4 @@ const DeleteThread = ({ open, close, onConfirmed }) => {
     )
 }
 
-export { RegEmailVerifications, LogEmailNotVerified, Terms, AIWriter, DeleteThread }
+export { RegEmailVerifications, LogEmailNotVerified, Terms, AIWriter, DeletePopup }

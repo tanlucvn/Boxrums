@@ -25,6 +25,8 @@ import File from "./pages/Uploads/File";
 import Boards from "./pages/Forum/Boards";
 import Dashboard from "./pages/Dashboard";
 import FilePage from "./pages/Uploads/File/FilePage";
+import Users from "./pages/Users";
+import User from "./pages/User";
 
 export const UserContext = createContext({})
 
@@ -69,8 +71,9 @@ const App = () => {
 
                                 <Route path="uploads" element={<Folders />} />
                                 <Route path="uploads/:folderName" element={<Folder />} />
-                                {/* <Route path="/file/:fileId" element={<File />} /> */}
 
+                                <Route exact path="users/*" element={<Users />} />
+                                <Route exact path="user/:userName" element={<User />} />
 
                                 <Route path="/dashboard/*" element={<Dashboard />} />
                             </Route>

@@ -488,7 +488,7 @@ const Strings = {
         en: "By answers count",
     },
     "noBansYet": {
-        vi: "Không có người dùng bị cấm chặn",
+        vi: "Không có mục cấm chặn",
         en: "No bans yet",
     },
     "unableToDisplayBans": {
@@ -595,6 +595,34 @@ const Strings = {
         vi: "Sao chép thất bại",
         en: "Failed to copy link",
     },
+    "newest": {
+        vi: "Mới nhất",
+        en: "Newest",
+    },
+    "oldest": {
+        vi: "Cũ nhất",
+        en: "Oldest",
+    },
+    "online": {
+        vi: "Trực tuyến",
+        en: "Online",
+    },
+    "karma": {
+        vi: "Điểm",
+        en: "Karma",
+    },
+    "unableToDisplayThreads": {
+        vi: "Không thể hiển thị bài đăng",
+        en: "Unable to display threads",
+    },
+    "noAnswersYet": {
+        vi: "Không có mục bình luận",
+        en: "No answers yet",
+    },
+    "unableToDisplayAnswers": {
+        vi: "Không thể hiển thị bình luận",
+        en: "Unable to display answers",
+    },
     "": {
         vi: "",
         en: ""
@@ -668,26 +696,6 @@ const Strings = {
         en: 'You are banned',
         jp: 'あなたは禁止されています'
     },
-    'users': {
-        ru: 'Пользователи',
-        en: 'Users',
-        jp: 'ユーザー'
-    },
-    'newest': {
-        ru: 'Новые',
-        en: 'Newest',
-        jp: '最新'
-    },
-    'oldest': {
-        ru: 'Старые',
-        en: 'Oldest',
-        jp: '最古'
-    },
-    'online': {
-        ru: 'Онлайн',
-        en: 'Online',
-        jp: 'オンライン'
-    },
     'noUsersYet': {
         ru: 'Пока нет пользователей',
         en: 'No users yet',
@@ -748,11 +756,6 @@ const Strings = {
         en: 'Error',
         jp: 'エラー'
     },
-    'noAnswersYet': {
-        ru: 'Пока нет ответов',
-        en: 'No answers yet',
-        jp: 'まだ答えはありません'
-    },
     'default': {
         ru: 'По умолчанию',
         en: 'Default',
@@ -777,16 +780,6 @@ const Strings = {
         ru: 'Невозможно отобразить доску',
         en: 'Unable to display board',
         jp: 'ボードを表示できません'
-    },
-    'unableToDisplayThreads': {
-        ru: 'Невозможно отобразить треды',
-        en: 'Unable to display threads',
-        jp: 'スレッドを表示できません'
-    },
-    'unableToDisplayAnswers': {
-        ru: 'Невозможно отобразить ответы',
-        en: 'Unable to display answers',
-        jp: '答えを表示できません'
     },
     'thread3': {
         ru: 'тредов',
@@ -1188,11 +1181,6 @@ const Strings = {
         ru: 'Нет подключения к интернету',
         en: 'No internet connection',
         jp: 'インターネットに接続できません'
-    },
-    'karma': {
-        ru: 'Карма',
-        en: 'Karma',
-        jp: 'カルマ'
     },
     'passwordChange': {
         ru: 'Смена пароля',

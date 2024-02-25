@@ -9,8 +9,6 @@ import { BACKEND, Strings } from '@/support/Constants';
 import { Section } from '@/components/Section';
 import Loader from '@/components/Loader';
 import Errorer from '@/components/Errorer';
-
-import FileContent from './FileContent';
 import Comments from './Comments';
 
 const File = ({ history, match }) => {

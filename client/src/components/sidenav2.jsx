@@ -84,6 +84,11 @@ const SideNav2 = () => {
                         {Strings.allBoards[lang]}
                     </NavLink>
 
+                    <NavLink to={'/users'} onClick={(e) => setPageState(e.target.innerText)} className='sidebar-link'>
+                        <i class="fi fi-rr-users"></i>
+                        {Strings.users[lang]}
+                    </NavLink>
+
                     <NavLink to={'/uploads'} onClick={(e) => setPageState(e.target.innerText)} className='sidebar-link'>
                         <i class="fi fi-rr-cube"></i>
                         {Strings.uploads[lang]}

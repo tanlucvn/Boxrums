@@ -5,6 +5,8 @@ import Avatar from 'boring-avatars'
 import { BACKEND, Strings, fileExt, imageTypes, videoTypes } from "@/support/Constants"
 import { StoreContext } from "@/stores/Store"
 import { ImageLightbox } from "@/components/VideoLightbox"
+import { UserOnline, UserRole, UserStatus } from "../UserBadge"
+import { CardBody } from "."
 
 export const ArticleCard = ({ data, threadData, full = false, preview = false, type, joinedList }) => {
     const { user, lang } = useContext(StoreContext)
@@ -240,5 +242,55 @@ export const FileCard = ({ data, deleteFile }) => {
                 }
             </div>
         </Link>
+    )
+}
+
+
+export const UserCard = ({ data, online, karma }) => {
+    const { lang } = useContext(StoreContext)
+
+    return (
+        <CardBody>
+            <Link to={'/user/' + data.name} className="card_head flex items-start">
+                <div className="card_head_inner">
+                    <div className="card_title flex items-center gap-3">
+                        {data.name ? (
+                            <div className="w-10 h-10">
+                                <Avatar
+                                    size={"100%"}
+                                    name={data.name}
+                                    variant="marble"
+                                    colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+                                />
+                            </div>
+                        ) : (
+                            <div className="head_profile">
+                                {data.displayName.charAt(0)}
+                            </div>
+                        )}
+                        <div className="flex flex-col flex-1 overflow-hidden leading-6">
+                            <div className="flex items-center">
+                                {data.displayName}
+                                <UserRole role={data.role} />
+                                {data.ban && <UserStatus status="ban" />}
+                            </div>
+                            {!online && (
+                                <div className="head_text">
+                                    <UserOnline onlineAt={data.onlineAt} />
+                                </div>
+                            )}
+                            {karma && (
+                                <div className="head_text">
+                                    {Strings.karma[lang]}:&nbsp;
+                                    <span className={data.karma > 0 ? 'positive' : data.karma < 0 ? 'negative' : ''}>
+                                        {counter(data.karma)}
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </Link>
+        </CardBody>
     )
 }

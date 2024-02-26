@@ -147,6 +147,9 @@
     .card_head_inner.row{
         @apply flex-row
     }
+    .card_content{
+        @apply py-1 px-3 mt-1 text-sm
+    }
     .card_body{
         @apply flex-[1_auto] min-w-0
     }
@@ -192,10 +195,18 @@
         @apply flex items-center text-dark-grey/80 break-words
     }
     .bullet{
-        @apply mr-2
+        @apply mx-2 text-dark-grey/80
     }
     .form_inner{
         @apply w-full max-w-[480px] mx-4 mt-4 max-sm:w-full m-[1rem_auto_0]
+    }
+
+    .card_count{
+        @apply text-dark-grey/80
+    }
+
+    .btn-delete{
+        @apply flex items-center p-2 px-3 rounded-md border border-light-grey ml-auto cursor-pointer hover:bg-red/30 hover:text-red hover:border-red/30
     }
 }
 

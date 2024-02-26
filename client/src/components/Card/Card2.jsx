@@ -250,47 +250,122 @@ export const UserCard = ({ data, online, karma }) => {
     const { lang } = useContext(StoreContext)
 
     return (
-        <CardBody>
-            <Link to={'/user/' + data.name} className="card_head flex items-start">
-                <div className="card_head_inner">
-                    <div className="card_title flex items-center gap-3">
-                        {data.name ? (
-                            <div className="w-10 h-10">
-                                <Avatar
-                                    size={"100%"}
-                                    name={data.name}
-                                    variant="marble"
-                                    colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
-                                />
-                            </div>
-                        ) : (
-                            <div className="head_profile">
-                                {data.displayName.charAt(0)}
+        <div className="block relative group p-6 bg-grey text-black border-2 border-grey rounded-lg shadow-sm my-4 max-w-lg max-md:max-w-none">
+            <Link to={'/user/' + data.name}>
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10">
+                        <Avatar
+                            size={"100%"}
+                            name={data.name}
+                            variant="marble"
+                            colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+                        />
+                    </div>
+
+                    <div className="flex flex-col flex-1 overflow-hidden leading-6">
+                        <div className="flex items-center">
+                            {data.displayName}
+                            <UserRole role={data.role} />
+                            {data.ban && <UserStatus status="ban" lang={lang} />}
+                        </div>
+                        {!online && (
+                            <div className="flex items-center text-dark-grey/80 break-words">
+                                <UserOnline onlineAt={data.onlineAt} />
                             </div>
                         )}
-                        <div className="flex flex-col flex-1 overflow-hidden leading-6">
-                            <div className="flex items-center">
-                                {data.displayName}
-                                <UserRole role={data.role} />
-                                {data.ban && <UserStatus status="ban" />}
+                        {karma && (
+                            <div className="flex items-center text-dark-grey/80 break-words">
+                                {Strings.karma[lang]}:&nbsp;
+                                <span className={data.karma > 0 ? 'positive' : data.karma < 0 ? 'negative' : ''}>
+                                    {counter(data.karma)}
+                                </span>
                             </div>
-                            {!online && (
-                                <div className="head_text">
-                                    <UserOnline onlineAt={data.onlineAt} />
-                                </div>
-                            )}
-                            {karma && (
-                                <div className="head_text">
-                                    {Strings.karma[lang]}:&nbsp;
-                                    <span className={data.karma > 0 ? 'positive' : data.karma < 0 ? 'negative' : ''}>
-                                        {counter(data.karma)}
-                                    </span>
-                                </div>
-                            )}
-                        </div>
+                        )}
                     </div>
                 </div>
             </Link>
-        </CardBody>
+        </div>
+    )
+}
+
+export const BannedAll = ({ data, deleteBan }) => {
+    const { lang } = useContext(StoreContext)
+
+    if (data.user === null) {
+        data.user = deletedUser
+    }
+
+    if (data.admin === null) {
+        data.admin = deletedUser
+    }
+
+    return (
+        <>
+            <div class="block relative group p-6 bg-grey text-black border-2 border-grey rounded-lg shadow-sm my-4">
+                {/* <h5 class="mb-2 text-2xl font-bold tracking-tight">Noteworthy technology acquisitions 2021</h5> */}
+                <div className="flex font-medium">
+                    <Link to={'/user/' + data.user.name}>
+                        <span>{data.user.displayName}</span>
+                    </Link>
+                    <span className="mx-2 font-normal">/</span>
+                    <p>
+                        <time>{dateFormat(data.createdAt)}</time>
+                    </p>
+                </div>
+
+                <div className="mt-5">
+                    <p>
+                        <span className="mr-2 font-medium">{Strings.reason[lang]}:</span>
+                        <span className="font-normal">{data.reason}</span>
+                    </p>
+                    <p>
+                        <span className="mr-2 font-medium">{Strings.banExpires[lang]}:</span>
+                        <span className="font-normal">{dateFormat(data.expiresAt)}</span>
+                    </p>
+                </div>
+
+                <div className="flex items-center gap-3 mt-5">
+                    <Link to={'/user/' + data.admin.name} reloadDocument="true" className="border-2 border-light-grey px-3 py-2 rounded-full cursor-pointer hover:bg-light-grey">
+                        Admin:&nbsp;
+                        <span className='text-purple'>{data.admin.displayName}</span>
+                    </Link>
+
+                    {deleteBan && (
+                        <div className="btn-delete" onClick={() => deleteBan(data._id)}>
+                            <i class="fi fi-rr-trash"></i>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </>
+    )
+}
+
+export const AnswerCard = ({ data }) => {
+    const { lang } = useContext(StoreContext)
+
+    return (
+        <>
+            <div class="block relative group p-6 bg-grey text-black border-2 border-grey rounded-lg shadow-sm my-4">
+                <div className="flex font-medium">
+                    <Link to={'/user/' + data.author.name}>
+                        <span>{data.author.displayName}</span>
+                    </Link>
+                    <span className="mx-2 font-normal">/</span>
+                    <p>
+                        <time>{dateFormat(data.createdAt)}</time>
+                    </p>
+                </div>
+
+                <div className="mt-5">
+                    <AttachCard data={data} />
+                    {data.body}
+                </div>
+
+                <div className="flex items-center gap-3 mt-5">
+                    <Link to={'/thread/' + data.threadId} className="border-2 border-light-grey px-3 py-2 rounded-full cursor-pointer hover:bg-light-grey">{Strings.open[lang]} {Strings.thread[lang]}</Link>
+                </div>
+            </div>
+        </>
     )
 }

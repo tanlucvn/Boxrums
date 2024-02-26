@@ -7,7 +7,7 @@ import { useMoreFetch } from '@/hooks/useMoreFetch';
 import { Strings } from '@/support/Constants';
 
 import DataView from '@/components/DataView';
-import { Card } from '@/components/Card';
+import { AnswerCard } from '@/components/Card/Card2';
 
 const Answers = ({ userData }) => {
     const { lang } = useContext(StoreContext)
@@ -21,7 +21,7 @@ const Answers = ({ userData }) => {
             noData={noData}
             loading={loading}
             moreLoading={moreLoading}
-            card={(props) => <Card {...props} preview type="answer" />}
+            card={(props) => <AnswerCard {...props} />}
             noDataMessage={Strings.noAnswersYet[lang]}
             errorMessage={Strings.unableToDisplayAnswers[lang]}
         />

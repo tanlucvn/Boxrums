@@ -8,7 +8,7 @@ import { useMoreFetch } from '@/hooks/useMoreFetch';
 import { BACKEND, Strings } from '@/support/Constants';
 
 import DataView from '@/components/DataView';
-import { BannedAll } from '@/components/Card';
+import { BannedAll } from '@/components/Card/Card2';
 
 const Bans = ({ userData }) => {
     const { user, token, lang } = useContext(StoreContext)

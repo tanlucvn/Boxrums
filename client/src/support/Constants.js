@@ -623,6 +623,26 @@ const Strings = {
         vi: "Không thể hiển thị bình luận",
         en: "Unable to display answers",
     },
+    "banned": {
+        vi: "Đã cấm",
+        en: "Banned"
+    },
+    "owner": {
+        vi: "Người tạo",
+        en: "Owner"
+    },
+    "reason": {
+        vi: "Lý do",
+        en: "Reason",
+    },
+    "banExpires": {
+        vi: "Thời hạn cấm",
+        en: "Ban expires",
+    },
+    "noResults": {
+        vi: "Không có kết quả",
+        en: "No results",
+    },
     "": {
         vi: "",
         en: ""
@@ -641,15 +661,15 @@ const Strings = {
         en: "Users"
     },
     "noAdminsYet": {
-        vi: "Chưa có quản trị viên",
+        vi: "Không có quản trị viên",
         en: "No admins yet",
     },
     "noUsersYet": {
-        vi: "Chưa có người dùng",
+        vi: "Không có người dùng",
         en: "No users yet"
     },
     "noUploadsYet": {
-        vi: "Chưa có tệp tin",
+        vi: "Không có tệp tin",
         en: "No uploads yet",
     },
     /* 
@@ -695,16 +715,6 @@ const Strings = {
         ru: 'Вы забанены',
         en: 'You are banned',
         jp: 'あなたは禁止されています'
-    },
-    'noUsersYet': {
-        ru: 'Пока нет пользователей',
-        en: 'No users yet',
-        jp: 'まだユーザーはいません'
-    },
-    'noAdminsYet': {
-        ru: 'Пока нет админов',
-        en: 'No admins yet',
-        jp: 'まだ管理者はいません'
     },
     'unableToDisplayUsers': {
         ru: 'Невозможно отобразить пользователей',
@@ -770,11 +780,6 @@ const Strings = {
         ru: 'Недавно отвеченные',
         en: 'Recently answered',
         jp: '最近答えした'
-    },
-    'board': {
-        ru: 'Доска',
-        en: 'Board',
-        jp: 'ボード'
     },
     'unableToDisplayBoard': {
         ru: 'Невозможно отобразить доску',
@@ -921,11 +926,6 @@ const Strings = {
         en: 'Answer in thread',
         jp: 'スレッドに答え'
     },
-    'reason': {
-        ru: 'Причина',
-        en: 'Reason',
-        jp: '理由'
-    },
     'banDuration': {
         ru: 'Продолжительность бана',
         en: 'Ban duration',
@@ -1012,11 +1012,6 @@ const Strings = {
         vi: 'yêu thích',
         en: 'likes',
     },
-    'banExpires': {
-        ru: 'Бан истекает',
-        en: 'Ban expires',
-        jp: '禁止期間が終了します'
-    },
     'userBanned': {
         ru: 'Пользователь забанен',
         en: 'User banned',
@@ -1031,11 +1026,6 @@ const Strings = {
         ru: 'Введите запрос для поиска',
         en: 'Enter your search term',
         jp: '検索語を入力してください'
-    },
-    'noResults': {
-        ru: 'Нет результатов',
-        en: 'No results',
-        jp: '結果がありません'
     },
     'unableToDisplaySearchResults': {
         ru: 'Невозможно отобразить результаты поиска',

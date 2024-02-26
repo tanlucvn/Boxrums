@@ -1,7 +1,7 @@
 import Loader from '@/components/Loader';
-import Errorer from '@/components/Errorer';
+import NoDataMessage from '../nodata.component';
 
-const DataView = ({ data, noData, loading, moreLoading, card: Card, noDataMessage, errorMessage, lang, children }) => {
+const DataView = ({ data, noData, loading, moreLoading, card: Card, noDataMessage, errorMessage, children }) => {
     return !noData ? (
         !loading ? (
             data.length ? (
@@ -16,9 +16,9 @@ const DataView = ({ data, noData, loading, moreLoading, card: Card, noDataMessag
 
                     {moreLoading && <Loader />}
                 </>
-            ) : <Errorer message={noDataMessage} />
+            ) : <NoDataMessage message={noDataMessage} />
         ) : <Loader />
-    ) : <Errorer message={errorMessage} />
+    ) : <NoDataMessage message={errorMessage} />
 }
 
 export default DataView;

@@ -478,15 +478,16 @@ const search = async (req, res, next) => {
             select: '_id name displayName picture'
         }]
         let results
+        const regexQuery = new RegExp(query, 'i');
         if (type === 'answers') {
-            results = await Answer.paginate({ $text: { $search: query } }, { sort: { createdAt: -1 }, page, limit, populate })
+            results = await Answer.paginate({ $or: [{ body: regexQuery }] }, { sort: { createdAt: -1 }, page, limit, populate })
         } else if (type === 'users') {
             const select = '_id name displayName createdAt onlineAt picture role ban'
-            results = await User.paginate({ $text: { $search: query } }, { sort: { onlineAt: -1 }, page, limit, select })
+            results = await User.paginate({ $or: [{ name: regexQuery }, { displayName: regexQuery }] }, { sort: { onlineAt: -1 }, page, limit, select })
         } else if (type === 'boards') {
-            results = await Board.paginate({ $text: { $search: query } }, { sort: { newestAnswer: -1 }, page, limit })
+            results = await Board.paginate({ $or: [{ title: regexQuery }] }, { sort: { createdAt: -1 }, page, limit })
         } else {
-            results = await Thread.paginate({ $text: { $search: query } }, { sort: { createdAt: -1 }, page, limit, populate })
+            results = await Thread.paginate({ $or: [{ title: regexQuery }] }, { sort: { createdAt: -1 }, page, limit, populate })
         }
 
         res.json(results)

@@ -1,3 +1,4 @@
+import { Strings } from '@/support/Constants';
 import { dateFormat } from '@/support/Utils';
 
 export const UserRole = ({ role }) => {
@@ -20,14 +21,18 @@ export const UserRole = ({ role }) => {
     )
 }
 
-export const UserStatus = ({ status }) => {
+export const UserStatus = ({ status, lang }) => {
     return (
         <>
             {status === 'ban' && (
-                <span className="user_status ban">ban</span>
+                <span class="bg-red/20 text-red text-sm font-medium me-2 px-2.5 py-0.5 rounded-full ml-2">
+                    {Strings.banned[lang]}
+                </span>
             )}
             {status === 'owner' && (
-                <span className="user_status">owner</span>
+                <span class="bg-purple/20 text-purple text-sm font-medium me-2 px-2.5 py-0.5 rounded-full ml-2">
+                    {Strings.owner[lang]}
+                </span>
             )}
         </>
     )

@@ -1,21 +1,12 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import AnimationWrapper from "@/common/page-animation";
 import Loader from "@/components/loader.component";
-import { UserContext } from "@/App";
-import AboutUser from "@/components/about.component";
-import { filterPaginationData } from "@/common/filter-pagination-data";
 import InPageNavigaion from "@/components/inpage-navigation.component";
-import NoDataMessage from "@/components/nodata.component";
-import BlogPostCard from "@/components/blog-post.component";
-import LoadMoreDataBtn from "@/components/load-more.component";
-import PageNotFound from "@/pages/NotFound";
-import toast, { Toaster } from "react-hot-toast";
 import { StoreContext } from "@/stores/Store";
 import { BACKEND, Strings } from "@/support/Constants";
 import Errorer from "@/components/Errorer";
-import Breadcrumbs from "@/components/Breadcrumbs";
 import Avatar from 'boring-avatars'
 import Threads from "./Threads";
 import Answers from "./Answers";
@@ -23,7 +14,6 @@ import Bans from "./Bans";
 
 const ProfilePage = ({ userName, type }) => {
   const { user, token, lang, setModalOpen, setPostType } = useContext(StoreContext)
-  const navigate = useNavigate()
 
   const [userData, setUserData] = useState({})
   const [loading, setLoading] = useState(true)

@@ -768,8 +768,8 @@ export const BannedAll = ({ data, deleteBan }) => {
             <header className="card_head">
                 <div className="card_head_inner">
                     <div className="card_info">
-                        <Link to={'/user/' + data.user.name} className="head_text bold">
-                            {data.user.displayName}
+                        <Link to={'/user/' + data.user.name} className="head_text font-semibold">
+                            <span>{data.user.displayName}</span>
                         </Link>
                         <span className="bullet">•</span>
                         <span className="head_text">
@@ -781,11 +781,11 @@ export const BannedAll = ({ data, deleteBan }) => {
 
             <div className="card_content">
                 <p>
-                    <span className="secondary_text">{Strings.reason[lang]}:</span>
+                    <span className="text-dark-grey/80 mr-2">{Strings.reason[lang]}:</span>
                     {data.reason}
                 </p>
                 <p>
-                    <span className="secondary_text">{Strings.banExpires[lang]}:</span>
+                    <span className="text-dark-grey/80 mr-2">{Strings.banExpires[lang]}:</span>
                     {dateFormat(data.expiresAt)}
                 </p>
             </div>
@@ -794,7 +794,7 @@ export const BannedAll = ({ data, deleteBan }) => {
                 <div className="act_btn foot_btn disable">
                     <span className="card_count">
                         Admin:&nbsp;
-                        <Link to={'/user/' + data.admin.name}>{data.admin.displayName}</Link>
+                        <Link to={'/user/' + data.admin.name} className='text-purple'>{data.admin.displayName}</Link>
                     </span>
                 </div>
 

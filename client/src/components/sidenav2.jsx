@@ -48,7 +48,7 @@ const SideNav2 = () => {
     return (
         <section className='relative flex gap-10 py-0 pl-7 pr-7 m-0 max-md:flex-col'>
 
-            <div className="sticky top-[80px] z-30 max-md:relative max-md:top-0">
+            <div className="fixed top-[80px] z-30 max-md:relative max-md:top-0">
 
                 <div className='relative md:hidden bg-white py-1 border-b border-grey flex flex-nowrap overflow-x-auto '>
                     <button ref={sideBarIconTab} className='p-5 capitalize ' onClick={chagnePageState}>
@@ -109,7 +109,7 @@ const SideNav2 = () => {
                 </div>
 
             </div>
-            <div className='max-md:-mt-8 mt-5 w-full'>
+            <div className='ml-64 max-md:-mt-8 mt-5 w-full max-md:ml-0'>
                 <Outlet />
             </div>
         </section>

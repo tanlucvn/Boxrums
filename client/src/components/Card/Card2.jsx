@@ -287,7 +287,24 @@ export const UserCard = ({ data, online, karma }) => {
         </div>
     )
 }
-
+export const SearchUserCard = ({ data }) => {
+    return (
+        <Link to={`/user/${data.name}`} className='flex gap-5 items-center mb-5'>
+            <div className='w-14 h-15'>
+                <Avatar
+                    size={"100%"}
+                    name={data.name}
+                    variant="marble"
+                    colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+                />
+            </div>
+            <div>
+                <h1 className='font-medium text-xl line-clamp-2'>{data.displayName}</h1>
+                <p className='text-dark-grey'>@{data.name}</p>
+            </div>
+        </Link>
+    )
+}
 export const BannedAll = ({ data, deleteBan }) => {
     const { lang } = useContext(StoreContext)
 
@@ -367,5 +384,54 @@ export const AnswerCard = ({ data }) => {
                 </div>
             </div>
         </>
+    )
+}
+
+export const DialoqueCard = ({ data }) => {
+    const { user, lang } = useContext(StoreContext)
+    let key = 'from'
+    if (user.id === data.from?._id) {
+        key = 'to'
+    }
+
+    if (data[key] === null) {
+        data[key] = deletedUser
+    }
+
+    return (
+        <div class="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
+            <Link
+                to={'/messages/' + data[key].name}
+                class="flex flex-row items-center hover:bg-grey rounded-xl p-2"
+            >
+                <div
+                    class="h-8 w-8"
+                >
+                    <Avatar
+                        size={"100%"}
+                        name={data[key].name}
+                        variant="marble"
+                        colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+                    />
+                </div>
+                <div class="ml-2 text-sm font-semibold">{data[key].displayName}</div>
+
+                {data.lastMessage?.from === user.id && <span>{Strings.you[lang]}: </span>}
+                {data.lastMessage?.body.length ? data.lastMessage.body : data.lastMessage?.file.length
+                    ? (
+                        <>
+                            <File weight='bold' />
+                            {Strings.file[lang]}
+                        </>
+                    ) : Strings.message[lang]
+                }
+
+                <UserOnline onlineAt={data[key].onlineAt} dot />
+                <UserRole role={data[key].role} />
+                {data[key].ban && <UserStatus status="ban" />}
+            </Link>
+        </div>
+
+
     )
 }

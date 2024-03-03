@@ -112,6 +112,10 @@ export const formatBytes = (bytes, decimals) => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
 }
 
+export const truncatedTitle = (title, max = 30) => {
+    return title.length > max ? title.slice(0, max) + '...' : title;
+}
+
 export const deletedUser = {
     _id: (Math.random() * 1000).toFixed(),
     name: 'deleted',

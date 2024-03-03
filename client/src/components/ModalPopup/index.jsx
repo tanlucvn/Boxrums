@@ -5,7 +5,7 @@ import { StoreContext } from '@/stores/Store';
 import AnimationWrapper from '@/common/page-animation';
 import { SentenceContext } from '../comment-field.component';
 
-const RegEmailVerifications = ({ open, data }) => {
+export const RegEmailVerifications = ({ open, data }) => {
     const [openModalPopup, setOpenModalPopup] = useState(open)
     const [resendCooldown, setResendCooldown] = useState(false);
     const [remainingTime, setRemainingTime] = useState(0);
@@ -82,7 +82,7 @@ const RegEmailVerifications = ({ open, data }) => {
     )
 }
 
-const LogEmailNotVerified = ({ open, data }) => {
+export const LogEmailNotVerified = ({ open, data }) => {
     const [openModalPopup, setOpenModalPopup] = useState(open)
     const [resendCooldown, setResendCooldown] = useState(false);
     const [remainingTime, setRemainingTime] = useState(0);
@@ -159,7 +159,7 @@ const LogEmailNotVerified = ({ open, data }) => {
     )
 }
 
-const Terms = ({ open }) => {
+export const Terms = ({ open }) => {
     const [openModalPopup, setOpenModalPopup] = useState(open)
 
     useEffect(() => {
@@ -224,7 +224,7 @@ const Terms = ({ open }) => {
     )
 }
 
-const AIWriter = ({ open, close }) => {
+export const AIWriter = ({ open, close }) => {
     const { lang } = useContext(StoreContext)
     const { setStc } = useContext(SentenceContext)
     const modalRef = useRef();
@@ -340,7 +340,7 @@ const AIWriter = ({ open, close }) => {
     )
 }
 
-const DeletePopup = ({ open, close, onConfirmed, title, body, lang }) => {
+export const DeletePopup = ({ open, close, onConfirmed, title, body, lang }) => {
 
     return (
         <AnimationWrapper>
@@ -371,5 +371,3 @@ const DeletePopup = ({ open, close, onConfirmed, title, body, lang }) => {
         </AnimationWrapper>
     )
 }
-
-export { RegEmailVerifications, LogEmailNotVerified, Terms, AIWriter, DeletePopup }

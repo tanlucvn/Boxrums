@@ -161,7 +161,7 @@ const FileUploadForm = ({ mini, title, hint, sendFiles, clearFiles, multiple = t
                     disabled={files.length >= maxCount}
                 />
                 <label htmlFor="miniFileInput" className="message_action_item send_file" title={Strings.chooseAFile[lang]}>
-                    PaperClip
+                    <i class="fi fi-rr-clip"></i>
                 </label>
             </Fragment>
         )

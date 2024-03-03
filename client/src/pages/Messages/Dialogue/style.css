@@ -1,0 +1,176 @@
+.main_section.with_hested_scroll {
+  @apply m-0;
+}
+
+.messages_wrapper {
+  @apply h-[calc(100vh-180px)];
+}
+
+.messages_wrapper .card_body.row {
+  @apply items-end;
+}
+
+.messages_wrapper .comments_form {
+  @apply relative bg-transparent py-2 px-0;
+}
+
+.messages_wrapper .comments_form {
+  @apply fixed bottom-0 w-full max-w-none transition-all z-10;
+}
+
+.messages_wrapper .form_block {
+  @apply border-none;
+}
+
+.messages_wrapper .comments_form textarea.input_area {
+  @apply leading-relaxed min-h-[36px] max-h-[98px];
+}
+
+.messages_wrapper .comments_form .card_item {
+  @apply mx-4;
+}
+
+.send_file {
+  @apply text-xl mr-1 px-1;
+}
+
+.send_file i {
+  @apply transform rotate-45;
+}
+
+.comments_form .attach_list {
+  @apply absolute bottom-12 left-0;
+}
+
+.messages_wrapper .user_head {
+  @apply px-0 mx-4 mb-4;
+}
+
+.messages_wrapper .empty-results,
+.messages_wrapper .content_loader {
+  @apply h-full mx-auto;
+}
+
+.messages_wrapper .more_loader {
+  @apply absolute inset-x-0 z-10;
+}
+
+.messages_list {
+  @apply mx-4;
+}
+
+.message_item{
+  @apply w-full;
+}
+
+.message_actions {
+  @apply hidden items-center justify-center absolute top-0 right-[-2.5rem] h-full;
+}
+
+.message_item.my .message_actions {
+  @apply left-[-2.5rem] right-auto;
+}
+
+.message_item:hover .message_actions {
+  @apply block;
+}
+
+.message_action_item {
+  @apply flex items-center justify-center rounded-[var(--border-radius)] transition-[var(--transition-background)] py-2 px-3 text-base cursor-pointer;
+}
+
+.message_action_item:hover {
+  @apply bg-[var(--secondary-bg-tint-focus)];
+}
+
+.message_body {
+  @apply relative rounded-r-[12px] rounded-l-[12px] rounded-bl-none flex flex-col bg-grey border border-light-grey border-b-0 py-2 px-3 my-2 max-w-[300px] min-w-[100px] w-max max-sm:max-w-[380px];
+}
+
+.message_item.my .message_body {
+  @apply bg-grey;
+}
+
+.message_item.my .message_body {
+  @apply rounded-l-[12px] rounded-br-none ml-auto;
+}
+
+.message_content {
+  @apply text-[0.95rem] break-words;
+}
+
+.message_content p {
+  @apply whitespace-pre-wrap;
+}
+
+.message_body.markdown img {
+  @apply max-w-full m-0 mb-3 float-none;
+}
+
+.message_info {
+  @apply flex items-center text-[0.8rem] text-dark-grey/80 ml-auto h-[15px];
+}
+.message_info i {
+  @apply text-purple text-[.8rem] relative top-[-1px] ml-auto;
+}
+
+.message_time {
+  @apply absolute right-[0.5rem] top-[0.6rem] text-[0.7rem] text-dark-grey/80;
+}
+
+.msg_file_grid {
+  @apply grid grid-cols-1 rounded-[var(--border-radius-inner)] overflow-hidden mb-[0.3rem];
+}
+
+.msg_file_grid.group {
+  @apply grid-cols-2;
+}
+
+.group > *:nth-child(2n) {
+  @apply justify-self-end;
+}
+
+.group > *:nth-child(2n-1) {
+  @apply justify-self-center;
+}
+
+.group > *:nth-child(2n-1):nth-last-of-type(1) {
+  @apply col-span-2;
+}
+
+.one .msg_file {
+  @apply min-w-[280px] h-[280px];
+}
+
+.one .simple_file {
+  @apply min-w-[120px] h-[120px];
+}
+
+.simple_file .attached_info {
+  @apply rounded-lg py-[0.1rem] px-[0.3rem] max-w-[120px];
+}
+
+.msg_file {
+  @apply w-full min-w-[140px] h-[140px] relative flex items-center justify-center bg-light-grey transition-[var(--transition-background)] cursor-pointer;
+}
+
+.msg_file.video::before {
+  @apply absolute w-[42px] h-[42px] bg-opacity-40 bg-black rounded-full;
+}
+
+.msg_file.video::after {
+  @apply absolute content-['\eb1e'] text-[26px] left-3;
+}
+
+.group .msg_file:not(.video)::after {
+  @apply absolute content-[''] border-[1px] border-solid border-black/20 inset-0;
+}
+
+.group_date_block {
+  @apply sticky top-0 flex items-center justify-center z-10;
+}
+
+.group_date_title {
+  @apply rounded-[var(--border-radius)] bg-black/25 text-[0.8em] px-2 py-0.5 select-none;
+}
+

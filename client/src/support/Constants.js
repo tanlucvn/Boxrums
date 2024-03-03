@@ -643,6 +643,14 @@ const Strings = {
         vi: "Không có kết quả",
         en: "No results",
     },
+    "isTyping": {
+        vi: "đang nhập",
+        en: "is typing",
+    },
+    "selectBoards": {
+        vi: "Chọn chủ đề",
+        en: "Select boards",
+    },
     "": {
         vi: "",
         en: ""
@@ -1161,11 +1169,6 @@ const Strings = {
         ru: 'Введите сообщение',
         en: 'Enter your message',
         jp: 'メッセージを入力してください'
-    },
-    'isTyping': {
-        ru: 'печатает',
-        en: 'is typing',
-        jp: '入力中'
     },
     'noInternetConnection': {
         ru: 'Нет подключения к интернету',

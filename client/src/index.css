@@ -63,7 +63,12 @@
     .input-box {
         @apply w-[100%] rounded-md p-4 bg-grey pl-12 border border-grey placeholder:text-black focus-within:bg-transparent;
     }
-
+    .select-box{
+        @apply outline-none focus:outline-none bg-grey p-4 mb-4 w-full rounded-md border-2 border-grey focus:border-black
+    }
+    .input_area{
+        @apply flex bg-transparent border-0 py-2 px-3 w-full max-h-[48vh] min-h-[12vh] text-sm leading-6 shadow-none transition-none resize-none
+    }
     input:disabled, input:disabled ~ .input-icon{
         @apply opacity-50;
     }
@@ -101,7 +106,7 @@
     }
 
     #textEditor *, .blog-page-content *{
-        @apply font-gelasio text-xl leading-10 md:text-2xl;
+        @apply font-worksans text-xl leading-10 md:text-2xl;
     }
 
     #textEditor a, .blog-page-content a{
@@ -207,6 +212,9 @@
 
     .btn-delete{
         @apply flex items-center p-2 px-3 rounded-md border border-light-grey ml-auto cursor-pointer hover:bg-red/30 hover:text-red hover:border-red/30
+    }
+    .form_block{
+        @apply relative w-full rounded-lg border-2 border-grey ease-in-out overflow-hidden
     }
 }
 

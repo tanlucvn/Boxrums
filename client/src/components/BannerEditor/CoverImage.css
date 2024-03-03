@@ -1,10 +1,19 @@
 .dev {
+    justify-content: center;
     height: 340px;
-    width: 860px;
+    width: 100%;
 }
 
 .hashnode {
+    justify-content: center;
     height: 420px;
-    width: 800px;
+    width: 100%;
+}
 
+.default {
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    max-height: 460px;
+    max-width: 800px;
 }

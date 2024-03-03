@@ -2,7 +2,7 @@ import React from 'react';
 
 
 const BasicTheme = ({ config }) => {
-    const { title, bgColor, pattern, author, icon, font, customIcon,platform } = config;
+    const { title, bgColor, pattern, author, icon, font, customIcon, platform } = config;
 
     return (
         <div className="p-4 bg-white ">
@@ -33,8 +33,8 @@ const BasicTheme = ({ config }) => {
                         <h2 className="text-xl ml-auto mr-2 font-semibold">{author}</h2>
 
                     </div>
-                    
-                    </div>
+
+                </div>
 
             </div>
 

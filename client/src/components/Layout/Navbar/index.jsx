@@ -1,6 +1,4 @@
 import { useContext, useEffect, useState } from 'react'
-import darkLogo from '@/imgs/logo-dark.png'
-import lightLogo from '@/imgs/logo-light.png'
 import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { ThemeContext, UserContext } from '@/App'
 import NavbarDropdown from './Dropdown'
@@ -30,21 +28,6 @@ const Navbar = () => {
             navigate(`/search/${query}`)
         }
     }
-    /* useEffect(() => {
-        if (access_token) {
-            axios.get(import.meta.env.VITE_SERVER_DOMAIN + '/new-notification', {
-                headers: {
-                    'Authorization': `Bearer ${access_token}`
-                }
-            })
-                .then(({ data }) => {
-                    setUserAuth({ ...userAuth, ...data })
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        }
-    }, [access_token]) */
 
     const changeChage = () => {
         let newTheme = theme === 'light' ? 'dark' : 'light'
@@ -57,7 +40,6 @@ const Navbar = () => {
         <>
             <nav className="navbar z-50">
                 <Link to='/'>
-                    {/* <img src={theme == 'light' ? darkLogo : lightLogo} alt="logo" className='flex-none w-10' /> */}
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 612 684" className={`w-10 ${theme === 'dark' ? 'opacity-90' : 'opacity-80'}`}>
                         <path fill={theme === 'dark' ? '#916bc2' : '#000'} d="M305.7 0L0 170.9v342.3L305.7 684 612 513.2V170.9L305.7 0z" />
                         <path fill="#fff" d="M305.7 80.1l-233.6 131 233.6 131 234.2-131-234.2-131" />
@@ -81,6 +63,7 @@ const Navbar = () => {
                     <button className='w-12 h-12 rounded-full bg-grey relative hover:bg-black/10 '>
                         <i className={'fi fi-rr-' + (theme == 'light' ? 'moon' : 'sun') + " text-xl block mt-1"} onClick={changeChage}></i>
                     </button>
+
                     {
                         user ?
                             <>
@@ -95,9 +78,6 @@ const Navbar = () => {
                                     </button>
                                 </Link>
                                 <div className="relative" onClick={handleUserNavPanel} onBlur={handleBlur}>
-                                    {/* <button className="w-12 h-12 mt1">
-                                        <img src={profile_img} alt="Profile" className='w-full h-full object-cover rounded-full' />
-                                    </button> */}
                                     <div className="cursor-pointer">
                                         <Avatar
                                             size={40}

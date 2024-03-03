@@ -62,9 +62,9 @@ const SideNav2 = () => {
 
                 </div>
 
-                <div className={'min-w-[200px] h-[calc(100vh-80px-64px)] md:h-cover md:sticky top-24 overflow-y-auto p-6 md:pr-0 md:border-grey md:border-r absolute max-md:top-[64px] bg-white max-md:w-screen max-md:overflow-hidden max-md:px-16 max-md:-ml-7 ' + (!showSideNav ? 'max-md:opacity-0 max-md:pointer-events-none' : 'opacity-100 pointer-events-auto')}>
+                <div className={'min-w-[200px] h-[calc(100vh-80px-64px)] md:h-cover md:sticky top-24 overflow-y-auto p-6 md:pr-0 md:border-grey md:border-r absolute max-md:top-[64px] bg-white max-md:w-screen max-md:overflow-hidden max-md:px-16 max-md:-ml-7 max-md:h-max ' + (!showSideNav ? 'max-md:opacity-0 max-md:pointer-events-none' : 'opacity-100 pointer-events-auto')}>
                     <h1 className='text-xl text-dark-grey mb-3 select-none'>{Strings.generals[lang]}</h1>
-                    <hr className='border-grey -ml-6 mb-8 mr-6' />
+                    <hr className='border-grey ml-6 mb-8 mr-6' />
 
 
                     <NavLink to={'/'} onClick={(e) => setPageState(e.target.innerText)} className='sidebar-link'>

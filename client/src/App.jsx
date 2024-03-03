@@ -27,6 +27,9 @@ import Dashboard from "./pages/Dashboard";
 import FilePage from "./pages/Uploads/File/FilePage";
 import Users from "./pages/Users";
 import User from "./pages/User";
+import Messages from "./pages/Messages";
+import Dialogues from "./pages/Messages/Dialogues";
+import Dialogue from "./pages/Messages/Dialogue";
 
 export const UserContext = createContext({})
 
@@ -63,7 +66,8 @@ const App = () => {
                 <UserContext.Provider value={{ userAuth, setUserAuth }}>
                     <Routes>
                         <Route path="/editor" element={<Editor />} />
-                        <Route path="/editor/:blog_id" element={<Editor />} />
+                        <Route path="/editor/:threadId" element={<Editor />} />
+
                         <Route path="/" element={<Layout />}>
                             <Route element={<SideNav2 />}>
                                 <Route index element={<Home />} />
@@ -80,7 +84,13 @@ const App = () => {
 
                             <Route path="/thread/:threadId" element={<Thread />} />
                             <Route path="/file/:fileId" element={<FilePage />} />
+
+                            <Route path="/messages" element={<Dialogues />}>
+                                <Route path=":userName" element={<Dialogue />} />
+                            </Route>
+
                             <Route path="/banner" element={<BannerEditor />} />
+
                             <Route /* path="dashboard" */ element={<SideNav />}>
                                 <Route path="notifications" element={<Notification />} />
                                 <Route path="blogs" element={<ManageBlog />} />

@@ -28,7 +28,7 @@ export default function LeftSidebar({ data, likes }) {
             </div>
 
             <div className="text-xs text-dark-grey mb-4">
-                <p>Khoảng {calculateReadingTime(data.body)} phút xem</p>
+                {/* <p>Khoảng {calculateReadingTime(data.body)} phút xem</p> */}
                 <p>{vietnameseTime}</p>
             </div>
 

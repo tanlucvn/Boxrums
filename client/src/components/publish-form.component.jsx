@@ -6,89 +6,104 @@ import Tag from './tags.component'
 import axios from 'axios'
 import { UserContext } from '../App'
 import { useNavigate, useParams } from 'react-router-dom'
+import { StoreContext } from '@/stores/Store'
+import { BACKEND } from '@/support/Constants'
 
 const PublishForm = () => {
   const charLength = 200
   const tagLimit = 10
   const navigate = useNavigate()
   const { blog_id } = useParams()
-  const { blog, setBlog } = useContext(EditorContext)
+  const { token } = useContext(StoreContext)
+  const { blog, setBlog, setEditorState } = useContext(EditorContext)
+
+  const handleClose = () => {
+    setEditorState("editor")
+  }
+
+  const handlePublish = (e) => {
+    if (e.target.className.includes('disable')) {
+      return
+    }
+    if (!blog.title) {
+      return toast.error("Write Blog Title befor publising")
+    }
+    if (!blog.boards) {
+      return toast.error("Please seletect a board")
+    }
+    if (!blog.desc.length || blog.desc.length > charLength)
+      return toast.error(`Write a description about your blog within ${charLength} characters to publish`)
+    if (!blog.tags.length || blog.tags.length > 10) {
+      return toast.error(`Write some tags about blog within ${tagLimit} taglimit to publish`)
+    }
+
+    const loadingToast = toast.loading("Publishing...")
+
+    const threadObj = {
+      title: blog.title, desc: blog.desc, banner: blog.banner, body: blog.body, tags: blog.tags, attach: null
+    }
+
+    e.target.classList.add('disable');
+
+    axios.post(BACKEND + '/api/thread/create', { ...threadObj, boardId: blog.boards.boardId }, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }).then((res) => {
+      e.target.classList.remove('disable');
+
+      toast.dismiss(loadingToast)
+      toast.success("Published successfully");
+
+      navigate(`/thread/${res.data._id}`)
+
+    }).catch(({ response }) => {
+      e.target.classList.remove('disable');
+      toast.dismiss(loadingToast)
+      return toast.error(response)
+    })
+  }
+
+  const handleTagsKeyDown = (e) => {
+    if (e.keyCode === 13 || e.keyCode === 188) {
+      e.preventDefault();
+      const tag = e.target.value;
+
+      if (blog?.tags?.length < tagLimit) {
+        if (!blog.tags.includes(tag) && tag.length) {
+          setBlog({ ...blog, tags: [...blog.tags, tag] })
+        }
+      }
+      else {
+        toast.error(`You can add max ${tagLimit} tags`)
+      }
+
+      e.target.value = ""
+    }
+  }
+
   // let {userAuth: {access_token}} = useContext(UserContext)
   /*  let { userAuth: { access_token } } = useContext(UserContext)
-   const handleClose = () => {
-     setEditorState("editor")
-   }
    const handleBlogTitleChange = (e) => {
      let input = e.target;
      setBlog({ ...blog, title: input.value })
    }
-   const handleKeyDown = (e) => {
-     if (e.keyCode === 13 || e.keyCode === 188) {
-       e.preventDefault();
-       let tag = e.target.value;
-       if (tags.length < tagLimit) {
-         if (!tags.includes(tag) && tag.length) {
-           setBlog({ ...blog, tags: [...tags, tag] })
-         }
-       }
-       else {
-         toast.error(`You can add max ${tagLimit} tags`)
-       }
-       e.target.value = ""
-     }
-   }
- 
-   const handlePublish = (e) => {
-     if (e.target.className.includes('disable')) {
-       return
-     }
-     if (!title.length) {
-       return toast.error("Write Blog Title befor publising")
-     }
-     if (!des.length || des.length > charLength)
-       return toast.error(`Write a description about your blog within ${charLength} characters to publish`)
-     if (!tags.length || tags.length > 10) {
-       return toast.error(`Write some tags about blog within ${tagLimit} taglimit to publish`)
-     }
- 
-     let loadingToast = toast.loading("Publishing...")
- 
-     let blogObj = {
-       title, banner, des, content, tags, draft: false
-     }
-     e.target.classList.add('disable');
-     axios.post(import.meta.env.VITE_SERVER_DOMAIN + '/create-blog', { ...blogObj, id: blog_id }, {
-       headers: {
-         'Authorization': `Bearer ${access_token}`
-       }
-     }).then(() => {
-       e.target.classList.remove('disable');
-       toast.dismiss(loadingToast)
-       toast.success("Published successfully");
-       setTimeout(() => {
-         navigate('/dashboard/blogs')
-       }, 5000);
-     }).catch(({ response }) => {
-       e.target.classList.remove('disable');
-       toast.dismiss(loadingToast)
-       return toast.error(response.data.error)
-     })
- 
+
    } */
 
-
+  console.log(blog)
   return (
     <AnimationWrapper >
       <section className='w-screen min-h-screen grid items-center lg:grid-cols-2 py-16 lg:gap-4'>
         <Toaster />
-        <button className='w-12 h-12 absolute right-[5vw] z-10 top-[5%] lg:top-[10%]' /* onClick={handleClose} */><i className='fi fi-rr-cross'></i></button>
+        <button className='w-12 h-12 absolute right-[5vw] z-10 top-[5%] lg:top-[10%]' onClick={handleClose}><i className='fi fi-rr-cross'></i></button>
         <div className='max-w-[500px] center '>
           <p className='text-dark-grey mb-1'>Preview</p>
           <div className='w-full aspect-video rounded-lg overflow-hidden bg-grey mt-4'>
             <img src={blog.banner} alt="Banner" />
           </div>
           <h1 className='text-4xl font-medium mt-2 leading-tight line-clamp-2'>{blog.title}</h1>
-          <p className='font-gelasio line-clamp-3 text-xl leading-7 mt-4'>{/* {des} */} Desc here</p>
+          <p className='font-gelasio line-clamp-3 text-xl leading-7 mt-4'>{blog.desc}</p>
         </div>
         <div className='border-grey lg:border-1 lg:pl-4'>
           <p className='text-dark-grey mb-2 mt-9'>Blog Title</p>
@@ -97,9 +112,9 @@ const PublishForm = () => {
           <p className='text-dark-grey mb-2 mt-9'>Short description about your blog</p>
           <textarea
             maxLength={charLength}
-            defaultValue={blog.des}
+            defaultValue={blog.desc}
             className='h-40 resize-none leading-7 input-box pl-4'
-            onChange={(e) => setBlog({ ...blog, des: e.target.value })}
+            onChange={(e) => setBlog({ ...blog, desc: e.target.value })}
             onKeyDown={(e) => {
               if (e.keyCode === 13)
                 e.preventDefault()
@@ -108,12 +123,12 @@ const PublishForm = () => {
 
           </textarea>
           <p className='mt-1 text-dark-grey text-sm text-right'>
-            {charLength - blog?.des?.length} characters left
+            {charLength - blog.desc.length} characters left
           </p>
 
           <p className='text-dark-grey mb-2 mt-9'>Topics - ( Helps in searching and ranking your blog post )</p>
           <div className='relative input-box pl-2 py-2 pb-4'>
-            <input type="text" placeholder='Topics' /* onKeyDown={handleKeyDown} */ className='sticky input-box bg-white top-0 lef0 pl-4 mb-3 focus:bg-white' />
+            <input type="text" placeholder='Topics' onKeyDown={handleTagsKeyDown} className='sticky input-box bg-white top-0 lef0 pl-4 mb-3 focus:bg-white' />
             {
               blog.tags && blog.tags.map((tag, i) => {
                 return <Tag key={i} tagIndex={i} tag={tag} />
@@ -121,7 +136,7 @@ const PublishForm = () => {
             }
           </div>
           <p className='mt-1 pt-1 mb-4 text-dark-grey text-right '>{tagLimit - blog?.tags?.length} Tags left</p>
-          <button /* onClick={handlePublish} */ className='btn-dark px-8 '>Publish</button>
+          <button onClick={handlePublish} className='btn-dark px-8 '>Publish</button>
         </div>
       </section>
     </AnimationWrapper>

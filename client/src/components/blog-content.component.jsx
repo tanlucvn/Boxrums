@@ -25,12 +25,13 @@ const List = ({ style, items }) => {
   )
 }
 const BlogContent = ({ block }) => {
+  // console.log("block", block)
+  const { type, data } = block;
 
-  console.log("block", block)
-  let { type, data } = block;
   if (type === "paragraph") {
     return <p dangerouslySetInnerHTML={{ __html: data.text }}></p>;
   }
+
   if (type === "header") {
     if (data.level === 3) {
       return <h3
@@ -43,15 +44,19 @@ const BlogContent = ({ block }) => {
       dangerouslySetInnerHTML={{ __html: data.text }}
     ></h2>
   }
+
   if (type === 'image') {
     return <Img url={data.file.url} caption={data.caption} />
   }
+
   if (type === 'quote') {
     return <Quote quote={data.quote} caption={data.caption} />
   }
+
   if (type === 'list') {
     return <List style={data.style} items={data.items} />
   }
+
   else {
     return <h1></h1>;
   }

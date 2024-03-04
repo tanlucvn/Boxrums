@@ -1,9 +1,17 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { counter, dateFormat, declOfNum } from '@/support/Utils'
 import Avatar from 'boring-avatars'
 import { Strings } from '@/support/Constants'
+import { StoreContext } from '@/stores/Store'
 
 const BlogPostCard = ({ data, lang }) => {
+    const { user } = useContext(StoreContext)
+    const [liked, setLiked] = useState(false)
+
+    useEffect(() => {
+        setLiked(user ? !!data.likes?.find(i => i._id === user.id) : false)
+    }, [user, data.likes])
+
     return (
         <a href={`/thread/${data._id}`} className='flex gap-8 items-center border-b border-grey pb-5 mb-4 hover:opacity-80'>
             <div className='w-full'>
@@ -20,11 +28,20 @@ const BlogPostCard = ({ data, lang }) => {
                     <p className='min-w-fit'>{dateFormat(data.createdAt)}</p>
                 </div>
                 <h1 className='blog-title'>{data.title}</h1>
-                <p className='my-3 text-xl leading-7 max-sm:hidden md:max-[1100px]:hidden line-clamp-2'>{data.body}</p>
+                <p className='my-3 text-xl leading-7 max-sm:hidden md:max-[1100px]:hidden line-clamp-2'>{data.desc}</p>
                 <div className='flex gap-4 mt-7'>
-                    {/* <span className='btn-light py-1 px-4'>{tags[0]}</span> */}
+                    {data.tags.length > 0 && <span className='btn-light py-1 px-4 capitalize'>{data.tags[0]}</span>}
                     <span className='ml-3 flex items-center gap-2 text-dark-grey'>
-                        <i className='fi fi-rr-heart text-xl'></i>{counter(data.likes ? data.likes.length : 0)} {declOfNum(data.likes ? data.likes.length : 0, Strings.like[lang], Strings.likes[lang])}
+                        {liked ?
+                            <>
+                                <i className='fi fi-sr-heart text-xl text-red'></i>
+                                {counter(data.likes ? data.likes.length : 0)} {declOfNum(data.likes ? data.likes.length : 0, Strings.like[lang], Strings.likes[lang])}
+                            </> :
+                            <>
+                                <i className='fi fi-rr-heart text-xl'></i>
+                                {counter(data.likes ? data.likes.length : 0)} {declOfNum(data.likes ? data.likes.length : 0, Strings.like[lang], Strings.likes[lang])}
+                            </>
+                        }
                     </span>
                 </div>
             </div>

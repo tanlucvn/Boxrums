@@ -7,6 +7,7 @@ import { BACKEND, Strings } from '@/support/Constants';
 import { StoreContext } from '@/stores/Store';
 import Dropdown from './Dropdown';
 import { DeletePopup } from './ModalPopup';
+import axios from 'axios';
 
 const BlogInteraction = ({ dropdown = false, share = false }) => {
     const threadContextData = useContext(ThreadContext);
@@ -40,99 +41,92 @@ const BlogInteraction = ({ dropdown = false, share = false }) => {
     }
 
     const pinThread = () => {
-        const formData = new FormData()
-        formData.append('threadId', thread._id)
-        formData.append('title', thread.title)
-        formData.append('body', thread.body)
-        formData.append('pined', !thread.pined)
+        const threadData = {
+            threadId: thread._id,
+            title: thread.title,
+            body: thread.body,
+            pined: !thread.pined
+        };
 
-        fetch(BACKEND + '/api/thread/adminedit', {
-            method: 'PUT',
+        axios.put(BACKEND + '/api/thread/adminedit', threadData, {
             headers: {
-                Authorization: 'Bearer ' + token
-            },
-            body: formData
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
         })
-            .then(response => response.json())
-            .then(data => {
-                if (!data.error) {
-                    setThread({ ...thread, ...data });
+            .then(response => {
+                if (!response.data.error) {
+                    setThread({ ...thread, ...response.data });
                 }
-                if (data.error) throw Error(data.error?.message || 'Error')
+                if (response.data.error) throw Error(response.data.error?.message || 'Error');
             })
-            .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message))
-
+            .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message));
     }
 
     const closeThread = () => {
-        const editApi = user.role >= 2 ? 'adminedit' : 'edit'
+        const editType = user.role >= 2 ? 'adminedit' : 'edit';
 
-        const formData = new FormData()
-        formData.append('threadId', thread._id)
-        formData.append('title', thread.title)
-        formData.append('body', thread.body)
-        formData.append('closed', !thread.closed)
+        const threadData = {
+            threadId: thread._id,
+            title: thread.title,
+            body: thread.body,
+            closed: !thread.closed
+        };
 
-        fetch(BACKEND + '/api/thread/' + editApi, {
-            method: 'PUT',
+        axios.put(BACKEND + '/api/thread/' + editType, threadData, {
             headers: {
-                Authorization: 'Bearer ' + token
-            },
-            body: formData
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            }
         })
-            .then(response => response.json())
-            .then(data => {
-                if (!data.error) {
-                    setThread({ ...thread, ...data })
+            .then(response => {
+                if (!response.data.error) {
+                    setThread({ ...thread, ...response.data });
                 }
-                if (data.error) throw Error(data.error?.message || 'Error')
+                if (response.data.error) throw Error(response.data.error?.message || 'Error');
             })
-            .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message))
-    }
+            .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message));
+    };
 
     const deleteThread = () => {
-        fetch(BACKEND + '/api/thread/delete', {
-            method: 'DELETE',
+        axios.delete(BACKEND + '/api/thread/delete', {
             headers: {
-                Authorization: 'Bearer ' + token,
+                'Authorization': 'Bearer ' + token,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ threadId: thread._id })
+            data: { threadId: thread._id }
         })
-            .then(response => response.json())
-            .then(data => {
-                if (!data.error) {
-                    setThread({ ...thread, ...data })
+            .then(response => {
+                if (!response.data.error) {
+                    setThread({ ...thread, ...response.data });
                 }
-                if (data.message) {
-                    toast.success(data.message)
-                    navigate('/')
-                } else throw Error(data.error?.message || 'Error')
+                if (response.data.message) {
+                    toast.success(response.data.message);
+                    navigate('/');
+                } else throw Error(response.data.error?.message || 'Error');
             })
-            .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message))
-    }
+            .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message));
+    };
 
     const clearThread = () => {
-        setOpen(false)
+        setOpen(false);
 
-        fetch(BACKEND + '/api/thread/clear', {
-            method: 'DELETE',
+        axios.delete(BACKEND + '/api/thread/clear', {
             headers: {
-                Authorization: 'Bearer ' + token,
+                'Authorization': 'Bearer ' + token,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ threadId: thread._id })
+            data: { threadId: thread._id }
         })
-            .then(response => response.json())
-            .then(data => {
-                if (!data.error) {
-                    setAnswers({ ...answers, ...data })
-                    toast.success("Cleared successfully")
+            .then(response => {
+                if (!response.data.error) {
+                    setAnswers({ ...answers, ...response.data });
+                    toast.success("Cleared successfully");
                 }
-                if (data.error) throw Error(data.error?.message || 'Error')
+                if (response.data.error) throw Error(response.data.error?.message || 'Error');
             })
-            .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message))
-    }
+            .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message));
+    };
 
     const onBan = () => {
         if (banned) {

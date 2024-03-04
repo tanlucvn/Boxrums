@@ -313,16 +313,20 @@ const createThread = async (req, res, next) => {
             if (err) return next(createHttpError.BadRequest({ upload: err.message }))
 
             const postDataString = JSON.stringify(req.body);
-            const { boardId, title, body } = JSON.parse(postDataString);
+            let { boardId, banner, title, body, desc, tags } = JSON.parse(postDataString);
 
             if (!boardId) return next(createHttpError.BadRequest('boardId must not be empty'))
-            if (title.trim() === '') return next(createHttpError.BadRequest('Thread title must not be empty'))
-            if (body.trim() === '') return next(createHttpError.BadRequest('Thread body must not be empty'))
+            if (!title) return next(createHttpError.BadRequest('Thread title must not be empty'))
+            if (!body) return next(createHttpError.BadRequest('Thread body must not be empty'))
+
+            if (tags) {
+                tags = tags.map(tag => tag.toLowerCase())
+            }
 
             const now = new Date().toISOString()
 
             let files = null
-            if (req.files.length) {
+            if (req.files && req.files.length) {
                 files = []
                 await Promise.all(req.files.map(async (item) => {
                     if (videoTypes.find(i => i === item.mimetype)) {
@@ -351,11 +355,14 @@ const createThread = async (req, res, next) => {
                 boardId,
                 pined: false,
                 closed: false,
+                banner: banner,
                 title: title.trim().substring(0, 100),
-                body: body.substring(0, 10000),
+                body: body,
+                desc: desc,
                 createdAt: now,
                 author: req.payload.id,
                 newestAnswer: now,
+                tags: tags,
                 attach: files
             })
 
@@ -533,7 +540,7 @@ const editThread = async (req, res, next) => {
 
             if (!threadId) return next(createHttpError.BadRequest('threadId must not be empty'))
             if (title.trim() === '') return next(createHttpError.BadRequest('Thread title must not be empty'))
-            if (body.trim() === '') return next(createHttpError.BadRequest('Thread body must not be empty'))
+            if (!body) return next(createHttpError.BadRequest('Thread body must not be empty'))
 
             try {
                 thread = await Thread.findById(threadId).populate({ path: 'author', select: 'role' })
@@ -644,7 +651,7 @@ const adminEditThread = async (req, res, next) => {
             if (!moder) return next(createHttpError.Unauthorized('Action not allowed'))
             if (!threadId) return next(createHttpError.BadRequest('threadId must not be empty'))
             if (title.trim() === '') return next(createHttpError.BadRequest('Board title must not be empty'))
-            if (body.trim() === '') return next(createHttpError.BadRequest('Thread body must not be empty'))
+            if (!body) return next(createHttpError.BadRequest('Thread body must not be empty'))
 
             const thread = await Thread.findById(threadId).populate({ path: 'author', select: 'role' })
 
@@ -655,7 +662,7 @@ const adminEditThread = async (req, res, next) => {
             }
             if (req.payload.role < thread.author.role) return next(createHttpError.Unauthorized('Action not allowed'))
 
-            if (req.files.length && thread.attach && thread.attach.length) {
+            if (req.files && req.files.length && thread.attach && thread.attach.length) {
                 const files = thread.attach.reduce((array, item) => {
                     if (item.thumb) {
                         return [
@@ -677,7 +684,7 @@ const adminEditThread = async (req, res, next) => {
             }
 
             let files = thread.attach
-            if (req.files.length) {
+            if (req.files && req.files.length) {
                 files = []
                 await Promise.all(req.files.map(async (item) => {
                     if (videoTypes.find(i => i === item.mimetype)) {
@@ -704,7 +711,7 @@ const adminEditThread = async (req, res, next) => {
 
             const obj = {
                 title: title.trim().substring(0, 100),
-                body: body.substring(0, 1000),
+                body: body,
                 pined: pined === undefined ? thread.pined : pined,
                 closed: closed === undefined ? thread.closed : closed,
                 attach: files
@@ -804,7 +811,7 @@ const createAnswer = async (req, res, next) => {
             const { threadId, answeredTo, body } = req.body;
 
             if (!threadId) return next(createHttpError.BadRequest('threadId must not be empty'))
-            if (body.trim() === '') return next(createHttpError.BadRequest('Answer body must not be empty'))
+            if (!body) return next(createHttpError.BadRequest('Answer body must not be empty'))
 
             const now = new Date().toISOString()
 
@@ -979,7 +986,7 @@ const editAnswer = async (req, res, next) => {
             const { answerId, body } = JSON.parse(postDataString);
 
             if (!answerId) return next(createHttpError.BadRequest('answerId must not be empty'))
-            if (body.trim() === '') return next(createHttpError.BadRequest('Answer body must not be empty'))
+            if (!body) return next(createHttpError.BadRequest('Answer body must not be empty'))
 
             const answer = await Answer.findById(answerId).populate({ path: 'author', select: 'role' })
 

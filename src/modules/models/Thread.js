@@ -14,7 +14,16 @@ const threadSchema = new Schema({
   closed: Boolean,
   banner: String,
   title: String,
-  body: String,
+  desc: {
+    type: String,
+    maxlength: 200,
+  },
+  body: {
+    type: []
+  },
+  tags: {
+    type: [String],
+  },
   createdAt: Date,
   author: {
     type: Types.ObjectId,

@@ -4,25 +4,12 @@ import { Link } from "react-router-dom"
 import Avatar from 'boring-avatars'
 import { BACKEND, Strings, fileExt, imageTypes, videoTypes } from "@/support/Constants"
 import { StoreContext } from "@/stores/Store"
-import { ImageLightbox } from "@/components/VideoLightbox"
 import { UserOnline, UserRole, UserStatus } from "../UserBadge"
-import { CardBody } from "."
 
 export const ArticleCard = ({ data, threadData, full = false, preview = false, type, joinedList }) => {
     const { user, lang } = useContext(StoreContext)
-    const likesList = useRef()
     const [likes, setLikes] = useState(data.likes)
     const [liked, setLiked] = useState(user ? !!data.likes?.find(i => i._id === user.id) : false)
-
-    const removeMarkdown = (markdownText) => {
-        const regex = /(?:__|[*]{2})(.*?)(?:__|[*]{2})|\[(.*?)\]\(.*?\)|`([^`]+)`|![.*?]\(.*?\)|<.*?>/g;
-
-        const plainText = markdownText.replace(regex, (match, p1, p2, p3) => {
-            return p1 || p2 || p3 || match;
-        });
-
-        return plainText;
-    }
 
     useEffect(() => {
         setLikes(data.likes)
@@ -45,14 +32,16 @@ export const ArticleCard = ({ data, threadData, full = false, preview = false, t
                     <p className='min-w-fit'>{dateFormat(data.createdAt)}</p>
                 </div>
                 <h1 className='blog-title'>{data.title}</h1>
-                <p className='my-3 text-xl font-gelasio leading-7 max-sm:hidden md:max-[1100px]:hidden line-clamp-2'>{removeMarkdown(data.body)}</p>
+                <p className='my-3 text-xl leading-7 max-sm:hidden md:max-[1100px]:hidden line-clamp-2'>
+                    {data.desc}
+                </p>
 
                 {/* IMG/VIDEO/FILE BOX */}
                 <AttachCard data={data} />
 
                 {/* LIKE COUNTER */}
                 <div className='flex gap-4 mt-7'>
-                    <span className='btn-light py-1 px-4'>{data.tags ? tags[0] : "Test"}</span>
+                    {data.tags.length > 0 && <span className='btn-light py-1 px-4 capitalize'>{data.tags[0]}</span>}
                     {liked ?
                         <span className='ml-3 flex items-center gap-2 text-dark-grey'>
                             <i className='fi fi-sr-heart text-xl text-red'></i>
@@ -67,7 +56,8 @@ export const ArticleCard = ({ data, threadData, full = false, preview = false, t
             </div>
             <div className='h-28 aspect-square bg-grey'>
                 {
-                    data.banner ? <img src={data.banner} alt="Banner" className='w-full h-full aspect-square object-cover' /> :
+                    data.banner ?
+                        <img src={data.banner} alt="Banner" className='w-full h-full aspect-square object-cover' /> :
                         <Avatar
                             size={"100%"}
                             name={data.title}
@@ -162,7 +152,7 @@ export const FolderCard = ({ data }) => {
         <Link to={`/uploads/${data.name}`} className='flex gap-8 items-center border-b border-grey pb-5 mb-4 hover:opacity-90'>
             <div className='w-full'>
                 <h1 className='blog-title'>{data.title}</h1>
-                <p className='my-3 text-xl font-gelasio leading-7 max-sm:hidden md:max-[1100px]:hidden line-clamp-2'>{data.body}</p>
+                <p className='my-3 text-xl leading-7 max-sm:hidden md:max-[1100px]:hidden line-clamp-2'>{data.body}</p>
 
                 {/* FILES COUNTER */}
                 <div className='flex gap-4 mt-7'>
@@ -216,7 +206,7 @@ export const FileCard = ({ data, deleteFile }) => {
                     <p className='min-w-fit'>{dateFormat(data.createdAt)}</p>
                 </div>
                 <h1 className='blog-title'>{data.title}</h1>
-                <p className='my-3 text-xl font-gelasio leading-7 max-sm:hidden md:max-[1100px]:hidden line-clamp-2'>{removeMarkdown(data.body)}</p>
+                <p className='my-3 text-xl leading-7 max-sm:hidden md:max-[1100px]:hidden line-clamp-2'>{removeMarkdown(data.body)}</p>
 
                 {/* IMG/VIDEO/FILE BOX */}
                 <AttachCard data={data} />
@@ -244,7 +234,6 @@ export const FileCard = ({ data, deleteFile }) => {
         </Link>
     )
 }
-
 
 export const UserCard = ({ data, online, karma }) => {
     const { lang } = useContext(StoreContext)
@@ -287,6 +276,7 @@ export const UserCard = ({ data, online, karma }) => {
         </div>
     )
 }
+
 export const SearchUserCard = ({ data }) => {
     return (
         <Link to={`/user/${data.name}`} className='flex gap-5 items-center mb-5'>
@@ -305,6 +295,7 @@ export const SearchUserCard = ({ data }) => {
         </Link>
     )
 }
+
 export const BannedAll = ({ data, deleteBan }) => {
     const { lang } = useContext(StoreContext)
 

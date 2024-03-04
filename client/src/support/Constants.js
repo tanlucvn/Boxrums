@@ -651,6 +651,10 @@ const Strings = {
         vi: "Chọn chủ đề",
         en: "Select boards",
     },
+    "generateBanner": {
+        vi: "Tạo ảnh bìa",
+        en: "Generate a banner",
+    },
     "": {
         vi: "",
         en: ""

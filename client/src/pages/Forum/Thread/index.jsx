@@ -131,7 +131,7 @@ const Thread = () => {
         setLiked(user ? !!thread?.likes?.find(i => i === user.id) : false)
     }, [user, thread?.likes])
 
-    useLayoutEffect(() => {
+    /* useLayoutEffect(() => {
         const searchHeadings = setTimeout(() => {
             const contentElements = document.querySelectorAll('.md-editor-preview h1');
             const headingsData = [];
@@ -155,8 +155,9 @@ const Thread = () => {
         }, 1000);
 
         return () => clearTimeout(searchHeadings);
-    }, [threadId]);
+    }, [threadId]); */
 
+    console.log(thread)
     return (
         <AnimationWrapper>
             {
@@ -172,18 +173,20 @@ const Thread = () => {
                                     <CommentContainer />
                                     <div className='max-w-[900px] center py-10 max-lg:px-[5vw] rounded-2xl'>
                                         <div className='p-10 rounded-2xl border-2 border-grey'>
-                                            {/* <img src={"banner"} alt="Banner" className='aspect-video' /> */}
                                             <div className='aspect-video'>
                                                 {
-                                                    thread.banner ? thread.banner : <Avatar
-                                                        size={"100%"}
-                                                        name={thread.title}
-                                                        variant="marble"
-                                                        colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
-                                                        square="true"
-                                                    />
+                                                    thread.banner ?
+                                                        <img src={thread.banner} alt="Banner" className='aspect-video' /> :
+                                                        <Avatar
+                                                            size={"100%"}
+                                                            name={thread.title}
+                                                            variant="marble"
+                                                            colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+                                                            square="true"
+                                                        />
                                                 }
                                             </div>
+
                                             <div className='mt-12'>
                                                 <div className='flex items-center gap-5'>
                                                     <h2>
@@ -206,7 +209,6 @@ const Thread = () => {
                                                 </div>
                                                 <div className='flex max-sm:flex-col justify-between my-8'>
                                                     <div className='flex gap-5 items-start '>
-                                                        {/* <img src={thread,author.} alt="Author" className='w-12 h-12 rounded-full' /> */}
                                                         <Avatar
                                                             size={40}
                                                             name={thread.author.name}
@@ -228,21 +230,17 @@ const Thread = () => {
 
                                             <div className='my-12 blog-page-content'>
                                                 {
-                                                    /* content[0].blocks.map((block, i) => {
+                                                    thread && thread.body && thread.body[0].blocks.map((block, i) => {
                                                         return <div className='my-4 md:my-8' key={i}>
                                                             <BlogContent block={block} />
                                                         </div>
-                                                    }) */
-                                                    <div className='my-4 md:my-8'>
-                                                        <Markdown source={thread.body} />
-                                                    </div>
+                                                    })
                                                 }
-
                                             </div>
 
                                             <BlogInteraction share="true" />
 
-                                            {
+                                            {/* {
                                                 filteredSimilarBlog !== null && filteredSimilarBlog.length ?
                                                     <>
                                                         <h1 className='font-medium text-2xl mt-14 mb-10'>Similar Blogs</h1>
@@ -255,14 +253,13 @@ const Thread = () => {
                                                         }
                                                     </>
                                                     : ""
-                                            }
-
+                                            } */}
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className='thread-rightSidebar col-span-3 sticky top-0 pl-4 pr-6 max-lg:px-[5vw] max-lg:col-span-6 max-lg:relative max-lg:top-6 max-sm:col-span-12 max-sm:top-8'>
-                                    <RightSidebar headings={headings} loading={rightSidebarLoading} />
+                                    {/* <RightSidebar headings={headings} loading={rightSidebarLoading} /> */}
                                 </div>
                             </div>
                         </ThreadContext.Provider>

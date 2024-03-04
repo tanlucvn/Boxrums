@@ -13,7 +13,7 @@ const Editor = () => {
   const { user } = useContext(StoreContext)
 
   let { threadId } = useParams()
-  const [blog, setBlog] = useState({})
+  const [blog, setBlog] = useState({ banner: "", title: "", desc: "", body: [], tags: [] }) //initial state
   const [editorState, setEditorState] = useState("editor");
   const [textEditor, setTextEditor] = useState({ isReady: false })
   const [loading, setLoading] = useState(true)

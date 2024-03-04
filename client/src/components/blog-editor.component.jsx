@@ -20,7 +20,7 @@ import BlogEditorSidebar from './blog-editor-sidebar'
 import { StoreContext } from '@/stores/Store'
 import { BACKEND, Strings } from '@/support/Constants'
 import { truncatedTitle } from '@/support/Utils'
-import { SelectBox } from './Form/Input'
+import { InputBox, SelectBox } from './Form/Input'
 
 const BlogEditor = () => {
     const { threadId } = useParams()
@@ -33,20 +33,20 @@ const BlogEditor = () => {
     const [boards, setBoards] = useState([])
     const [isTextareaFocused, setIsTextareaFocused] = useState(false);
     const fullLang = lang === "vi" ? "Vietnamese" : "English"
+    const titleWithoutMarkdown = blog.title.replace(/[^a-zA-Z\sÀ-ÖÔÕƠà-öôõơẠ-ỹạ-ỹĂ-ỹĨ-ỹĩ-ỹĀ-ỹā-ỹĂ-ỹă-ỹĐđ-ỹ0-9]/g, '');
     const textareaRef = useRef(null)
-
-    const content = ""
 
     useEffect(() => {
         if (!textEditor.isReady) {
             setTextEditor(new EditorJS({
                 holderId: "textEditor",
-                data: Array.isArray(content) ? content[0] : content,
+                data: blog.body ? blog.body[0] : blog.body,
                 tools: tools,
                 placeholder: "Let's write an awesome story"
             }))
         }
     }, [])
+
     const handleChangeBanner = (e) => {
         if (e.target.files[0]) {
             let ladingTast = toast.loading('Uploading...')
@@ -84,19 +84,19 @@ const BlogEditor = () => {
         switch (lang) {
             case "en": {
                 switch (theme) {
-                    case "light": return <img src={blog.banner ? blog.banner : bgBannerLightEN} alt="Default Banner" className='z-20' onError={handleError} />
-                    case "dark": return <img src={blog.banner ? blog.banner : bgBannerDarkEN} alt="Default Banner" className='z-20' onError={handleError} />
-                    case "default": return <img src={blog.banner ? blog.banner : bgBannerDarkEN} alt="Default Banner" className='z-20' onError={handleError} />
+                    case "light": return <img src={blog?.banner ? blog.banner : bgBannerLightEN} alt="Default Banner" className='z-20' onError={handleError} />
+                    case "dark": return <img src={blog?.banner ? blog.banner : bgBannerDarkEN} alt="Default Banner" className='z-20' onError={handleError} />
+                    case "default": return <img src={blog?.banner ? blog.banner : bgBannerDarkEN} alt="Default Banner" className='z-20' onError={handleError} />
                 }
             }
             case "vi": {
                 switch (theme) {
-                    case "light": return <img src={blog.banner ? blog.banner : bgBannerLightVI} alt="Default Banner" className='z-20' onError={handleError} />
-                    case "dark": return <img src={blog.banner ? blog.banner : bgBannerDarkVI} alt="Default Banner" className='z-20' onError={handleError} />
-                    case "default": return <img src={blog.banner ? blog.banner : bgBannerDarkVI} alt="Default Banner" className='z-20' onError={handleError} />
+                    case "light": return <img src={blog?.banner ? blog.banner : bgBannerLightVI} alt="Default Banner" className='z-20' onError={handleError} />
+                    case "dark": return <img src={blog?.banner ? blog.banner : bgBannerDarkVI} alt="Default Banner" className='z-20' onError={handleError} />
+                    case "default": return <img src={blog?.banner ? blog.banner : bgBannerDarkVI} alt="Default Banner" className='z-20' onError={handleError} />
                 }
             }
-            case "default": return <img src={blog.banner ? blog.banner : bgBannerLightEN} alt="Default Banner" className='z-20' onError={handleError} />
+            case "default": return <img src={blog?.banner ? blog.banner : bgBannerLightEN} alt="Default Banner" className='z-20' onError={handleError} />
         }
     }
 
@@ -147,6 +147,9 @@ const BlogEditor = () => {
                 if (data.blocks.length) {
                     setBlog({ ...blog, body: data })
                     setEditorState("publish")
+                    /* console.log("default data", data)
+                    console.log("blog data", blog.body) */
+
                 }
                 else {
                     return toast.error("Write Something in your blog to publish it")
@@ -158,7 +161,90 @@ const BlogEditor = () => {
         }
     }
 
-    // console.log(blog)
+    const AIWritingBody = async () => {
+        if (!blog.title) return toast.error("Enter title (topic) before use AI writing content")
+
+        try {
+            const response = await fetch('https://typli.ai/api/completion', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ prompt: `You are a Typli, a helpful writing assistant that writes SEO friendly articles in markdown format.\nWrite in a conversational tone.\nWrite for a 9th grade reading level.\nKeep paragraphs to 2 sentences max. Be concise.\nAvoid Overly Complex vocabulary unless it's necessary for the topic. Steer clear of using overly complex vocabulary or jargon.\nRemember to write in markdown format and include h3 headers, lists, bold or italic text, quotes, statistics (only use verified statistics, don't make anything up) and references to external articles when necessary.\n\nWrite an article around 900 words in markdown format about ${titleWithoutMarkdown} with ${fullLang} languages in a Blog Article writing style. Do not include images in the output.\n`, temperature: 1.2 })
+            });
+
+            const markdownData = await response.text(); // Nhận dữ liệu markdown từ API
+
+            if (markdownData && textEditor.isReady) {
+                // Phân tích dữ liệu markdown thành các block và đặt vào Editor.js
+                textEditor.render({
+                    blocks: parseMarkdownToBlocks(markdownData)
+                }).then(() => {
+                    console.log('Markdown content set successfully');
+                }).catch((error) => {
+                    console.error('Setting markdown content failed: ', error);
+                });
+            }
+        } catch (err) {
+            console.error('Error:', err);
+        }
+    }
+
+    const parseMarkdownToBlocks = (markdownData) => {
+        const blocks = [];
+
+        // Tách dữ liệu markdown thành các đoạn văn và tiêu đề
+        const paragraphsAndHeadings = markdownData.split(/\n\s*\n/);
+
+        paragraphsAndHeadings.forEach(item => {
+            // Xác định loại của mỗi phần tử (đoạn văn hoặc tiêu đề) bằng cách kiểm tra ký tự đầu tiên
+            if (item.startsWith('#')) {
+                // Tiêu đề
+                const level = item.match(/#+/)[0].length; // Xác định cấp độ của tiêu đề dựa trên số ký tự #
+                const text = item.replace(/#+\s*/, ''); // Lấy nội dung của tiêu đề bằng cách loại bỏ các ký tự # và khoảng trắng sau đó
+                blocks.push({
+                    type: 'header',
+                    data: {
+                        text: text.trim(), // Xóa khoảng trắng thừa ở đầu và cuối chuỗi
+                        level: level
+                    }
+                });
+            } else {
+                // Đoạn văn
+                blocks.push({
+                    type: 'paragraph',
+                    data: {
+                        text: item.trim() // Xóa khoảng trắng thừa ở đầu và cuối chuỗi
+                    }
+                });
+            }
+        });
+
+        return blocks;
+    };
+
+
+    const setHeadingContent = () => {
+        if (textEditor.isReady) {
+            const headingBlock = {
+                type: 'header',
+                data: {
+                    text: 'Your Heading Text Here',
+                    level: 3
+                }
+            };
+
+            textEditor.render({ blocks: [headingBlock] }).then(() => {
+                console.log('Heading content set successfully');
+            }).catch((error) => {
+                console.error('Setting heading content failed: ', error);
+            });
+        }
+    };
+
+    useEffect(() => {
+        // console.log("blog data", blog)
+    }, [blog]);
 
     return (
         <>
@@ -170,7 +256,7 @@ const BlogEditor = () => {
                     </svg>
                 </Link>
                 <p className='max-md:hidden text-black line-clamp-1 w-full'>
-                    {blog.title ? truncatedTitle(blog.title, 30) : "New Blog"}
+                    {blog?.title ? truncatedTitle(blog.title, 30) : "New Blog"}
                 </p>
                 <div className='flex gap-4 ml-auto'>
                     <button className='btn-dark py-2 ' onClick={publishThread}>Publish</button>
@@ -184,26 +270,25 @@ const BlogEditor = () => {
                         <div className='relative aspect-video hover:opacity-80 bg-white border-4 border-grey group'>
                             <label htmlFor="uploadBanner">
                                 {showBanner()}
-                                {/* {blog.banner &&
-                                    <button class="absolute w-10 h-10 flex items-center justify-center top-5 left-5 bg-grey rounded-full cursor-pointer z-30" onClick={() => setBlog({ ...blog, banner: "" })}>
-                                        <i class="fi fi-rr-cross-small text-2xl mt-2"></i>
-                                    </button>
-                                } */}
 
                                 <input type="file" id='uploadBanner' accept='.png, .jpg, .jpeg' hidden onChange={handleChangeBanner} />
 
-                                <button className='btn-light absolute py-2 bottom-0 right-0 m-7 hidden group-hover:block' onClick={() => setBannerWrapper(true)}>
-                                    Generate Banner
-                                </button>
+                                {!blog.banner ?
+                                    <button className='btn-dark absolute py-2 bottom-0 right-0 m-7 hidden group-hover:block' onClick={() => setBannerWrapper(true)}>
+                                        {Strings.generateBanner[lang]}
+                                    </button> :
+                                    <button className='btn-light absolute py-2 bottom-0 right-0 m-7 hidden text-red bg-red/20 group-hover:block' onClick={() => setBlog({ ...blog, banner: "" })}>
+                                        {Strings.delete[lang]}
+                                    </button>
+                                }
                             </label>
                         </div>
 
                         <SelectBox options={boards} className="mt-5 bg-white" onClick={loadBoards} value={blog?.boards ? blog.boards.title : Strings.selectBoards[lang]} onChange={(value) => setBlog({ ...blog, boards: { boardId: value._id, title: value.title, threadsCount: value.threadsCount, answersCount: value.answersCount } })} />
 
-
-                        {/* ============= TITLE ============= */}
+                        {/* TITLE */}
                         <textarea
-                            defaultValue={blog.title ? blog.title : ''}
+                            defaultValue={blog?.title ? blog.title : ''}
                             placeholder='Blog Title'
                             className='text-4xl font-medium w-full h-20 outline-none resize-none mt-10 leading-tight placeholder:opacity-40 bg-white'
                             onKeyDown={handleTitleKeyDown}
@@ -234,11 +319,26 @@ const BlogEditor = () => {
                             </div>
                         }
 
-
                         <hr className='w-full opacity-10 my-5' />
 
+                        <div className='flex gap-5 items-center justify-end'>
+                            <button
+                                className="flex items-center justify-center font-medium gap-3 border-2 border-grey my-5 px-4 py-2 w-max min-w-[20px] h-9 text-black bg-transparent text-sm rounded-md cursor-pointer select-none"
+                                onClick={() => {
+                                    AIWritingBody()
+                                }}
+                                title={Strings.aiWriter[lang]}
+                            >
+                                <i className="fi fi-rr-magic-wand"></i>
+                                <p>{Strings.aiWriter[lang]}</p>
+                            </button>
+                        </div>
+
+                        {/* BODY */}
                         <div id="textEditor">
                         </div>
+
+
                     </div>
                 </section>
             </AnimationWrapper>

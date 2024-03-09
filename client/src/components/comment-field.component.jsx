@@ -52,6 +52,10 @@ const CommentField = ({ action, index = undefined, replyingTo = undefined, setRe
       .catch(err => {
         // setLoading(false)
         // setErrors({ general: err.message === '[object Object]' ? 'Error' : err.message })
+        if (err.message == "thread is closed") {
+          toast.error(Strings.threadIsClosed[lang])
+          setComment("");
+        }
       })
   }
 
@@ -122,6 +126,7 @@ const CommentField = ({ action, index = undefined, replyingTo = undefined, setRe
   return (
     <SentenceContext.Provider value={{ stc, setStc }}>
       <Toaster />
+
       <button
         className="relative flex items-center justify-center font-medium gap-3 border-2 border-grey my-5 px-4 py-2 w-max min-w-[20px] h-9 text-black bg-transparent text-sm rounded-md cursor-pointer select-none"
         onClick={() => setOpen(true)}
@@ -132,6 +137,7 @@ const CommentField = ({ action, index = undefined, replyingTo = undefined, setRe
       </button>
 
       <AIWriter open={open} close={() => setOpen(false)} />
+
       <textarea
         value={comment}
         onChange={(e) => setComment(e.target.value)}
@@ -139,6 +145,7 @@ const CommentField = ({ action, index = undefined, replyingTo = undefined, setRe
         className='input-box pl-5 placeholder:text-dark-grey resize-none h-[150px] overflow-auto'
       >
       </textarea>
+
       <FileUploadForm
         sendFiles={getFile}
         clearFiles={clearFiles}

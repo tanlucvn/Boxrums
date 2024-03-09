@@ -1,45 +1,32 @@
-import { useContext } from 'react';
-import { toast } from 'react-hot-toast';
-
+import { useContext, useEffect } from 'react';
 import { StoreContext } from '@/stores/Store';
-
 import { useMoreFetch } from '@/hooks/useMoreFetch';
-
-import { BACKEND, Strings } from '@/support/Constants';
-
+import { Strings } from '@/support/Constants';
 import DataView from '@/components/DataView';
 import { BannedAll } from '@/components/Card/Card2';
 
 const Bans = ({ userData }) => {
-    const { user, token, lang } = useContext(StoreContext)
+    const { user, lang, setPostType, setModalOpen, postRes } = useContext(StoreContext)
     document.title = 'Forum | ' + userData.displayName + ' / ' + Strings.bans[lang]
 
     const { loading, moreLoading, noData, items, setItems } = useMoreFetch({ method: 'user/bans', params: { userId: userData.id ? userData.id : userData._id }, auth: true })
 
     const deleteBan = (banId) => {
-        const conf = window.confirm(`${Strings.delete[lang]}?`)
-
-        if (!conf) return
-
-        fetch(BACKEND + '/api/ban/history/delete', {
-            method: 'DELETE',
-            headers: {
-                Authorization: 'Bearer ' + token,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ banId })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (!data.error) {
-                    toast.success(data.message)
-                    setItems(items.filter(item => item._id !== banId))
-                } else throw Error(data.error?.message || 'Error')
-            })
-            .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message))
+        setPostType({
+            type: 'deleteBan',
+            banId: banId,
+        });
+        setModalOpen(true);
     }
 
-    console.log(userData)
+    useEffect(() => {
+        if (postRes && postRes.banDeleted && postRes.banDeleted.data) {
+            const updatedItems = items.filter(item => item._id !== postRes.banDeleted.data._id);
+            setItems(updatedItems);
+        }
+        // eslint-disable-next-line
+    }, [postRes.banDeleted])
+
     return (
         <DataView
             data={items}

@@ -1,5 +1,5 @@
 import { Fragment, useContext, useEffect, useRef, useState } from "react"
-import { counter, dateFormat, declOfNum } from "@/support/Utils"
+import { counter, dateFormat, declOfNum, deletedUser } from "@/support/Utils"
 import { Link } from "react-router-dom"
 import Avatar from 'boring-avatars'
 import { BACKEND, Strings, fileExt, imageTypes, videoTypes } from "@/support/Constants"
@@ -51,7 +51,8 @@ export const ArticleCard = ({ data, threadData, full = false, preview = false, t
                         <span className='ml-3 flex items-center gap-2 text-dark-grey'>
                             <i className='fi fi-rr-heart text-xl'></i>
                             {counter(likes ? likes.length : 0)} {declOfNum(likes ? likes.length : 0, Strings.like[lang], Strings.likes[lang])}
-                        </span>}
+                        </span>
+                    }
                 </div>
             </div>
             <div className='h-28 aspect-square bg-grey'>
@@ -68,6 +69,63 @@ export const ArticleCard = ({ data, threadData, full = false, preview = false, t
                 }
             </div>
         </Link>
+    )
+}
+
+export const BlogPostCard = ({ data, lang }) => {
+    const { user } = useContext(StoreContext)
+    const [liked, setLiked] = useState(false)
+
+    useEffect(() => {
+        setLiked(user ? !!data.likes?.find(i => i._id === user.id) : false)
+    }, [user, data.likes])
+
+    return (
+        <a href={`/thread/${data._id}`} className='flex gap-8 items-center border-b border-grey pb-5 mb-4 hover:opacity-80'>
+            <div className='w-full'>
+                <div className='flex gap-2 items-center mb-7'>
+                    <div className="w-6 h-6">
+                        <Avatar
+                            size={"100%"}
+                            name={data.author.name}
+                            variant="marble"
+                            colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+                        />
+                    </div>
+                    <p className='line-clamp-1'>{data.author.displayName} @{data.author.name}</p>
+                    <p className='min-w-fit'>{dateFormat(data.createdAt)}</p>
+                </div>
+                <h1 className='blog-title'>{data.title}</h1>
+                <p className='my-3 text-xl leading-7 max-sm:hidden md:max-[1100px]:hidden line-clamp-2'>{data.desc}</p>
+                <div className='flex gap-4 mt-7'>
+                    {data.tags.length > 0 && <span className='btn-light py-1 px-4 capitalize'>{data.tags[0]}</span>}
+                    <span className='ml-3 flex items-center gap-2 text-dark-grey'>
+                        {liked ?
+                            <>
+                                <i className='fi fi-sr-heart text-xl text-red'></i>
+                                {counter(data.likes ? data.likes.length : 0)} {declOfNum(data.likes ? data.likes.length : 0, Strings.like[lang], Strings.likes[lang])}
+                            </> :
+                            <>
+                                <i className='fi fi-rr-heart text-xl'></i>
+                                {counter(data.likes ? data.likes.length : 0)} {declOfNum(data.likes ? data.likes.length : 0, Strings.like[lang], Strings.likes[lang])}
+                            </>
+                        }
+                    </span>
+                </div>
+            </div>
+            <div className='h-28 aspect-square bg-grey'>
+                {
+                    data.banner ? <img src={data.banner} alt="Banner" className='w-full h-full aspect-square object-cover' /> :
+                        <Avatar
+                            size={"100%"}
+                            name={data.title}
+                            variant="marble"
+                            colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+                            square="true"
+                        />
+                }
+            </div>
+        </a>
     )
 }
 
@@ -180,48 +238,97 @@ export const FolderCard = ({ data }) => {
 }
 
 export const FileCard = ({ data, deleteFile }) => {
+    const { user, lang } = useContext(StoreContext)
+    const [likes, setLikes] = useState(data.likes)
+    const [liked, setLiked] = useState(user ? !!data.likes?.find(i => i._id === user.id) : false)
+    const [tagsParse, setTagsParse] = useState(data.tags && data.tags.length > 0 && JSON.parse(data.tags[0]))
 
-    const removeMarkdown = (markdownText) => {
-        const regex = /(?:__|[*]{2})(.*?)(?:__|[*]{2})|\[(.*?)\]\(.*?\)|`([^`]+)`|![.*?]\(.*?\)|<.*?>/g;
-
-        const plainText = markdownText.replace(regex, (match, p1, p2, p3) => {
-            return p1 || p2 || p3 || match;
-        });
-
-        return plainText;
-    }
-
+    useEffect(() => {
+        setLikes(data.likes)
+        setLiked(user ? !!data.likes?.find(i => i._id === user.id) : false)
+    }, [user, data.likes])
 
     return (
-        <Link to={`/thread/${data._id}`} className='flex gap-8 items-center border-b border-grey pb-5 mb-4 hover:opacity-90'>
+        <Link to={`/file/${data._id}`} className='flex gap-8 items-center border-b border-grey pb-5 mb-4 hover:opacity-80'>
             <div className='w-full'>
                 <div className='flex gap-2 items-center mb-7'>
-                    <Avatar
-                        size={40}
-                        name={data.author.name}
-                        variant="marble"
-                        colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
-                    />
-                    <p className='line-clamp-1'>{data.author.displayName} @{data.author.name}</p>
+                    {data.author !== null ?
+                        <>
+                            <div className="w-6 h-6">
+                                <Avatar
+                                    size={"100%"}
+                                    name={data.author.name}
+                                    variant="marble"
+                                    colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+                                />
+                            </div>
+                            <p className='line-clamp-1'>{data.author.displayName} @{data.author.name}</p>
+                        </> :
+                        <>
+                            <div className="w-6 h-6">
+                                <Avatar
+                                    size={"100%"}
+                                    name={deletedUser.name}
+                                    variant="marble"
+                                    colors={['#C20D90']}
+                                />
+                            </div>
+                            <p className='line-clamp-1'>{deletedUser.displayName} @{deletedUser.name}</p>
+                        </>
+                    }
+
                     <p className='min-w-fit'>{dateFormat(data.createdAt)}</p>
                 </div>
                 <h1 className='blog-title'>{data.title}</h1>
-                <p className='my-3 text-xl leading-7 max-sm:hidden md:max-[1100px]:hidden line-clamp-2'>{removeMarkdown(data.body)}</p>
+                <p className='my-3 text-xl leading-7 max-sm:hidden md:max-[1100px]:hidden line-clamp-2'>
+                    {data.desc}
+                </p>
 
                 {/* IMG/VIDEO/FILE BOX */}
                 <AttachCard data={data} />
 
                 {/* LIKE COUNTER */}
                 <div className='flex gap-4 mt-7'>
-                    {/* <span className='btn-light py-1 px-4'>{tags[0]}</span> */}
+                    {data.tags.length > 0 && <span className='btn-light py-1 px-4 capitalize'>{tagsParse}</span>}
+                    {liked ?
+                        <span className='ml-3 flex items-center gap-2 text-dark-grey'>
+                            <i className='fi fi-sr-heart text-xl text-red'></i>
+                            {counter(likes ? likes.length : 0)} {declOfNum(likes ? likes.length : 0, Strings.like[lang], Strings.likes[lang])}
+                        </span>
+                        :
+                        <span className='ml-3 flex items-center gap-2 text-dark-grey'>
+                            <i className='fi fi-rr-heart text-xl'></i>
+                            {counter(likes ? likes.length : 0)} {declOfNum(likes ? likes.length : 0, Strings.like[lang], Strings.likes[lang])}
+                        </span>
+                    }
+
                     <span className='ml-3 flex items-center gap-2 text-dark-grey'>
-                        <i className='fi fi-rr-heart text-xl'></i>50 likes{/* {total_likes} */}
+                        <i className='fi fi-rr-download text-xl'></i>
+                        {counter(data.downloads ? data.downloads : 0)} {declOfNum(data.downloads ? data.downloads.length : 0, Strings.download[lang], Strings.downloads[lang])}
                     </span>
                 </div>
             </div>
+
+            <div className="h-28 aspect-square flex justify-center items-center">
+                {imageTypes.find(i => i === data.file.type) ? (
+                    <div
+                        className="card_left"
+                        style={{ backgroundImage: `url(${BACKEND + data.file.url})` }}
+                    />
+                ) : videoTypes.find(i => i === data.file.type) ? (
+                    <div
+                        className="card_left"
+                        style={{ backgroundImage: `url(${BACKEND + data.file.thumb})` }}
+                    />
+                ) : (
+                    <div className="card_left empty" />
+                )}
+            </div>
+
             <div className='h-28 aspect-square bg-grey'>
                 {
-                    data.banner ? <img src={data.banner} alt="Banner" className='w-full h-full aspect-square object-cover' /> :
+                    data.banner ?
+                        <img src={data.banner} alt="Banner" className='w-full h-full aspect-square object-cover' /> :
                         <Avatar
                             size={"100%"}
                             name={data.title}
@@ -299,6 +406,24 @@ export const SearchUserCard = ({ data }) => {
 export const BannedAll = ({ data, deleteBan }) => {
     const { lang } = useContext(StoreContext)
 
+    function calculateCooldown(expiresAt) {
+        if (!expiresAt) return '';
+
+        const now = new Date();
+        const expirationDate = new Date(expiresAt);
+        const difference = expirationDate - now;
+
+        if (difference <= 0) return Strings.timeExpired[lang];
+
+        const hours = Math.floor(difference / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+        const result = `${hours} ${Strings.hours[lang]} ${minutes} ${Strings.minutes[lang]} ${seconds} ${Strings.seconds[lang]}`;
+
+        return result;
+    }
+
     if (data.user === null) {
         data.user = deletedUser
     }
@@ -322,22 +447,37 @@ export const BannedAll = ({ data, deleteBan }) => {
                 </div>
 
                 <div className="mt-5">
-                    <p>
+                    <p className="my-2">
                         <span className="mr-2 font-medium">{Strings.reason[lang]}:</span>
                         <span className="font-normal">{data.reason}</span>
                     </p>
-                    <p>
+                    <p className="my-2">
+                        <span className="mr-2 font-medium">Ngày tạo:</span>
+                        <span className="font-normal">{dateFormat(data.createdAt)}</span>
+                    </p>
+                    <p className="my-2">
                         <span className="mr-2 font-medium">{Strings.banExpires[lang]}:</span>
                         <span className="font-normal">{dateFormat(data.expiresAt)}</span>
+                    </p>
+                    <p className="my-2">
+                        <span className="mr-2 font-medium">Tình trạng:</span>
+                        <span className="font-normal">{calculateCooldown(data.expiresAt)}</span>
                     </p>
                 </div>
 
                 <div className="flex items-center gap-3 mt-5">
-                    <Link to={'/user/' + data.admin.name} reloadDocument="true" className="border-2 border-light-grey px-3 py-2 rounded-full cursor-pointer hover:bg-light-grey">
-                        Admin:&nbsp;
+                    <Link to={'/user/' + data.admin.name} reloadDocument="true" className="flex items-center gap-3 border-2 border-light-grey px-3 py-2 rounded-full cursor-pointer hover:bg-light-grey">
+                        <div className="w-8 h-8">
+                            <Avatar
+                                size={'100%'}
+                                name={data.admin.name}
+                                variant="marble"
+                                colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+                            />
+                        </div>
+
                         <span className='text-purple'>{data.admin.displayName}</span>
                     </Link>
-
                     {deleteBan && (
                         <div className="btn-delete" onClick={() => deleteBan(data._id)}>
                             <i class="fi fi-rr-trash"></i>
@@ -378,7 +518,7 @@ export const AnswerCard = ({ data }) => {
     )
 }
 
-export const DialoqueCard = ({ data }) => {
+/* export const DialoqueCard = ({ data }) => {
     const { user, lang } = useContext(StoreContext)
     let key = 'from'
     if (user.id === data.from?._id) {
@@ -424,5 +564,59 @@ export const DialoqueCard = ({ data }) => {
         </div>
 
 
+    )
+} */
+
+export const DialoqueCard = ({ data }) => {
+    const { user, lang } = useContext(StoreContext)
+    let key = 'from'
+    if (user.id === data.from?._id) {
+        key = 'to'
+    }
+
+    if (data[key] === null) {
+        data[key] = deletedUser
+    }
+
+    return (
+        <div className={data.lastMessage.read ? 'card_block' : 'card_block noread'}>
+            <header className="card_head user_head">
+                <div className="card_head_inner">
+                    <Link to={'/messages/' + data[key].name} className="flex">
+                        <div
+                            class="h-8 w-8"
+                        >
+                            <Avatar
+                                size={"100%"}
+                                name={data[key].name}
+                                variant="marble"
+                                colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+                            />
+                        </div>
+
+                        <div className="user_info">
+                            <div className="user_info_top">
+                                {data[key].displayName}
+                                <UserOnline onlineAt={data[key].onlineAt} dot />
+                                <UserRole role={data[key].role} />
+                                {data[key].ban && <UserStatus status="ban" />}
+                            </div>
+                            <div className="head_text">
+                                {data.lastMessage?.from === user.id && <span>{Strings.you[lang]}: </span>}
+                                {data.lastMessage?.body.length ? data.lastMessage.body : data.lastMessage?.file.length
+                                    ? (
+                                        <>
+                                            <File weight='bold' />
+                                            {Strings.file[lang]}
+                                        </>
+                                    ) : Strings.message[lang]
+                                }
+                            </div>
+                        </div>
+                    </Link>
+                    <span className="message_time">{dateFormat(data.lastMessage.createdAt, 'mini')}</span>
+                </div>
+            </header>
+        </div>
     )
 }

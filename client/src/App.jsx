@@ -30,6 +30,7 @@ import User from "./pages/User";
 import Messages from "./pages/Messages";
 import Dialogues from "./pages/Messages/Dialogues";
 import Dialogue from "./pages/Messages/Dialogue";
+import { AuthRoute, GeneralRoute } from "./components/ProtectedRoute";
 
 export const UserContext = createContext({})
 
@@ -70,24 +71,26 @@ const App = () => {
 
                         <Route path="/" element={<Layout />}>
                             <Route element={<SideNav2 />}>
-                                <Route index element={<Home />} />
-                                <Route path="boards" element={<Boards />} />
+                                <Route element={<GeneralRoute />}>
+                                    <Route index element={<Home />} />
+                                    <Route path="boards" element={<Boards />} />
 
-                                <Route path="uploads" element={<Folders />} />
-                                <Route path="uploads/:folderName" element={<Folder />} />
+                                    <Route path="uploads" element={<Folders />} />
+                                    <Route path="uploads/:folderName" element={<Folder />} />
 
-                                <Route exact path="users/*" element={<Users />} />
-                                <Route exact path="user/:userName" element={<User />} />
+                                    <Route exact path="users/*" element={<Users />} />
+                                    <Route exact path="user/:userName" element={<User />} />
 
-                                <Route path="/dashboard/*" element={<Dashboard />} />
+                                    <Route path="/messages/*" element={<Messages />} />
+
+                                    <Route path="/dashboard/*" element={<Dashboard />} />
+                                </Route>
                             </Route>
 
                             <Route path="/thread/:threadId" element={<Thread />} />
                             <Route path="/file/:fileId" element={<FilePage />} />
 
-                            <Route path="/messages" element={<Dialogues />}>
-                                <Route path=":userName" element={<Dialogue />} />
-                            </Route>
+
 
                             <Route path="/banner" element={<BannerEditor />} />
 
@@ -100,8 +103,12 @@ const App = () => {
                                 <Route path="edit-profile" element={<EditProfile />} />
                                 <Route path="change-password" element={<ChangePassword />} />
                             </Route>
-                            <Route path="login" element={<Login type="sign-in" />} />
-                            <Route path="register" element={<Register type="sign-up" />} />
+
+                            <Route element={<AuthRoute />}>
+                                <Route path="login" element={<Login type="sign-in" />} />
+                                <Route path="register" element={<Register type="sign-up" />} />
+                            </Route>
+
                             <Route path="search/:query" element={<SearchPage />} />
                             <Route path="user/:id" element={<ProfilePage />} />
                             <Route path="blog/:blog_id" element={<BlogPage />} />

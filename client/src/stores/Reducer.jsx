@@ -30,6 +30,11 @@ const Reducer = (state, action) => {
                 ...state,
                 postType: action.payload
             }
+        case 'SET_POST_RES':
+            return {
+                ...state,
+                postRes: action.payload
+            }
         case 'SET_FAB_VISIBLE':
             return {
                 ...state,

@@ -5,7 +5,7 @@ import { useMoreFetch } from '@/hooks/useMoreFetch';
 import { Strings } from '@/support/Constants';
 
 import DataView from '@/components/DataView';
-import BlogPostCard from '@/components/blog-post.component';
+import { BlogPostCard } from '@/components/Card/Card2';
 
 const Threads = ({ lang, query, type }) => {
   const { loading, moreLoading, noData, items, refetch } = useMoreFetch({ method: 'search', params: { query, type } })

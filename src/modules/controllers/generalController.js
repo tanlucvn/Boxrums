@@ -1,5 +1,6 @@
 import { Types } from 'mongoose';
 import createHttpError from 'http-errors';
+import moment from 'moment';
 
 import User from '../models/User.js';
 import Board from '../models/Board.js';
@@ -15,37 +16,101 @@ import AuthHistory from '../models/AuthHistory.js';
 
 const getStats = async (req, res, next) => {
     try {
-        const bans = await User.find({ ban: { $ne: null } })
+        const bans = await User.find({ ban: { $ne: null } });
 
-        res.json([{
-            _id: 1,
-            title: 'Users',
-            count: await User.countDocuments()
-        }, {
-            _id: 2,
-            title: 'Boards',
-            count: await Board.countDocuments()
-        }, {
-            _id: 3,
-            title: 'Threads',
-            count: await Thread.countDocuments()
-        }, {
-            _id: 4,
-            title: 'Answers',
-            count: await Answer.countDocuments()
-        }, {
-            _id: 5,
-            title: 'Bans',
-            count: bans.length
-        }, {
-            _id: 6,
-            title: 'Files',
-            count: await File.countDocuments()
-        }])
+        // Tính toán thời điểm bắt đầu và kết thúc của tháng trước
+        const startOfLastMonth = moment().subtract(1, 'months').startOf('month');
+        const endOfLastMonth = moment().subtract(1, 'months').endOf('month');
+
+        // Tính toán thời điểm bắt đầu và kết thúc của tháng hiện tại
+        const startOfThisMonth = moment().startOf('month');
+        const endOfThisMonth = moment().endOf('month');
+
+        // Lấy dữ liệu cho năm trước
+        const startOfLastYear = moment().subtract(1, 'years').startOf('year');
+        const endOfLastYear = moment().subtract(1, 'years').endOf('year');
+
+        // Lấy dữ liệu cho năm nay
+        const startOfThisYear = moment().startOf('year');
+        const endOfThisYear = moment().endOf('year');
+
+        // Tạo một hàm để lấy số lượng mục trong khoảng thời gian nhất định
+        const getCount = async (model, startDate, endDate) => {
+            return await model.countDocuments({ createdAt: { $gte: startDate, $lte: endDate } });
+        };
+
+        // Tạo một hàm để lấy số lượng mục cho từng tháng trong năm
+        const getMonthlyCounts = async (model, year) => {
+            const monthlyCounts = {};
+            for (let month = 0; month < 12; month++) {
+                const startOfMonth = moment().year(year).month(month).startOf('month');
+                const endOfMonth = moment().year(year).month(month).endOf('month');
+                monthlyCounts[startOfMonth.format('MMMM')] = await getCount(model, startOfMonth, endOfMonth);
+            }
+            return monthlyCounts;
+        };
+
+        const getYearlyCounts = async (model, year) => {
+            const yearlyCounts = {};
+            const startOfYear = moment().year(year - 1).startOf('year');
+            const endOfYear = moment().year(year - 1).endOf('year');
+            yearlyCounts[year - 1] = await getCount(model, startOfYear, endOfYear);
+            return yearlyCounts;
+        };
+
+        // Trả về dữ liệu
+        res.json([
+            {
+                _id: 1,
+                title: 'Users',
+                count: await User.countDocuments(),
+                month: await getMonthlyCounts(User, moment().year()),
+                lastMonth: await getCount(User, startOfLastMonth, endOfLastMonth),
+                lastYear: await getYearlyCounts(User, moment().year())
+            },
+            {
+                _id: 2,
+                title: 'Boards',
+                count: await Board.countDocuments(),
+                month: await getMonthlyCounts(Board, moment().year()),
+                lastMonth: await getCount(Board, startOfLastMonth, endOfLastMonth),
+                lastYear: await getYearlyCounts(Board, moment().year())
+            },
+            {
+                _id: 3,
+                title: 'Threads',
+                count: await Thread.countDocuments(),
+                month: await getMonthlyCounts(Thread, moment().year()),
+                lastMonth: await getCount(Thread, startOfLastMonth, endOfLastMonth),
+                lastYear: await getYearlyCounts(Thread, moment().year())
+            },
+            {
+                _id: 4,
+                title: 'Answers',
+                count: await Answer.countDocuments(),
+                month: await getMonthlyCounts(Answer, moment().year()),
+                lastMonth: await getCount(Answer, startOfLastMonth, endOfLastMonth),
+                lastYear: await getYearlyCounts(Answer, moment().year())
+            },
+            {
+                _id: 5,
+                title: 'Bans',
+                count: bans.length
+            },
+            {
+                _id: 6,
+                title: 'Files',
+                count: await File.countDocuments(),
+                month: await getMonthlyCounts(File, moment().year()),
+                lastMonth: await getCount(File, startOfLastMonth, endOfLastMonth),
+                lastYear: await getYearlyCounts(File, moment().year())
+            }
+        ]);
     } catch (err) {
-        next(createHttpError.InternalServerError({ message: err.message }))
+        next(createHttpError.InternalServerError({ message: err.message }));
     }
-}
+};
+
 
 const getUsers = async (req, res, next) => {
     try {
@@ -66,6 +131,17 @@ const getUsers = async (req, res, next) => {
         } else {
             users = await User.paginate({}, { sort: { createdAt: -1 }, page, limit, select })
         }
+
+        // Lọc và gán "ban" bằng "null" nếu không tìm thấy id trong collection Ban
+        for (let user of users.docs) {
+            if (user.ban) {
+                const foundBan = await Ban.findOne({ _id: user.ban });
+                if (!foundBan || (foundBan.expiresAt && new Date(foundBan.expiresAt) < new Date())) {
+                    user.ban = null; // Nếu không tìm thấy bản ghi ban hoặc nó đã hết hạn, gán null cho trường ban của user
+                }
+            }
+        }
+
 
         res.json(users)
     } catch (err) {
@@ -244,8 +320,9 @@ const unBan = async (req, res, next) => {
         if (!userId) return next(createHttpError.BadRequest('userId must not be empty'))
 
         await User.updateOne({ _id: new Types.ObjectId(userId) }, { $inc: { karma: 10 }, ban: null })
+        const user = await User.findOne({ _id: userId })
 
-        res.json('User unbanned')
+        res.json({ user: user, messsage: "User unbanned" })
 
         req.io.to('banned:' + userId).emit('unban', { message: 'Unbanned' })
     } catch (err) {
@@ -264,7 +341,7 @@ const deleteBan = async (req, res, next) => {
         const ban = await Ban.findById(banId)
         await ban.deleteOne()
 
-        res.json('Ban successfully deleted')
+        res.json({ ban: ban, message: "Ban successfully deleted" })
     } catch (err) {
         next(createHttpError.InternalServerError({ message: err.message }))
     }
@@ -486,7 +563,12 @@ const search = async (req, res, next) => {
             results = await User.paginate({ $or: [{ name: regexQuery }, { displayName: regexQuery }] }, { sort: { onlineAt: -1 }, page, limit, select })
         } else if (type === 'boards') {
             results = await Board.paginate({ $or: [{ title: regexQuery }] }, { sort: { createdAt: -1 }, page, limit })
-        } else {
+        } else if (type === 'tags') {
+            results = await Thread.paginate({ $or: [{ tags: regexQuery }] }, { sort: { createdAt: -1 }, page, limit, populate })
+        } else if (type === 'files') {
+            results = await File.paginate({ $or: [{ title: regexQuery }] }, { sort: { createdAt: -1 }, page, limit, populate })
+        }
+        else {
             results = await Thread.paginate({ $or: [{ title: regexQuery }] }, { sort: { createdAt: -1 }, page, limit, populate })
         }
 

@@ -21,12 +21,9 @@ import Avatar from 'boring-avatars'
 
 import MessageItem from './MessageItem';
 import './style.css';
-import { DialogueContext } from '../Dialogues';
-import { prev } from 'spotlight.js';
 
 const Dialogue = () => {
   const { user, token, lang } = useContext(StoreContext)
-  const { dialogue, setDialogue } = useContext(DialogueContext)
   const { userName } = useParams()
   const [toUser, setToUser] = useState({})
   const [errors, setErrors] = useState({})
@@ -85,7 +82,6 @@ const Dialogue = () => {
         if (!response.error) {
           setToUser(response)
           setNoData(false)
-          setDialogue({ user: response })
         } else throw Error(response.error?.message || 'Error')
       } catch (err) {
         setToUser(deletedUser)
@@ -107,11 +103,6 @@ const Dialogue = () => {
 
         if (!response.error) {
           setDialogueId(response._id)
-          setDialogue(prev => ({
-            ...prev,
-            dialogueId: response._id
-          }));
-
         } else throw Error(response.error?.message || 'Error')
       } catch (err) {
         toast.error(err.message === '[object Object]' ? 'Error' : err.message)
@@ -379,115 +370,113 @@ const Dialogue = () => {
     setChatWidth(contentSection.clientWidth)
   }
 
-  useEffect(() => {
-    if (items !== null) {
-      setDialogue(prev => ({ ...prev, msg: [...items] }))
-    }
-  }, [items])
+  console.log("hooks")
 
   return (
-    <>
-      {toUser.name && (
-        <div className="flex items-start py-1 px-3 text-sm relative">
-          <div className="flex flex-col w-full">
-            <div className="flex items-center gap-5 font-medium">
-              <Link to={'/messages'} class="w-8 h-8 flex items-center justify-center rounded-full bg-grey relative hover:bg-black/10 ">
-                <i class="fi fi-rr-arrow-left mt-[.3rem] text-xl"></i>
-              </Link>
+    <Fragment>
+      <div className="messages_wrapper" style={{ height: `calc(${chatHeight}px - 180px)` }}>
+        {toUser.name && (
+          <div className="flex items-start py-1 px-3 text-sm relative">
+            <div className="flex flex-col w-full">
+              <div className="flex items-center gap-5 font-medium">
+                <Link to={'/messages'} class="w-8 h-8 flex items-center justify-center rounded-full bg-grey relative hover:bg-black/10 ">
+                  <i class="fi fi-rr-arrow-left mt-[.3rem] text-xl"></i>
+                </Link>
 
-              <div className="w-10 h-10">
-                <Avatar
-                  size={"100%"}
-                  name={toUser.name}
-                  variant="marble"
-                  colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
-                />
-              </div>
-
-              <div className="flex flex-col flex-1 overflow-hidden">
-                <div className="text-xl">
-                  <Link to={'/user/' + toUser.name}>{toUser.displayName}</Link>
-                  <UserRole role={toUser.role} />
-                  {toUser.ban && <UserStatus status="ban" />}
+                <div className="w-10 h-10">
+                  <Avatar
+                    size={"100%"}
+                    name={toUser.name}
+                    variant="marble"
+                    colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+                  />
                 </div>
-                <div className="text-sm text-dark-grey/80">
-                  {typing ? (
-                    <>
-                      {Strings.isTyping[lang]}
-                    </>
-                  ) : (
-                    <UserOnline onlineAt={toUser.onlineAt} offlineText={Strings.lastSeen[lang]} dateType="short" />
-                  )}
+
+                <div className="flex flex-col flex-1 overflow-hidden">
+                  <Link to={'/user/' + toUser.name} className="text-xl">
+                    {toUser.displayName}
+                    <UserRole role={toUser.role} />
+                    {toUser.ban && <UserStatus status="ban" />}
+                  </Link>
+                  <div className="text-sm text-dark-grey/80">
+                    {typing ? (
+                      <>
+                        {Strings.isTyping[lang]}
+                      </>
+                    ) : (
+                      <UserOnline onlineAt={toUser.onlineAt} offlineText={Strings.lastSeen[lang]} dateType="short" />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
-
-      <CustomScrollbar className="view" onScroll={handleScroll} toBottom={toBottom}>
-        {!noData ? (
-          !loading ? (
-            items.length ? (
-              <>
-                {moreLoading && <Loader className="more_loader" color="#64707d" />}
-
-                <div className="messages_list">
-                  {items.map(item => (
-                    <div key={item.groupId} className="messages_group">
-                      <div className="group_date_block">
-                        <span className="group_date_title">
-                          {dateFormat(item.date, 'onlyDate')}
-                        </span>
-                      </div>
-
-                      {item.messages.map(msg => (
-                        <MessageItem key={msg._id} groupId={item.groupId} data={msg} user={user} token={token} />
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              </>
-            ) : <Errorer message={Strings.noMessagesYet[lang]} />
-          ) : <Loader color="#64707d" />
-        ) : (
-          <Errorer message={Strings.unableToDisplayMessages[lang]} />
         )}
-      </CustomScrollbar>
 
-      {toUser.name && toUser.name !== 'deleted' && (
-        <form className="form_inner comments_form max-w-none z-20 px-6 m-0" /* style={{ width: `${chatWidth}px` }} */ onSubmit={onSubmit}>
-          <FormCardItem row>
-            <FileUploadForm
-              mini
-              sendFiles={getFile}
-              clearFiles={clearFiles}
-            />
+        <CustomScrollbar className="view" onScroll={handleScroll} toBottom={toBottom}>
+          {!noData ? (
+            !loading ? (
+              items.length ? (
+                <>
+                  {moreLoading && <Loader className="more_loader" color="#64707d" />}
 
-            <div className={errors.body ? 'form_block error' : 'form_block'}>
-              <TextareaAutosize
-                className="input_area"
-                name="body"
-                value={values.body}
-                maxLength="1000"
-                minRows={1}
-                maxRows={5}
-                onChange={onChange}
-                onBlur={onBlur}
-                placeholder={Strings.enterYourMessage[lang]}
+                  <div className="messages_list">
+                    {items.map(item => (
+                      <div key={item.groupId} className="messages_group">
+                        <div className="group_date_block">
+                          <span className="group_date_title">
+                            {dateFormat(item.date, 'onlyDate')}
+                          </span>
+                        </div>
+
+                        {item.messages.map(msg => (
+                          <MessageItem key={msg._id} groupId={item.groupId} data={msg} user={user} token={token} />
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : <Errorer message={Strings.noMessagesYet[lang]} />
+            ) : <Loader color="#64707d" />
+          ) : (
+            <Errorer message={Strings.unableToDisplayMessages[lang]} />
+          )}
+        </CustomScrollbar>
+
+        {toUser.name && toUser.name !== 'deleted' && (
+          <form className="form_inner comments_form bg-purple z-20 left-0 max-w-0 m-0" /* style={{ width: `${chatWidth}px` }} */ onSubmit={onSubmit}>
+            <FormCardItem row>
+              <FileUploadForm
+                mini
+                sendFiles={getFile}
+                clearFiles={clearFiles}
               />
-            </div>
 
-            <button className="btn-dark send_btn" disabled={uploading}>
-              {uploading
-                ? <i class="fi fi-rr-circle"></i>
-                : <i class="fi fi-rr-paper-plane-top"></i>
-              }
-            </button>
-          </FormCardItem>
-        </form>
-      )}
-    </>
+              <div className={errors.body ? 'form_block error' : 'form_block'}>
+                <TextareaAutosize
+                  className="input-box w-auto"
+                  name="body"
+                  value={values.body}
+                  maxLength="1000"
+                  minRows={1}
+                  maxRows={5}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  placeholder={Strings.enterYourMessage[lang]}
+                />
+              </div>
+
+              <button className="btn-dark send_btn" disabled={uploading}>
+                {uploading
+                  ? <i class="fi fi-rr-circle"></i>
+                  : <i class="fi fi-rr-paper-plane-top"></i>
+                }
+              </button>
+            </FormCardItem>
+          </form>
+        )}
+      </div>
+    </Fragment>
   )
 }
 

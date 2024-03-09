@@ -13,13 +13,13 @@ const Editor = () => {
   const { user } = useContext(StoreContext)
 
   let { threadId } = useParams()
-  const [blog, setBlog] = useState({ banner: "", title: "", desc: "", body: [], tags: [] }) //initial state
+  const [blog, setBlog] = useState({ banner: "", title: "", desc: "", body: [], tags: [], files: [] }) //initial state
   const [editorState, setEditorState] = useState("editor");
   const [textEditor, setTextEditor] = useState({ isReady: false })
   const [loading, setLoading] = useState(true)
   const [bannerWrapper, setBannerWrapper] = useState(false);
   const [bannerWrapperType, setBannerWrapperType] = useState('banner');
-  // console.log(access_token)
+  // console.log(postType)
 
   useEffect(() => {
     if (!threadId) {

@@ -1,0 +1,7 @@
+.modal{
+    @apply hidden fixed top-0 bg-transparent w-full h-full overflow-y-auto overflow-x-hidden z-[99]
+}
+
+.modal.open{
+    @apply flex
+}

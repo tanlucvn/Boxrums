@@ -77,7 +77,7 @@ const PopularBoardsItem = ({ data, lang }) => {
 
 const SlideItem = ({ data }) => {
     return (
-        <li className="w-full h-[112px] bg-grey">
+        <li className="w-[122px] h-[122px] bg-grey">
             <div className="flex flex-col w-full h-full p-3">
                 <span className="text-base font-medium overflow-hidden overflow-ellipsis line-clamp-2">{data.title}</span>
                 <span className="text-sm">

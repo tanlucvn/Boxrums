@@ -6,9 +6,11 @@ import { BACKEND, Strings, imageTypes, videoTypes, fileExt } from '@/support/Con
 
 import { UserRole, UserStatus } from '@/components/UserBadge';
 import Markdown from '@/components/Markdown';
+import BlogContent from '@/components/blog-content.component';
 
 const FileItem = ({ data, moderate, lang }) => {
   const [collapsed, setCollapsed] = useState(true)
+  const bodyParse = JSON.parse(data.body)
 
   const onModerate = ({ type }) => {
     moderate(type, data._id)
@@ -58,18 +60,13 @@ const FileItem = ({ data, moderate, lang }) => {
         </header>
 
         <div className="card_content markdown">
-          <Markdown
-            source={collapsed && data.body.length > 100 ? data.body.slice(0, 100) + '...' : data.body}
-          />
-
-          {data.body.length > 100 && (
-            <div
-              className="text_show_more"
-              onClick={() => setCollapsed(!collapsed)}
-            >
-              {collapsed ? Strings.showMore[lang] : Strings.showLess[lang]}
-            </div>
-          )}
+          {
+            data && data.body && bodyParse.blocks.map((block, i) => {
+              return <div className='my-4 md:my-8' key={i}>
+                <BlogContent block={block} />
+              </div>
+            })
+          }
         </div>
 
         <footer className="card_foot">

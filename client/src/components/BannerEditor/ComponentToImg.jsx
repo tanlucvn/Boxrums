@@ -1,12 +1,13 @@
 import React, { useContext, useState } from "react";
 // import { exportComponentAsPNG } from "react-component-export-image";
 import { toast } from 'react-hot-toast'
-import "./CoverImage.css";
 import { ImgContext } from "@/support/ImgContext";
 import unsplash from "@/support/unsplashConfig";
 import domtoimage from "dom-to-image";
 import { EditorContext } from "@/pages/editor.pages";
 import { uploadImage } from "@/common/cloudinary";
+import { Strings } from '@/support/Constants';
+import "./CoverImage.css";
 
 const ComponentToImg = (props) => {
 	const [loading, setLoading] = useState(false)
@@ -102,26 +103,29 @@ const ComponentToImg = (props) => {
 		<React.Fragment>
 			<div ref={componentRef}>{props.children}</div>
 			<div className="flex gap-3 justify-center">
-				<button
-					className="btn-light flex mt-5"
-					onClick={() => downloadImage()}>
-					<span>
-						{
-							loading ?
-								<svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-white animate animate-spin" fill="currentColor" width="24" height="24" viewBox="0 0 24 24" ><path d="M12 22c5.421 0 10-4.579 10-10h-2c0 4.337-3.663 8-8 8s-8-3.663-8-8c0-4.336 3.663-8 8-8V2C6.579 2 2 6.58 2 12c0 5.421 4.579 10 10 10z"></path></svg>
-								:
-								<i class="fi fi-rr-download"></i>
-						}
-					</span>
+				{unsplashImage &&
+					<>
+						<button
+							className="btn-light flex mt-5"
+							onClick={() => downloadImage()}>
+							<span>
+								{
+									loading ?
+										<svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-white animate animate-spin" fill="currentColor" width="24" height="24" viewBox="0 0 24 24" ><path d="M12 22c5.421 0 10-4.579 10-10h-2c0 4.337-3.663 8-8 8s-8-3.663-8-8c0-4.336 3.663-8 8-8V2C6.579 2 2 6.58 2 12c0 5.421 4.579 10 10 10z"></path></svg>
+										:
+										<i class="fi fi-rr-download"></i>
+								}
+							</span>
 
-					<span className="mx-2">Download</span>
-				</button>
-
-				<button
-					className="btn-dark flex mt-5"
-					onClick={handleApplyBanner}>
-					<span className="mx-2">Apply</span>
-				</button>
+							<span className="mx-2">{Strings.download[props.lang]}</span>
+						</button>
+						<button
+							className="btn-dark flex mt-5"
+							onClick={handleApplyBanner}>
+							<span className="mx-2">{Strings.apply[props.lang]}</span>
+						</button>
+					</>
+				}
 			</div>
 		</React.Fragment>
 	);

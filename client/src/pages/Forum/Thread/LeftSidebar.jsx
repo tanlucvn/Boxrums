@@ -1,24 +1,11 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AttachCard } from '@/components/Card/Card2';
+import { dateFormat } from '@/support/Utils';
+import Loader from '@/components/loader.component';
 
 export default function LeftSidebar({ data, likes }) {
     const navigate = useNavigate()
-    const vietnameseTime = new Date(data.createdAt).toLocaleString('en-US', {
-        timeZone: 'Asia/Ho_Chi_Minh',
-    });
-
-    const calculateReadingTime = (text) => {
-        // Bỏ qua Markdown
-        // eslint-disable-next-line no-useless-escape
-        const plainText = text.replace(/[\*\_]+/g, '');
-        const words = plainText.split(/\s+/).filter(word => word !== ''); // Tách văn bản thành từng từ
-
-        const wordsPerMinute = 200; // Số từ trung bình mà người đọc có thể đọc trong 1 phút
-        const readingTime = Math.ceil(words.length / wordsPerMinute); // Tính thời lượng đọc (làm tròn lên)
-
-        return readingTime;
-    }
 
     return (
         <div className='sticky border-2 border-grey p-10 top-[115px] text-center rounded-2xl shadow-sm max-lg:h-full'>
@@ -28,11 +15,23 @@ export default function LeftSidebar({ data, likes }) {
             </div>
 
             <div className="text-xs text-dark-grey mb-4">
-                {/* <p>Khoảng {calculateReadingTime(data.body)} phút xem</p> */}
-                <p>{vietnameseTime}</p>
+                <p>{data.desc}</p>
+            </div>
+
+            <div className="text-xs text-dark-grey mb-4">
+                <p>{dateFormat(data.createdAt)}</p>
             </div>
 
             <hr className='mb-4 w-full m-auto bg-dark-grey opacity-20' />
+
+            <div className="flex gap-3 flex-wrap">
+                {!data ? <Loader /> : data.tags.slice(0, 5).map((tag, i) => (
+                    <button onClick={() => loadBlogbyCategory(tag)} key={i} className="tag m-auto">
+                        {tag}
+                    </button>
+                ))}
+
+            </div>
 
             {data.attach &&
                 <div>

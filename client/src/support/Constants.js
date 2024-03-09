@@ -351,6 +351,10 @@ const Strings = {
         vi: "Mở cấm người dùng",
         en: "Unban user",
     },
+    "ban": {
+        vi: "Cấm",
+        en: "Ban",
+    },
     "banUser": {
         vi: "Chặn người dùng",
         en: "Ban user",
@@ -635,6 +639,18 @@ const Strings = {
         vi: "Lý do",
         en: "Reason",
     },
+    "enterReason": {
+        vi: "Nhập lý do",
+        en: "Enter reason",
+    },
+    "content": {
+        vi: "Nội dung",
+        en: "Content",
+    },
+    "banDuration": {
+        vi: "Thời hạn cấm",
+        en: "Ban duration",
+    },
     "banExpires": {
         vi: "Thời hạn cấm",
         en: "Ban expires",
@@ -647,13 +663,189 @@ const Strings = {
         vi: "đang nhập",
         en: "is typing",
     },
+    "filter": {
+        vi: "Lọc thông tin",
+        en: "Filter",
+    },
+    "select": {
+        vi: "Chọn",
+        en: "Select",
+    },
     "selectBoards": {
         vi: "Chọn chủ đề",
         en: "Select boards",
     },
+    "selectFolders": {
+        vi: "Chọn thư mục",
+        en: "Select folders",
+    },
     "generateBanner": {
         vi: "Tạo ảnh bìa",
         en: "Generate a banner",
+    },
+    "themes": {
+        vi: "Chủ đề",
+        en: "Themes",
+    },
+    "title": {
+        vi: "Tiêu đề",
+        en: "Title",
+    },
+    "enterTitle": {
+        vi: "Nhập tiêu đề...",
+        en: "Enter title here...",
+    },
+    "authorOrSubtitle": {
+        vi: "Tác giả hoặc tiêu đề phụ",
+        en: "Author or Subtitle",
+    },
+    "enterAuthorOrSubtitle": {
+        vi: "Nhập tác giả hoặc tiêu đề phụ...",
+        en: "Enter author or subtitle here...",
+    },
+    "icon": {
+        vi: "Biểu tượng",
+        en: "Icon",
+    },
+    "colorBackground": {
+        vi: "Màu nền",
+        en: "Color Background",
+    },
+    "resetAll": {
+        vi: "Làm mới",
+        en: "Reset all",
+    },
+    "letsWrite": {
+        vi: "Hãy viết một câu chuyện gì đó...",
+        en: "Let's write a story...",
+    },
+    "enterTopic": {
+        vi: "Vui lòng nhập tiêu đề (chủ đề) trước khi sử dụng AI tạo nội dung",
+        en: "Please enter title (topic) before use AI writing content",
+    },
+    "desc": {
+        vi: "Mô tả",
+        en: "Description",
+    },
+    "enterDesc": {
+        vi: "Nhập mô tả...",
+        en: "Enter description...",
+    },
+    "desc": {
+        vi: "Mô tả",
+        en: "Description",
+    },
+    "shortDesc": {
+        vi: "Mô tả ngắn về bài đăng của bạn",
+        en: "Short description about your blog",
+    },
+    "charsLeft": {
+        vi: "ký tự còn lại",
+        en: "characters left",
+    },
+    "tagsLeft": {
+        vi: "thẻ còn lại",
+        en: "tags left",
+    },
+    "tags": {
+        vi: "Thẻ",
+        en: "Tags",
+    },
+    "enterTags": {
+        vi: "Nhập thẻ và gửi đi để chọn...",
+        en: "Type tags and enter to select...",
+    },
+    "tagsInformation": {
+        vi: "(lọc và tìm kiếm thông tin nhanh hơn)",
+        en: "(filter and search information faster)",
+    },
+    "similarThreads": {
+        vi: "Chủ đề tương tự",
+        en: "Similar Threads",
+    },
+    "threadIsClosed": {
+        vi: "Bài đăng đã bị đóng",
+        en: "Thread is closed",
+    },
+    "deletedSuccessfully": {
+        vi: "Đã xoá thành công",
+        en: "Deleted successfully",
+    },
+    "newThread": {
+        vi: "Bài đăng mới",
+        en: "New thread",
+    },
+    "newFile": {
+        vi: "Tệp tin mới",
+        en: "New file",
+    },
+    "january": {
+        vi: "Tháng 1",
+        en: "January",
+    },
+    "february": {
+        vi: "Tháng 2",
+        en: "February",
+    },
+    "march": {
+        vi: "Tháng 3",
+        en: "March",
+    },
+    "april": {
+        vi: "Tháng 4",
+        en: "April",
+    },
+    "may": {
+        vi: "Tháng 5",
+        en: "May",
+    },
+    "june": {
+        vi: "Tháng 6",
+        en: "June",
+    },
+    "july": {
+        vi: "Tháng 7",
+        en: "July",
+    },
+    "august": {
+        vi: "Tháng 8",
+        en: "August",
+    },
+    "september": {
+        vi: "Tháng 9",
+        en: "September",
+    },
+    "october": {
+        vi: "Tháng 10",
+        en: "October",
+    },
+    "november": {
+        vi: "Tháng 11",
+        en: "November",
+    },
+    "december": {
+        vi: "Tháng 12",
+        en: "December",
+    },
+    "unableToDisplayUserProfile": {
+        vi: "Không thể hiển thị hồ sơ người dùng",
+        en: "Unable to display user profile",
+    },
+    "hours": {
+        vi: "giờ",
+        en: "hours",
+    },
+    "minutes": {
+        vi: "phút",
+        en: "minutes",
+    },
+    "seconds": {
+        vi: "giây",
+        en: "seconds",
+    },
+    "timeExpired": {
+        vi: "Hết thời gian",
+        en: "Time expired",
     },
     "": {
         vi: "",
@@ -742,11 +934,6 @@ const Strings = {
         ru: 'Настройки',
         en: 'Settings',
         jp: '設定'
-    },
-    'unableToDisplayUserProfile': {
-        ru: 'Невозможно отобразить профиль',
-        en: 'Unable to display user profile',
-        jp: 'ユーザープロフィールを表示できません'
     },
     'profileSettings': {
         ru: 'Настройки профиля',
@@ -888,40 +1075,20 @@ const Strings = {
         en: 'Boards not loaded',
         jp: 'ボードがロードされていません'
     },
-    'enterReason': {
-        ru: 'Введите причину',
-        en: 'Enter reason',
-        jp: '理由を入力してください'
-    },
     'enterDate': {
         ru: 'Введите дату',
         en: 'Enter date',
         jp: '日付を入力してください'
-    },
-    'newThread': {
-        ru: 'Новый тред',
-        en: 'New thread',
-        jp: '新しいスレッド'
     },
     'threadTitle': {
         ru: 'Заголовок треда',
         en: 'Thread title',
         jp: 'スレッドタイトル'
     },
-    'content': {
-        ru: 'Содержание',
-        en: 'Content',
-        jp: 'コンテンツ'
-    },
     'chooseABoard': {
         ru: 'Выберите доску',
         en: 'Choose a board',
         jp: 'ボードを選択してください'
-    },
-    'select': {
-        ru: 'Выберите',
-        en: 'Select',
-        jp: '選び出す'
     },
     'loading': {
         ru: 'Загрузка',
@@ -937,16 +1104,6 @@ const Strings = {
         ru: 'Ответить в тред',
         en: 'Answer in thread',
         jp: 'スレッドに答え'
-    },
-    'banDuration': {
-        ru: 'Продолжительность бана',
-        en: 'Ban duration',
-        jp: '禁止期間'
-    },
-    'ban': {
-        ru: 'Забанить',
-        en: 'Ban',
-        jp: '禁止'
     },
     'createNew': {
         ru: 'Создать тред',
@@ -1058,11 +1215,6 @@ const Strings = {
         ru: 'Папка',
         en: 'Folder',
         jp: 'フォルダ'
-    },
-    'newFile': {
-        ru: 'Новый файл',
-        en: 'New file',
-        jp: '新しいファイル'
     },
     'download1': {
         ru: 'скачивание',

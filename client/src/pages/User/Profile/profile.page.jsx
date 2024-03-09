@@ -11,14 +11,17 @@ import Avatar from 'boring-avatars'
 import Threads from "./Threads";
 import Answers from "./Answers";
 import Bans from "./Bans";
+import { InputBox } from "@/components/Form/Input";
+import { ModalContext } from "@/components/Modal";
 
 const ProfilePage = ({ userName, type }) => {
-  const { user, token, lang, setModalOpen, setPostType } = useContext(StoreContext)
+  const { user, token, lang, setModalOpen, setPostType, postRes } = useContext(StoreContext)
 
   const [userData, setUserData] = useState({})
   const [loading, setLoading] = useState(true)
   const [noData, setNoData] = useState(false)
   const [banned, setBanned] = useState(false)
+  const [open, setOpen] = useState(false)
   const [moder, setModer] = useState(false)
 
   if (userData.displayName) {
@@ -57,46 +60,44 @@ const ProfilePage = ({ userName, type }) => {
     fetchUser()
   }, [userData, userName, user?.name, token, lang])
 
-  /* const getBlogs = ({ page = 1, user_id }) => {
-    user_id = user_id === undefined ? blogs.user_id : user_id;
-    axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + "/search-blogs", {
-        author: user_id,
-        page,
+  const onBan = () => {
+    if (userData.ban) {
+      axios.delete(BACKEND + '/api/ban/delete', {
+        headers: {
+          Authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        },
+        data: { userId: userData._id }
       })
-      .then(async ({ data }) => {
-        let formateData = await filterPaginationData({
-          state: blogs,
-          data: data.blogs,
-          page,
-          countRoute: "/all-search-blogs-count",
-          data_to_send: { author: user_id },
-        });
-        formateData.user_id = user_id;
-        setBlogs(formateData);
-      })
-      .catch((err) => {
-        // toast.error(err)
-        console.log(err);
+        .then(response => {
+          const data = response.data;
+          const user = response.data.user;
+          if (!data.error) {
+            setBanned(false);
+            setUserData({ ...userData, ...user });
+          } else {
+            throw Error(data.error?.message || 'Error');
+          }
+        })
+        .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message));
+    } else {
+      setPostType({
+        type: 'ban',
+        id: userData._id,
+        someData: {
+          body: ""
+        }
       });
+      setModalOpen(true);
+    }
   };
+
   useEffect(() => {
-    if (profileId !== profileLoaded) {
-      setBlogs(null)
+    if (postRes.ban && postRes.ban.user === userData._id) {
+      setUserData({ ...userData, ban: postRes.ban._id })
     }
-    if (blogs === null) {
-      resetState();
-      fetchUserProfile();
-    }
-  }, [profileId, blogs]);
+  }, [postRes])
 
-  const resetState = () => {
-    setProfile(profileDataStructure);
-    setLoading(true);
-    setProfileLoaded("")
-  }; */
-
-  console.log(userData)
   return (
     <AnimationWrapper>
       {!noData ? (
@@ -134,6 +135,17 @@ const ProfilePage = ({ userName, type }) => {
                   </Link>
                 ) : (
                   ""
+                )}
+              </div>
+
+              <div className="flex gap-4 mt-2">
+                {user.role === 3 && (
+                  <button
+                    onClick={onBan}
+                    className={`btn-light rounded-md ${open && 'bg-red/20 text-red'}`}
+                  >
+                    {userData.ban ? Strings.unbanUser[lang] : Strings.ban[lang]}
+                  </button>
                 )}
               </div>
 

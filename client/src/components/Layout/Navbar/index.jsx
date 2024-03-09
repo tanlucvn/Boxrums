@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import { Link, Outlet, useNavigate } from 'react-router-dom'
+import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { ThemeContext, UserContext } from '@/App'
 import NavbarDropdown from './Dropdown'
 import { storeInSession } from '@/common/session'
@@ -7,13 +7,14 @@ import Avatar from 'boring-avatars';
 import { Strings } from '@/support/Constants'
 import { StoreContext } from '@/stores/Store'
 const Navbar = () => {
-    const { user, lang } = useContext(StoreContext)
+    const { user, lang, setPostType } = useContext(StoreContext)
     const navigate = useNavigate()
     const [searchBoxVisibility, setSearchBoxVisibility] = useState(false)
     const [userNavPanel, setUserNavPanel] = useState(false)
+    const [navType, setNavType] = useState("thread")
+    const location = useLocation()
 
     let { theme, setTheme } = useContext(ThemeContext)
-    const { userAuth, userAuth: { access_token, profile_img, new_notification_available }, setUserAuth } = useContext(UserContext);
     const handleUserNavPanel = () => {
         setUserNavPanel(currentVal => !currentVal)
     }
@@ -29,13 +30,21 @@ const Navbar = () => {
         }
     }
 
+    useEffect(() => {
+        if (location.pathname.startsWith("/uploads") || location.pathname.startsWith("/file")) {
+            setNavType("file")
+        } else {
+            setNavType("thread")
+        }
+    }, [location])
+
     const changeChage = () => {
         let newTheme = theme === 'light' ? 'dark' : 'light'
         setTheme(newTheme)
         document.body.setAttribute('data-theme', newTheme)
         storeInSession('theme', newTheme)
-
     }
+
     return (
         <>
             <nav className="navbar z-50">
@@ -55,9 +64,23 @@ const Navbar = () => {
                 <div className='flex items-center gap-3 md:gap-6 ml-auto '>
                     <button className='md:hidden  bg-grey w-12 h-12 rounded-full flex items-center justify-center' onClick={() => setSearchBoxVisibility(currentVal => !currentVal)}><i className='fi fi-rr-search text-xl'></i></button>
 
-                    <Link to='/editor' className='hidden md:flex gap-2 link '>
-                        <p>new thread</p>
-                        <i className='fi fi-rr-file-edit'></i>
+                    <Link to='/editor' className='hidden md:flex gap-2 link' onClick={navType === "thread" ?
+                        () => setPostType({
+                            type: 'thread'
+                        }) :
+                        () => setPostType({
+                            type: 'upload'
+                        })}>
+
+                        {navType === "thread" ?
+                            <>
+                                <p>{Strings.newThread[lang]}</p> <i className='fi fi-rr-file-edit'></i>
+                            </> :
+                            <>
+                                <p>{Strings.newFile[lang]}</p>
+                                <i class="fi fi-rr-add-document"></i>
+                            </>
+                        }
                     </Link>
 
                     <button className='w-12 h-12 rounded-full bg-grey relative hover:bg-black/10 '>
@@ -70,11 +93,11 @@ const Navbar = () => {
                                 <Link to='/dashboard/notifications'>
                                     <button className='w-12 h-12 rounded-full bg-grey relative hover:bg-black/10 '>
                                         <i className='fi fi-rr-bell text-xl block mt-1'></i>
-                                        {
+                                        {/* {
                                             new_notification_available &&
                                             <span className='bg-red w-3 h-3 rounded-full  absolute z-10 top-2 right-2'></span>
 
-                                        }
+                                        } */}
                                     </button>
                                 </Link>
                                 <div className="relative" onClick={handleUserNavPanel} onBlur={handleBlur}>

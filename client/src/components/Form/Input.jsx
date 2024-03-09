@@ -5,9 +5,9 @@ import Avatar from 'boring-avatars'
 
 import './style.scss'
 
-export const LabelInputBox = ({ text, errors }) => {
+export const LabelInputBox = ({ text, errors, className }) => {
     return (
-        <div className="input-label flex">
+        <div className={`input-label flex ${className}`}>
             {text}
             <span className='error-text'>
                 {errors}
@@ -40,9 +40,10 @@ export const InputBox = ({ name, type, id, value, placeholder, icon, disable = f
     )
 }
 
-export const TextareaBox = ({ value, onChange, placeholder, readonly }) => {
+export const TextareaBox = ({ name, value, onChange, placeholder, readonly }) => {
     return (
         <textarea
+            name={name}
             value={value}
             onChange={onChange}
             placeholder={placeholder}
@@ -186,7 +187,7 @@ export const IconSelectBox = ({ iconOptions, onSelect, value }) => {
 }
 
 export const SelectBox = ({ options, onChange, value, className, onClick }) => {
-    const { lang } = useContext(StoreContext)
+    const { lang, postType } = useContext(StoreContext)
     const [isOpen, setIsOpen] = useState(false);
     const wrapperRef = useRef(null);
 
@@ -244,8 +245,13 @@ export const SelectBox = ({ options, onChange, value, className, onClick }) => {
                                     <div className="ml-4">
                                         <p className="text-base font-medium">{option.title}</p>
                                         <div className="flex gap-3 items-center">
-                                            <p className="mt-1 text-sm text-dark-grey/80">{option.threadsCount} {Strings.thread[lang]}</p>
-                                            <p className="mt-1 text-sm text-dark-grey/80">{option.answersCount} {Strings.answer[lang]}</p>
+                                            {postType.type === "thread" &&
+                                                <>
+                                                    <p className="mt-1 text-sm text-dark-grey/80">{option.threadsCount} {Strings.thread[lang]}</p>
+                                                    <p className="mt-1 text-sm text-dark-grey/80">{option.answersCount} {Strings.answer[lang]}</p>
+                                                </>
+                                            }
+                                            {postType.type === "upload" && <p className="mt-1 text-sm text-dark-grey/80">{option.filesCount} {Strings.file[lang]}</p>}
                                         </div>
                                     </div>
                                 </div>

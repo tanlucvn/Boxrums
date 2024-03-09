@@ -30,6 +30,10 @@ const initialState = {
         id: null,
         someData: null
     },
+    postRes: {
+        type: '',
+        data: ''
+    },
     fab: true,
     lang
 }
@@ -83,6 +87,13 @@ const Store = ({ children }) => {
         })
     }
 
+    const setPostRes = (payload) => {
+        dispatch({
+            type: 'SET_POST_RES',
+            payload
+        })
+    }
+
     const setFabVisible = (payload) => {
         dispatch({
             type: 'SET_FAB_VISIBLE',
@@ -107,6 +118,8 @@ const Store = ({ children }) => {
         setModalOpen,
         postType: state.postType,
         setPostType,
+        postRes: state.postRes,
+        setPostRes,
         fab: state.fab,
         setFabVisible,
         login,

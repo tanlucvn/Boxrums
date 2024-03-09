@@ -86,7 +86,7 @@ const Home = () => {
         {/* latest blog */}
         <div className="w-full col-span-5 max-md:col-span-12 max-lg:col-span-8">
           <InPageNavigaion
-            routes={["Home", pageState, "trending"]}
+            routes={[pageState, "trending"]}
             defaultHidden={["trending"]}
           >
             <>
@@ -121,7 +121,7 @@ const Home = () => {
         </div>
 
         {/* filter and trending */}
-        <div className="border-l border-grey pl-8 pr-8 col-span-3 max-md:hidden max-lg:col-span-8">
+        <div className="border-l border-grey pl-8 pr-8 col-span-3 max-md:hidden max-lg:col-span-8 max-lg:border-0">
           <div className="w-full flex flex-col gap-10">
             <div>
               <h1 className="font-medium text-xl mb-8">

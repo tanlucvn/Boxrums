@@ -371,3 +371,5 @@ export const DeletePopup = ({ open, close, onConfirmed, title, body, lang }) => 
         </AnimationWrapper>
     )
 }
+
+

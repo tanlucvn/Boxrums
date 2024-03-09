@@ -11,7 +11,7 @@ import { DeletePopup } from './ModalPopup';
 const FileInteraction = ({ dropdown = false, share = false }) => {
     const fileContextData = useContext(FileContext);
     const { user, lang, token } = useContext(StoreContext)
-    const { file, setFile, likes, setLikes, liked, setLiked, setCommentsWrapper, comment, setAnswers } = fileContextData
+    const { file, setFile, likes, setLikes, liked, setLiked, commentsWrapper, setCommentsWrapper, downloadsWrapper, setDownloadsWrapper, comment } = fileContextData
     const [open, setOpen] = useState(false)
     const navigate = useNavigate()
 
@@ -36,25 +36,6 @@ const FileInteraction = ({ dropdown = false, share = false }) => {
                 } else throw Error(data.error?.message || 'Error')
             })
             .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message))
-    }
-
-    const onDownload = () => {
-        fetch(BACKEND + '/api/file/download', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ fileId: file._id })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (!data.error) setFile({ ...file, ...data })
-                if (data.error) throw Error(data.error?.message || 'Error')
-
-                const win = window.open(BACKEND + data.file.url, '_blank')
-                win.focus()
-            })
-            .catch(console.error)
     }
 
     const onCopyLink = (text) => {
@@ -115,6 +96,16 @@ const FileInteraction = ({ dropdown = false, share = false }) => {
             })
     }
 
+    const handleCommentsWrapper = () => {
+        if (downloadsWrapper === true) return
+        else { setCommentsWrapper(prev => !prev) }
+    }
+
+    const handleDownloadsWrapper = () => {
+        if (commentsWrapper === true) return
+        else { setDownloadsWrapper(prev => !prev) }
+    }
+
     return (
         <>
             <Toaster />
@@ -126,12 +117,12 @@ const FileInteraction = ({ dropdown = false, share = false }) => {
                     </button>
                     <p className='text-xl text-dark-grey'>{counter(likes ? likes.length : 0)} <span className='max-sm:hidden'>{declOfNum(likes ? likes.length : 0, Strings.like[lang], Strings.likes[lang])}</span></p>
 
-                    <button onClick={() => setCommentsWrapper(preVal => !preVal)} className='w-10 h-10 rounded-full flex items-center justify-center bg-grey/80'>
+                    <button onClick={handleCommentsWrapper} className='w-10 h-10 rounded-full flex items-center justify-center bg-grey/80'>
                         <i className='fi fi-rr-comment-dots'></i>
                     </button>
                     <p className='text-xl text-dark-grey'>{counter(comment ? comment.length : 0)} <span className='max-sm:hidden'>{declOfNum(comment ? comment.length : 0, Strings.answer[lang], Strings.answers[lang])}</span></p>
 
-                    <button onClick={onDownload} className='w-10 h-10 rounded-full flex items-center justify-center bg-grey/80'>
+                    <button onClick={handleDownloadsWrapper} className='w-10 h-10 rounded-full flex items-center justify-center bg-grey/80'>
                         <i class="fi fi-rr-download"></i>
                     </button>
                     <p className='text-xl text-dark-grey'>{counter(file.downloads ? file.downloads : 0)} <span className='max-sm:hidden'>{declOfNum(file.downloads ? file.downloads.length : 0, Strings.download[lang], Strings.downloads[lang])}</span></p>

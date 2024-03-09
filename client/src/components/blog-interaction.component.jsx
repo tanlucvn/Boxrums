@@ -37,7 +37,12 @@ const BlogInteraction = ({ dropdown = false, share = false }) => {
                     setLiked(!liked)
                 } else throw Error(data.error?.message || 'Error')
             })
-            .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message))
+            .catch(err => {
+                if (err.message == "thread is closed") {
+                    toast.error(Strings.threadIsClosed[lang])
+                } else { toast.error(err.message === '[object Object]' ? 'Error' : err.message) }
+            }
+            )
     }
 
     const pinThread = () => {

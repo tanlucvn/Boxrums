@@ -8,10 +8,10 @@ import AboutUser from "../components/about.component";
 import { filterPaginationData } from "../common/filter-pagination-data";
 import InPageNavigaion from "../components/inpage-navigation.component";
 import NoDataMessage from "../components/nodata.component";
-import BlogPostCard from "../components/blog-post.component";
 import LoadMoreDataBtn from "../components/load-more.component";
 import PageNotFound from "./NotFound";
 import toast, { Toaster } from "react-hot-toast";
+import { BlogPostCard } from "@/components/Card/Card2";
 
 export const profileDataStructure = {
   personal_info: {

@@ -247,11 +247,20 @@ const createFile = async (req, res, next) => {
                 return next(createHttpError.BadRequest('File upload failed'))
             }
 
-            const { folderId, title, body } = req.body
+            let { folderId, banner, title, body, desc, tags } = req.body
 
             if (!folderId) return next(createHttpError.BadRequest('folderId must not be empty'))
             if (title.trim() === '') return next(createHttpError.BadRequest('File title must not be empty'))
-            if (body.trim() === '') return next(createHttpError.BadRequest('File body must not be empty'))
+            if (!body) return next(createHttpError.BadRequest('File body must not be empty'))
+
+            if (tags) {
+                if (typeof tags === 'string') {
+                    tags = tags.split(',').map(tag => tag.trim().toLowerCase());
+                } else if (Array.isArray(tags)) {
+                    tags = tags.map(tag => tag.toLowerCase());
+                }
+            }
+
 
             const now = new Date().toISOString()
 
@@ -266,8 +275,11 @@ const createFile = async (req, res, next) => {
 
             const newFile = new File({
                 folderId,
+                banner: banner,
                 title: title.trim().substring(0, 100),
-                body: body.substring(0, 1000),
+                body: body,
+                desc: desc,
+                tags: tags,
                 createdAt: now,
                 author: req.payload.id,
                 file: {

@@ -4,7 +4,6 @@ import InPageNavigaion from "@/components/inpage-navigation.component";
 import Loader from "@/components/loader.component";
 import NoDataMessage from "@/components/nodata.component";
 import AnimationWrapper from "@/common/page-animation";
-import BlogPostCard from "@/components/blog-post.component";
 import LoadMoreDataBtn from "@/components/load-more.component";
 import { BACKEND, Strings } from "@/support/Constants";
 import { StoreContext } from "@/stores/Store";
@@ -12,6 +11,8 @@ import Users from "./Users";
 import Threads from "./Threads";
 import Answers from "./Answers";
 import Boards from "./Boards";
+import Files from "./File";
+import Tags from "./Tags";
 
 const SearchPage = () => {
   const { lang, token } = useContext(StoreContext)
@@ -21,11 +22,13 @@ const SearchPage = () => {
     <section className="h-cover flex justify-center gap-10">
       <div className="w-full">
         <InPageNavigaion
-          routes={[Strings.threads[lang], Strings.answer[lang], Strings.boards[lang], "Account Matched"]}
+          routes={[Strings.threads[lang], Strings.files[lang], Strings.answer[lang], Strings.tags[lang], Strings.boards[lang], "Account Matched"]}
           defaultHidden={["Account Matched"]}
         >
           <Threads query={query} lang={lang} type="threads" />
+          <Files query={query} lang={lang} type="files" />
           <Answers query={query} lang={lang} type="answers" />
+          <Tags query={query} lang={lang} type="tags" />
           <Boards query={query} lang={lang} type="boards" />
           <Users query={query} lang={lang} type="users" />
         </InPageNavigaion>

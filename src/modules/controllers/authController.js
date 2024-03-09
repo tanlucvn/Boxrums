@@ -5,6 +5,8 @@ import { signAccessToken } from '../utils/jwt.js';
 import createHttpError from 'http-errors';
 import bcrypt from 'bcrypt'
 import User from '../models/User.js';
+import AuthHistory from '../models/AuthHistory.js';
+import { Types } from 'mongoose';
 
 /**
  * ==========================
@@ -96,6 +98,28 @@ const login = async (req, res, next) => {
         }
 
         const accessToken = await signAccessToken(user)
+
+        const now = new Date().toISOString()
+
+        if (user.ban) {
+            if (user.ban.expiresAt < now) {
+                await User.updateOne({ _id: new Types.ObjectId(user._id) }, { ban: null })
+            } else {
+                return res.json({
+                    ban: {
+                        userId: user._id,
+                    }
+                })
+            }
+        }
+
+        const authHistory = new AuthHistory({
+            user: user._id,
+            loginAt: now,
+            ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+            ua: req.headers['user-agent']
+        })
+        await authHistory.save()
 
         res.json({
             user: {

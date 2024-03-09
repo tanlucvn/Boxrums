@@ -13,25 +13,33 @@ import ComponentToImg from './BannerEditor/ComponentToImg';
 import CoverImage from './BannerEditor/CoverImage';
 import { ImgProvider } from '@/support/ImgContext'
 
-import theme1 from '@/assets/images/theme1.webp'
-import theme2 from '@/assets/images/theme2.webp'
-import theme3 from '@/assets/images/theme3.webp'
-import theme4 from '@/assets/images/theme4.webp'
-import theme5 from '@/assets/images/theme5.webp'
-import theme6 from '@/assets/images/theme6.webp'
-import theme7 from '@/assets/images/theme7.webp'
+import bgThemeBasicDark from '@/assets/images/bgTheme-basic-dark.png'
+import bgThemeBasicLight from '@/assets/images/bgTheme-basic-light.png'
+import bgThemeBackgroundDark from '@/assets/images/bgTheme-background-dark.png'
+import bgThemeBackgroundLight from '@/assets/images/bgTheme-background-light.png'
+import bgThemeModernDark from '@/assets/images/bgTheme-modern-dark.png'
+import bgThemeModernLight from '@/assets/images/bgTheme-modern-light.png'
+import bgThemeStylishDark from '@/assets/images/bgTheme-stylish-dark.png'
+import bgThemeStylishLight from '@/assets/images/bgTheme-stylish-light.png'
+import bgThemeOutlineDark from '@/assets/images/bgTheme-outline-dark.png'
+import bgThemeOutlineLight from '@/assets/images/bgTheme-outline-light.png'
+import bgThemePreviewDark from '@/assets/images/bgTheme-preview-dark.png'
+import bgThemePreviewLight from '@/assets/images/bgTheme-preview-light.png'
+import bgThemeMobileDark from '@/assets/images/bgTheme-mobile-dark.png'
+import bgThemeMobileLight from '@/assets/images/bgTheme-mobile-light.png'
+
 import RandomTheme from './BannerEditor/RandomTheme';
 
 const defaultIcon = { 'label': 'react', 'value': 'react' }
 const defaultSettings = {
-    title: "Type Title Here",
+    title: "Boxrums",
     bgColor: "#ffffff",
     pattern: "",
     download: "PNG",
-    author: 'Type Author Here',
+    author: 'A Forum Website',
     icon: defaultIcon,
     devIconOptions: [defaultIcon],
-    font: 'font-Anek',
+    font: 'font-worksans',
     theme: 'background',
     customIcon: '',
     platform: 'default'
@@ -39,7 +47,7 @@ const defaultSettings = {
 const devIconsUrl = "https://raw.githubusercontent.com/devicons/devicon/master/devicon.json"
 
 const BlogEditorSidebar = () => {
-    const { lang } = useContext(StoreContext)
+    const { theme, lang } = useContext(StoreContext)
     const { thread, answers, bannerWrapper, setBannerWrapper, bannerWrapperType, setBannerWrapperType } = useContext(EditorContext)
     const [inputData, setInputData] = useState(defaultSettings)
 
@@ -100,7 +108,7 @@ const BlogEditorSidebar = () => {
                                             <div class="absolute inset-0 -left-1 flex items-center">
                                                 <div class="h-2 w-2 rotate-45 bg-grey"></div>
                                             </div>
-                                            Editor <span class="text-black">(Y)</span>
+                                            {Strings.edit[lang]}
                                         </div>
                                     </div>
                                 </button>
@@ -113,7 +121,7 @@ const BlogEditorSidebar = () => {
                                             <div class="absolute inset-0 -left-1 flex items-center">
                                                 <div class="h-2 w-2 rotate-45 bg-grey"></div>
                                             </div>
-                                            Editor <span class="text-black">(Y)</span>
+                                            {Strings.themes[lang]}
                                         </div>
                                     </div>
                                 </button>
@@ -125,13 +133,13 @@ const BlogEditorSidebar = () => {
                             {bannerWrapperType === 'banner' ?
                                 <div className='flex flex-row gap-7 justify-between max-md:flex-col'>
                                     <div className='basis-1/4'>
-                                        <LabelInputBox text={"Title"} />
-                                        <InputBox name='title' type='text' placeholder='Enter title here' value={inputData.title} onChange={handleInputChange} />
+                                        <LabelInputBox text={Strings.title[lang]} />
+                                        <InputBox name='title' type='text' placeholder={Strings.enterTitle[lang]} value={inputData.title} onChange={handleInputChange} />
 
-                                        <LabelInputBox text={"Author"} />
-                                        <InputBox name='author' type='text' placeholder='Enter author here' value={inputData.author} onChange={handleInputChange} />
+                                        <LabelInputBox text={Strings.authorOrSubtitle[lang]} />
+                                        <InputBox name='author' type='text' placeholder={Strings.enterAuthorOrSubtitle[lang]} value={inputData.author} onChange={handleInputChange} />
 
-                                        <LabelInputBox text={"Icon"} />
+                                        <LabelInputBox text={Strings.icon[lang]} />
                                         <IconSelectBox value={inputData.icon} iconOptions={inputData.devIconOptions} onSelect={(e) => setInputData({ ...inputData, icon: { label: e.label, value: e.value } })} />
 
                                         {/* <LabelInputBox text={"Platform"} />
@@ -145,60 +153,59 @@ const BlogEditorSidebar = () => {
                                             <option>dev</option>
                                         </select> */}
 
-                                        <LabelInputBox text={"Color"} />
+                                        <LabelInputBox text={Strings.colorBackground[lang]} />
                                         <InputColor onChange={(e) => setInputData({ ...inputData, bgColor: e })} />
-                                        <button onClick={handleReset} className='btn-dark mt-5'>Reset All</button>
+                                        <button onClick={handleReset} className='btn-dark mt-5'>{Strings.resetAll[lang]}</button>
                                     </div>
 
                                     <div className='basis-3/4'>
-                                        <ComponentToImg downloadAs={inputData.download}>
+                                        <ComponentToImg downloadAs={inputData.download} lang={lang}>
                                             <CoverImage {...inputData} />
                                         </ComponentToImg>
                                     </div>
                                 </div> :
                                 <>
-                                    <div className="flex items-center border rounded-xl border-gray-50 px-4">
-                                        <h2 className="text-lg pl-2 font-inter font-semibold">Themes</h2>
-                                        <div className="ml-auto mr-1 p-2">
+                                    <div className="flex items-center border-2 rounded-xl border-grey px-4">
+                                        <h2 className="text-lg pl-2 font-inter font-semibold">{Strings.themes[lang]}</h2>
+                                        {/* <div className="ml-auto mr-1 p-2">
                                             <RandomTheme onThemeChange={getRandomTheme} />
-
-                                        </div>
+                                        </div> */}
                                     </div>
 
                                     <div className="p-4 flex flex-wrap overflow-y-scroll gap-3 justify-center">
-                                        <img src={theme1} alt="basic theme"
+                                        <img src={theme === "light" ? bgThemeBasicLight : bgThemeBasicDark} alt="basic theme"
                                             onClick={(e) => setInputData({ ...inputData, theme: "basic" })}
-                                            className="cursor-pointer basis-1/4 rounded-xl hover:scale-90 duration-300"
+                                            className="cursor-pointer basis-1/4 rounded-xl hover:scale-90 duration-300 object-cover border-2 border-grey"
                                         />
 
-                                        <img src={theme2} alt="basic theme"
+                                        <img src={theme === "light" ? bgThemeModernLight : bgThemeModernDark} alt="basic theme"
                                             onClick={(e) => setInputData({ ...inputData, theme: "modern" })}
-                                            className="cursor-pointer basis-1/4 rounded-xl hover:scale-90 duration-300"
+                                            className="cursor-pointer basis-1/4 rounded-xl hover:scale-90 duration-300 object-cover border-2 border-grey"
                                         />
 
-                                        <img src={theme3} alt="basic theme"
+                                        <img src={theme === "light" ? bgThemeStylishLight : bgThemeStylishDark} alt="basic theme"
                                             onClick={(e) => setInputData({ ...inputData, theme: "stylish" })}
-                                            className="cursor-pointer basis-1/4 rounded-xl hover:scale-90 duration-300"
+                                            className="cursor-pointer basis-1/4 rounded-xl hover:scale-90 duration-300 object-cover border-2 border-grey"
                                         />
 
-                                        <img src={theme5} alt="basic theme"
+                                        <img src={theme === "light" ? bgThemeOutlineLight : bgThemeOutlineDark} alt="basic theme"
                                             onClick={(e) => setInputData({ ...inputData, theme: "outline" })}
-                                            className="cursor-pointer basis-1/4 rounded-xl hover:scale-90 duration-300"
+                                            className="cursor-pointer basis-1/4 rounded-xl hover:scale-90 duration-300 object-cover border-2 border-grey"
                                         />
 
-                                        <img src={theme4} alt="basic theme"
+                                        <img src={theme === "light" ? bgThemePreviewLight : bgThemePreviewDark} alt="basic theme"
                                             onClick={(e) => setInputData({ ...inputData, theme: "preview" })}
-                                            className="cursor-pointer basis-1/4 rounded-xl hover:scale-90 duration-300"
+                                            className="cursor-pointer basis-1/4 rounded-xl hover:scale-90 duration-300 object-cover border-2 border-grey"
                                         />
 
-                                        <img src={theme6} alt="basic theme"
+                                        <img src={theme === "light" ? bgThemeMobileLight : bgThemeMobileDark} alt="basic theme"
                                             onClick={(e) => setInputData({ ...inputData, theme: "mobile" })}
-                                            className="cursor-pointer basis-1/4 rounded-xl hover:scale-90 duration-300"
+                                            className="cursor-pointer basis-1/4 rounded-xl hover:scale-90 duration-300 object-cover border-2 border-grey"
                                         />
 
-                                        <img src={theme7} alt="basic theme"
+                                        <img src={theme === "light" ? bgThemeBackgroundLight : bgThemeBackgroundDark} alt="basic theme"
                                             onClick={(e) => setInputData({ ...inputData, theme: "background" })}
-                                            className="cursor-pointer basis-1/4 rounded-xl hover:scale-90 duration-300"
+                                            className="cursor-pointer basis-1/4 rounded-xl hover:scale-90 duration-300 object-cover border-2 border-grey"
                                         />
                                     </div>
 

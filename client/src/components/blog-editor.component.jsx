@@ -28,9 +28,8 @@ const BlogEditor = () => {
     // const { userAuth: { access_token } } = useContext(UserContext)
 
     const { theme } = useContext(ThemeContext)
-    const { token, lang } = useContext(StoreContext)
+    const { token, lang, postType } = useContext(StoreContext)
     const { blog, setBlog, textEditor, setTextEditor, setEditorState, setBannerWrapper, bannerWrapperType, setBannerWrapperType } = useContext(EditorContext)
-    const [boards, setBoards] = useState([])
     const [isTextareaFocused, setIsTextareaFocused] = useState(false);
     const fullLang = lang === "vi" ? "Vietnamese" : "English"
     const titleWithoutMarkdown = blog.title.replace(/[^a-zA-Z\sÀ-ÖÔÕƠà-öôõơẠ-ỹạ-ỹĂ-ỹĨ-ỹĩ-ỹĀ-ỹā-ỹĂ-ỹă-ỹĐđ-ỹ0-9]/g, '');
@@ -42,7 +41,7 @@ const BlogEditor = () => {
                 holderId: "textEditor",
                 data: blog.body ? blog.body[0] : blog.body,
                 tools: tools,
-                placeholder: "Let's write an awesome story"
+                placeholder: Strings.letsWrite[lang]
             }))
         }
     }, [])
@@ -120,25 +119,7 @@ const BlogEditor = () => {
         }
     }
 
-    const loadBoards = () => {
-        if (boards.length) return
-
-        fetch(`${BACKEND}/api/boards?pagination=true`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.docs?.length) {
-                    setBoards(data.docs)
-                } else throw Error(Strings.boardsNotLoaded[lang])
-            })
-            .catch(err => {
-                setErrors({ general: err.message === '[object Object]' ? 'Error' : err.message })
-            })
-    }
-
     const publishThread = () => {
-        if (!blog.banner) {
-            return toast.error("Upload a blog banner to publish it")
-        }
         if (!blog.title)
             return toast.error("Write blog title to publis it")
 
@@ -162,7 +143,7 @@ const BlogEditor = () => {
     }
 
     const AIWritingBody = async () => {
-        if (!blog.title) return toast.error("Enter title (topic) before use AI writing content")
+        if (!blog.title) return toast.error(Strings.enterTopic[lang])
 
         try {
             const response = await fetch('https://typli.ai/api/completion', {
@@ -170,7 +151,13 @@ const BlogEditor = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ prompt: `You are a Typli, a helpful writing assistant that writes SEO friendly articles in markdown format.\nWrite in a conversational tone.\nWrite for a 9th grade reading level.\nKeep paragraphs to 2 sentences max. Be concise.\nAvoid Overly Complex vocabulary unless it's necessary for the topic. Steer clear of using overly complex vocabulary or jargon.\nRemember to write in markdown format and include h3 headers, lists, bold or italic text, quotes, statistics (only use verified statistics, don't make anything up) and references to external articles when necessary.\n\nWrite an article around 900 words in markdown format about ${titleWithoutMarkdown} with ${fullLang} languages in a Blog Article writing style. Do not include images in the output.\n`, temperature: 1.2 })
+                // body: JSON.stringify({ prompt: `You are a Typli, a helpful writing assistant that writes SEO friendly articles in markdown format.\nWrite in a conversational tone.\nWrite for a 9th grade reading level.\nKeep paragraphs to 2 sentences max. Be concise.\nAvoid Overly Complex vocabulary unless it's necessary for the topic. Steer clear of using overly complex vocabulary or jargon.\nRemember to write in markdown format and include h3 headers, lists, bold or italic text, quotes, statistics (only use verified statistics, don't make anything up) and references to external articles when necessary.\n\nWrite an article around 900 words in markdown format about ${titleWithoutMarkdown} with ${fullLang} languages in a Blog Article writing style. Do not include images in the output.\n`, temperature: 1.2 })
+                body: JSON.stringify({
+                    prompt: lang === "vi" ?
+                        `Bạn là một Typli, một trợ lý viết hữu ích có thể viết các bài viết thân thiện với SEO dưới dạng markdown.\nViết bài viết theo dạng nói chuyện.\nViết dành cho những người học lớp 9.\nGiữ đoạn văn trong khoảng 2 câu tối đa và súc tích.\nTránh sử dụng từ vựng hoặc thuật ngữ quá phức tạp trừ khi cần thiết cho chủ đề.\nNhớ viết theo định dạng markdown và bao gồm tiêu đề h3, lists, bold hoặc italic, quotes, statistics (chỉ sử dụng thống kê được xác minh, không làm bất cứ điều gì lên), và liên kết đến các bài viết bên ngoài khi cần thiết.\nHãy nhớ là viết một bài viết khoảng 900 từ trong định dạng markdown về ${titleWithoutMarkdown} theo phong cách viết Blog Article và không bao gồm đưa hình ảnh trong đầu ra.` :
+                        `You are a Typli, a helpful writing assistant that writes SEO friendly articles in markdown format.\nWrite in a conversational tone.\nWrite for a 9th grade reading level.\nKeep paragraphs to 2 sentences max. Be concise.\nAvoid Overly Complex vocabulary unless it's necessary for the topic. Steer clear of using overly complex vocabulary or jargon.\nRemember to write in markdown format and include h3 headers, lists, bold or italic text, quotes, statistics (only use verified statistics, don't make anything up) and references to external articles when necessary.\n\nWrite an article around 900 words in markdown format about ${titleWithoutMarkdown} in a Blog Article writing style. Do not include images in the output.\n`,
+                    temperature: 1.2
+                })
             });
 
             const markdownData = await response.text(); // Nhận dữ liệu markdown từ API
@@ -180,6 +167,7 @@ const BlogEditor = () => {
                 textEditor.render({
                     blocks: parseMarkdownToBlocks(markdownData)
                 }).then(() => {
+
                     console.log('Markdown content set successfully');
                 }).catch((error) => {
                     console.error('Setting markdown content failed: ', error);
@@ -209,7 +197,8 @@ const BlogEditor = () => {
                         level: level
                     }
                 });
-            } else {
+            }
+            else {
                 // Đoạn văn
                 blocks.push({
                     type: 'paragraph',
@@ -221,25 +210,6 @@ const BlogEditor = () => {
         });
 
         return blocks;
-    };
-
-
-    const setHeadingContent = () => {
-        if (textEditor.isReady) {
-            const headingBlock = {
-                type: 'header',
-                data: {
-                    text: 'Your Heading Text Here',
-                    level: 3
-                }
-            };
-
-            textEditor.render({ blocks: [headingBlock] }).then(() => {
-                console.log('Heading content set successfully');
-            }).catch((error) => {
-                console.error('Setting heading content failed: ', error);
-            });
-        }
     };
 
     useEffect(() => {
@@ -284,12 +254,10 @@ const BlogEditor = () => {
                             </label>
                         </div>
 
-                        <SelectBox options={boards} className="mt-5 bg-white" onClick={loadBoards} value={blog?.boards ? blog.boards.title : Strings.selectBoards[lang]} onChange={(value) => setBlog({ ...blog, boards: { boardId: value._id, title: value.title, threadsCount: value.threadsCount, answersCount: value.answersCount } })} />
-
                         {/* TITLE */}
                         <textarea
                             defaultValue={blog?.title ? blog.title : ''}
-                            placeholder='Blog Title'
+                            placeholder={Strings.title[lang]}
                             className='text-4xl font-medium w-full h-20 outline-none resize-none mt-10 leading-tight placeholder:opacity-40 bg-white'
                             onKeyDown={handleTitleKeyDown}
                             onChange={handleTitleChange}
@@ -337,8 +305,6 @@ const BlogEditor = () => {
                         {/* BODY */}
                         <div id="textEditor">
                         </div>
-
-
                     </div>
                 </section>
             </AnimationWrapper>

@@ -1,22 +1,26 @@
-import React, { useContext, useState } from 'react'
-import { UserContext } from '../App'
+import React, { useContext, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import CommentField from './comment-field.component'
-import { BlogContext } from '../pages/blog.page'
 import axios from 'axios'
 import { StoreContext } from '@/stores/Store'
 import Avatar from 'boring-avatars'
 import { ThreadContext } from '@/pages/Forum/Thread'
-import { dateFormat } from '@/support/Utils'
+import { counter, dateFormat } from '@/support/Utils'
 import { BACKEND, Strings } from '@/support/Constants'
 import { AttachCard } from './Card/Card2'
 
 const CommentCard = ({ index, leftVal, answerData }) => {
   const { user, lang, token } = useContext(StoreContext)
   const { thread, answers, setAnswers } = useContext(ThreadContext)
-
   const [isReplying, setReplying] = useState(false)
   const [isEditing, setEditing] = useState(false)
+  const [likes, setLikes] = useState(answerData.likes)
+  const [liked, setLiked] = useState(user ? !!answerData.likes.find(i => i._id === user.id) : false)
+
+  useEffect(() => {
+    setLikes(answerData.likes)
+    setLiked(user ? !!answerData.likes?.find(i => i._id === user.id) : false)
+  }, [user, answerData.likes])
 
   const handleReplyClick = () => {
     if (!user) {
@@ -39,22 +43,48 @@ const CommentCard = ({ index, leftVal, answerData }) => {
   }
 
   const deleteAnswer = () => {
-    fetch(BACKEND + '/api/answer/delete', {
-      method: 'DELETE',
+    axios.delete(BACKEND + '/api/answer/delete', {
       headers: {
         Authorization: 'Bearer ' + token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ answerId: answerData._id })
+      data: {
+        answerId: answerData._id
+      }
     })
-      .then(response => response.json())
-      .then(data => {
-        if (data.error) throw Error(data.error?.message || 'Error')
-        toast.success('Deleted successfully')
+      .then(response => {
+        const data = response.data;
+        if (data.error) {
+          throw Error(data.error?.message || 'Error');
+        }
+        toast.success(Strings.deletedSuccessfully[lang]);
         setAnswers(answers.filter(a => a._id !== answerData._id));
       })
-      .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message))
-  }
+      .catch(err => {
+        toast.error(err.message === '[object Object]' ? 'Error' : err.message);
+      });
+  };
+
+  const likeAnswer = () => {
+    axios.put(BACKEND + '/api/answer/like', { answerId: answerData._id }, {
+      headers: {
+        Authorization: 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        const data = response.data;
+        if (!data.error) {
+          setLikes(data.likes);
+          setLiked(user ? !!data.likes?.find(i => i._id === user.id) : false);
+        } else {
+          throw Error(data.error?.message || 'Error');
+        }
+      })
+      .catch(err => {
+        toast.error(err.message === '[object Object]' ? 'Error' : err.message);
+      });
+  };
 
   return (
     <div className='w-full' style={{ paddingLeft: `${leftVal * 10}px` }}>
@@ -66,7 +96,9 @@ const CommentCard = ({ index, leftVal, answerData }) => {
             variant="marble"
             colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
           />
+
           <p className='line-clamp-1'>{answerData.author?.name} @{answerData.author?.name}</p>
+
           <p className='min-w-fit'>{dateFormat(answerData.createdAt)}</p>
         </div>
 
@@ -76,6 +108,14 @@ const CommentCard = ({ index, leftVal, answerData }) => {
 
         <div className='flex gap-5 items-center justify-between mt-5'>
           {!leftVal && <button onClick={handleReplyClick} className={`${isReplying && 'text-purple'} hover:text-purple`}>{Strings.reply[lang]}</button>}
+
+
+          <div className='flex gap-3 items-center'>
+            <button onClick={likeAnswer} className={'w-10 h-10 rounded-full flex items-center justify-center ' + (liked ? "bg-red/20 text-red" : "bg-grey/80")}>
+              <i className={'fi ' + (liked ? 'fi-sr-heart' : 'fi-rr-heart')}></i>
+            </button>
+            <p className='text-xl text-dark-grey'>{counter(likes ? likes.length : 0)}</p>
+          </div>
 
           <div className='flex gap-2 ml-auto'>
             {

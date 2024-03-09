@@ -48,7 +48,11 @@ const Login = ({ type }) => {
 
             setLoading(false);
             const data = await response.json();
-
+            if (data.ban) {
+                // localStorage.setItem('ban', data.ban.userId)
+                navigate('/banned')
+                return
+            }
             if (data.accessToken) {
                 login(data);
                 setSuccess(true);

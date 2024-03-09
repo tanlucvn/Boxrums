@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { BACKEND, Strings } from '@/support/Constants';
 
 import { Section, SectionHeader } from '@/components/Section';
-import { FileCard } from '@/components/Card';
+import { FileCard } from '@/components/Card/Card2';
 import Errorer from '@/components/Errorer';
 
 const Uploads = ({ lang }) => {

@@ -750,6 +750,10 @@ const likeThread = async (req, res, next) => {
 
         const thread = await Thread.findById(threadId)
 
+        if (thread.closed) {
+            return next(createHttpError.BadRequest('thread is closed'))
+        }
+
         if (thread.likes.find(like => like.toString() === req.payload.id)) {
             thread.likes = thread.likes.filter(like => like.toString() !== req.payload.id) // unlike
         } else {
@@ -820,6 +824,10 @@ const createAnswer = async (req, res, next) => {
                 thread = await Thread.findById(threadId)
             } catch (err) {
                 return next(createHttpError.BadRequest('threadId not found'))
+            }
+
+            if (thread.closed) {
+                return next(createHttpError.BadRequest('thread is closed'))
             }
 
             let files = null

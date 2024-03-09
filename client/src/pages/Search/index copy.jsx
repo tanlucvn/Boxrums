@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import InPageNavigaion from "@/components/inpage-navigation.component";
-import BlogPostCard from "@/components/blog-post.component";
 import UserCard from "@/components/usercard.component";
 import { Strings } from "@/support/Constants";
 import { StoreContext } from "@/stores/Store";
 import { useMoreFetch } from "@/hooks/useMoreFetch";
 import DataView from "@/components/DataView";
+import { BlogPostCard } from "@/components/Card/Card2";
 
 const SearchPage = () => {
   const { lang, token } = useContext(StoreContext)

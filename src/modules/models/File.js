@@ -10,8 +10,18 @@ const fileObjectSchema = new Schema({
 
 const fileSchema = new Schema({
   folderId: Types.ObjectId,
+  banner: String,
   title: String,
-  body: String,
+  desc: {
+    type: String,
+    maxlength: 200,
+  },
+  body: {
+    type: []
+  },
+  tags: {
+    type: [String],
+  },
   createdAt: Date,
   author: {
     type: Types.ObjectId,

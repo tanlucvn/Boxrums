@@ -1,10 +1,14 @@
 import { useMoreFetch } from '@/hooks/useMoreFetch';
 
 import DataView from '@/components/DataView';
-import { BoardCard } from '@/components/Card';
+import { BoardsCard } from '@/components/Card/Card2';
 
 export default function Answers({ lang }) {
     const { loading, moreLoading, noData, items } = useMoreFetch({ method: 'boards', sort: 'answersCount' })
+
+    const previewBoardsCard = (item) => {
+        return <BoardsCard {...item} preview="true" type="answersCount" />;
+    };
 
     return (
         <DataView
@@ -12,7 +16,7 @@ export default function Answers({ lang }) {
             noData={noData}
             loading={loading}
             moreLoading={moreLoading}
-            card={BoardCard}
+            card={previewBoardsCard}
             noDataMessage={"no boards yet"}
             errorMessage={"unable to display Boards"}
         />

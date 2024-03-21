@@ -5,12 +5,11 @@ import { dateFormat, deletedUser } from '@/support/Utils';
 import { BACKEND, Strings, imageTypes, videoTypes, fileExt } from '@/support/Constants';
 
 import { UserRole, UserStatus } from '@/components/UserBadge';
-import Markdown from '@/components/Markdown';
+// import Markdown from '@/components/Markdown';
 import BlogContent from '@/components/blog-content.component';
 
 const FileItem = ({ data, moderate, lang }) => {
   const [collapsed, setCollapsed] = useState(true)
-  const bodyParse = JSON.parse(data.body)
 
   const onModerate = ({ type }) => {
     moderate(type, data._id)
@@ -61,7 +60,7 @@ const FileItem = ({ data, moderate, lang }) => {
 
         <div className="card_content markdown">
           {
-            data && data.body && bodyParse.blocks.map((block, i) => {
+            data && data.body && data.body.map((block, i) => {
               return <div className='my-4 md:my-8' key={i}>
                 <BlogContent block={block} />
               </div>

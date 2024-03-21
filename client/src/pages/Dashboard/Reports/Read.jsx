@@ -8,7 +8,7 @@ import { useMoreFetch } from '@/hooks/useMoreFetch';
 import { BACKEND, Strings } from '@/support/Constants';
 
 import DataView from '@/components/DataView';
-import { NotificationCard } from '@/components/Card';
+import { NotificationCard } from '@/components/Card/Card2';
 import { Button } from '@/components/Button';
 
 const Unread = () => {

@@ -7,7 +7,7 @@ import { useMoreFetch } from '@/hooks/useMoreFetch';
 import { Strings } from '@/support/Constants';
 
 import DataView from '@/components/DataView';
-import { NotificationCard } from '@/components/Card';
+import { NotificationCard } from '@/components/Card/Card2';
 
 const Unread = () => {
   const { lang } = useContext(StoreContext)

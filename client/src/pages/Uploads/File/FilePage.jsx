@@ -1,17 +1,19 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import AnimationWrapper from '@/common/page-animation'
-import Loader from '@/components/loader.component'
+import Loader from '@/components/Loader'
 import { BACKEND, Strings, fileExt, imageTypes, videoTypes } from '@/support/Constants'
 import { dateFormat, deletedUser, formatBytes } from '@/support/Utils'
-import FileCommentContainer from '@/components/fileComments.component'
-import FileInteraction from '@/components/file-interaction.component'
+import FileCommentContainer from '@/components/Comments/File/fileComments.component'
+import FileInteraction from '@/components/Interaction/File/file-interaction.component'
 import { StoreContext } from '@/stores/Store'
 import Avatar from 'boring-avatars'
 import axios from 'axios'
 import Errorer from '@/components/Errorer'
 import BlogContent from '@/components/blog-content.component'
-import FileDownloads from '@/components/fileDownloads.components'
+import FileDownloads from '@/components/Comments/File/fileDownloads.components'
+import Socket, { joinToRoom, leaveFromRoom } from '@/support/Socket'
+import { toast } from 'react-hot-toast'
 
 const fileStructure = {
     folderId: "",
@@ -31,23 +33,22 @@ export const FileContext = createContext({})
 const FilePage = () => {
     const { fileId } = useParams();
     const { user, lang } = useContext(StoreContext);
+    const navigate = useNavigate()
 
     const [file, setFile] = useState(fileStructure)
     const [folder, setFolder] = useState()
     const [comment, setComment] = useState([])
-    const [bodyParse, setBodyParse] = useState()
-
     // console.log(file)
 
     const [loading, setLoading] = useState(true)
     const [noData, setNoData] = useState(false)
 
-    const [likes, setLikes] = useState()
     const [liked, setLiked] = useState()
 
     const [commentsWrapper, setCommentsWrapper] = useState(false);
     const [downloadsWrapper, setDownloadsWrapper] = useState(false);
     const [totalParentComentsLoaded, setTotalCommentsLoaded] = useState(0)
+    const [subscribed, setSubscribed] = useState({})
 
     const fetchFile = async () => {
         try {
@@ -62,8 +63,6 @@ const FilePage = () => {
                 if (!response.data.message) {
                     setFile(response.data.file);
                     setNoData(false);
-                    setLikes(response.data.file.likes);
-                    setBodyParse(JSON.parse(response.data.file.body));
 
                     await fetchComment();
                 } else {
@@ -105,11 +104,46 @@ const FilePage = () => {
     }, [fileId])
 
     useEffect(() => {
-        setLiked(user ? !!likes?.find(i => i._id === user.id) : false)
-    }, [user, likes])
+        if (file && file.likes.length >= 0) {
+            setLiked(user ? !!file.likes.find(i => i._id === user.id) : false)
+        }
+    }, [user, file])
 
+    useEffect(() => {
+        if (fileId) joinToRoom('file:' + fileId)
+        return () => {
+            if (fileId) leaveFromRoom('file:' + fileId)
+        }
+    }, [fileId])
 
-    console.log(file)
+    useEffect(() => {
+        Socket.on('fileDeleted', (data) => {
+            toast.error("File has been deleted")
+            navigate('/uploads/');
+        });
+        Socket.on('fileEdited', (data) => {
+            setFile(data);
+        });
+        Socket.on('fileLiked', (data) => {
+            setFile(data);
+        });
+        Socket.on('fileDownloaded', (data) => {
+            setFile(data);
+        });
+        Socket.on('commentCreated', (data) => {
+            setSubscribed({ type: 'commentCreated', payload: data })
+        });
+        Socket.on('commentDeleted', (data) => {
+            setSubscribed({ type: 'commentDeleted', payload: data })
+        });
+        Socket.on('commentLiked', (data) => {
+            setSubscribed({ type: 'commentLiked', payload: data })
+        });
+
+        // eslint-disable-next-line
+    }, []);
+
+    console.log("likes", file.likes)
     return (
         <AnimationWrapper>
             {
@@ -118,7 +152,8 @@ const FilePage = () => {
                         <FileContext.Provider value={{
                             file, setFile,
                             comment, setComment,
-                            likes, setLikes, liked, setLiked,
+                            subscribed, setSubscribed,
+                            liked, setLiked,
                             commentsWrapper, setCommentsWrapper, totalParentComentsLoaded, setTotalCommentsLoaded,
                             downloadsWrapper, setDownloadsWrapper
                         }}>
@@ -127,13 +162,14 @@ const FilePage = () => {
                             <div className='max-w-[900px] center py-10 max-lg:px-[5vw]'>
                                 <div className='aspect-video'>
                                     {
-                                        file.banner ? file.banner : <Avatar
-                                            size={"100%"}
-                                            name={file.title}
-                                            variant="marble"
-                                            colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
-                                            square="true"
-                                        />
+                                        file.banner ? <img src={file.banner} alt="Banner" className='aspect-video' /> :
+                                            <Avatar
+                                                size={"100%"}
+                                                name={file.title}
+                                                variant="marble"
+                                                colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+                                                square="true"
+                                            />
                                     }
                                 </div>
                                 <div className='mt-12'>
@@ -173,42 +209,13 @@ const FilePage = () => {
                                         </div>
                                         <p className='text-dark-grey opacity-75 max-sm:mt-6 mx-sm:ml-12 max-sm:pl-5'>{dateFormat(file?.createdAt)}</p>
                                     </div>
-
-                                    {/* <div className='bg-grey rounded-xl w-fit'>
-                                        {imageTypes.find(i => i === file.file.type) ? (
-                                            <img
-                                                className="card_left"
-                                                src={BACKEND + file.file.url}
-                                                onClick={() => imageView(BACKEND + file.file.url)}
-                                                alt="Preview"
-                                            />
-                                        ) : videoTypes.find(i => i === file.file.type) ? (
-                                            <video
-                                                className="card_left"
-                                                src={BACKEND + file.file.url}
-                                                poster={BACKEND + file.file.thumb}
-                                                controls
-                                            />
-                                        ) : null}
-
-                                        <div className='my-4 md:my-8'>
-                                            <div className='flex gap-3'>
-                                                <p>{Strings.extension[lang]}:</p>
-                                                <span>{fileExt.exec(file.file.url)[1]}</span>
-                                            </div>
-                                            <div className='flex gap-3'>
-                                                <p>{Strings.fileSize[lang]}:</p>
-                                                <span>{formatBytes(file.file.size)}</span>
-                                            </div>
-                                        </div>
-                                    </div> */}
                                 </div>
 
                                 <FileInteraction dropdown="true" />
 
                                 <div className='my-12 blog-page-content'>
                                     {
-                                        file && file.body && bodyParse.blocks.map((block, i) => {
+                                        file && file.body && file.body[0].blocks.map((block, i) => {
                                             return <div className='my-4 md:my-8' key={i}>
                                                 <BlogContent block={block} />
                                             </div>

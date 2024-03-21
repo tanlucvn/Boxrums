@@ -6,14 +6,14 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Toaster, toast } from 'react-hot-toast'
 import validator from 'validator';
 
-import { BACKEND, Strings } from '@/support/Constants';
+import { BACKEND, CLIENT, Strings } from '@/support/Constants';
 import { useForm } from "@/hooks/useForm"
 import { StoreContext } from "@/stores/Store"
 
 const Login = ({ type }) => {
     document.title = 'Boxrum | Login'
 
-    const { login, lang } = useContext(StoreContext)
+    const { login, lang, setBanned } = useContext(StoreContext)
     const navigate = useNavigate();
 
     const [errors, setErrors] = useState({})
@@ -50,9 +50,10 @@ const Login = ({ type }) => {
             const data = await response.json();
             if (data.ban) {
                 // localStorage.setItem('ban', data.ban.userId)
-                navigate('/banned')
+                setBanned({ status: true, userId: data.ban.userId })
                 return
             }
+            console.log("data", data)
             if (data.accessToken) {
                 login(data);
                 setSuccess(true);
@@ -126,11 +127,11 @@ const Login = ({ type }) => {
     }
 
     const handleDiscordAuth = () => {
-        window.location.href = 'https://discord.com/api/oauth2/authorize?client_id=1193082815420575745&redirect_uri=http://localhost:3000/auth/discord&response_type=code&scope=email+identify';
+        window.location.href = `https://discord.com/api/oauth2/authorize?client_id=1193082815420575745&redirect_uri=${CLIENT}/auth/discord&response_type=code&scope=email+identify`;
     };
 
     const handleFacebookAuth = () => {
-        window.location.href = 'https://www.facebook.com/v18.0/dialog/oauth?client_id=1044853073435724&redirect_uri=http://localhost:3000/auth/facebook&scope=email';
+        window.location.href = `https://www.facebook.com/v18.0/dialog/oauth?client_id=1044853073435724&redirect_uri=${CLIENT}/auth/facebook&scope=email`;
     };
 
     useEffect(() => {
@@ -143,7 +144,7 @@ const Login = ({ type }) => {
 
     const renderPage0Content = () => (
         <>
-            <LabelInputBox text={Strings.enterUsername[lang]} errors={errors.username} />
+            <LabelInputBox text={Strings.username[lang]} errors={errors.username} />
             <InputBox icon="fi-rr-user" className={`${errors.username ? 'error' : ''}`} type="text" name='username' id='username' placeholder={Strings.placeholderUsername[lang]} value={values.username} onChange={onChange} autoFocus={true} />
 
             <button className="btn-dark center mt-14" onClick={handleSetNextPage}>
@@ -154,12 +155,12 @@ const Login = ({ type }) => {
 
     const renderPage1Content = () => (
         <>
-            <LabelInputBox text={Strings.enterPassword[lang]} errors={errors.password} />
+            <LabelInputBox text={Strings.password[lang]} errors={errors.password} />
             <InputBox icon="fi-rr-lock" className={`${errors.password ? 'error' : ''}`} type="password" name='password' id='password' placeholder={Strings.placeholderPassword[lang]} value={values.password} onChange={onChange} autoFocus={true} />
 
             <div className="back-section flex text-dark-grey cursor-pointer hover:opacity-80" onClick={handleSetPrevPage}>
                 <i className="fi fi-rr-arrow-small-left mr-3" />
-                {Strings.authFormBack[lang]}
+                {Strings.back[lang]}
             </div>
             <button className="btn-dark center mt-14" type='submit'>
                 {Strings.login[lang]}

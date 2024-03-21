@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AnimationWrapper from '@/common/page-animation'
 import { Link } from 'react-router-dom'
@@ -9,6 +9,7 @@ import { Strings } from '@/support/Constants'
 const NavbarDropdown = () => {
     const { user, logout, lang } = useContext(StoreContext)
     const navigate = useNavigate()
+    const dropdownRef = useRef()
 
     const onLogout = () => {
         navigate('/')
@@ -19,7 +20,7 @@ const NavbarDropdown = () => {
 
     return (
         <AnimationWrapper transition={{ duration: 0.2 }} className="absolute right-0 z-50">
-            <div className='bg-white absolute right-0 border-grey w-60 duration-200 shadow-md'>
+            <div ref={dropdownRef} className='bg-grey absolute right-0 top-3 border-grey w-60 duration-200 shadow-md'>
                 <Link to='/editor' className='flex gap-2 link md:hidden pl-8 py-4 '>
                     <i className='fi fi-rr-file-edit'></i>
                     <p>Write</p>
@@ -27,11 +28,13 @@ const NavbarDropdown = () => {
                 <Link to={`/user/${user.name}`} className='link pl-8 py-4 '>
                     {Strings.profile[lang]}
                 </Link>
-                <Link to={`/dashboard/blogs`} className='link pl-8 py-4 '>
-                    {Strings.dashboard[lang]}
-                </Link>
+                {user.role >= 2 &&
+                    <Link to={`/dashboard`} className='link pl-8 py-4 '>
+                        {Strings.dashboard[lang]}
+                    </Link>
+                }
                 <Link to={`/settings/edit-profile`} className='link pl-8 py-4 '>
-                    {Strings.setting[lang]}
+                    {Strings.settings[lang]}
                 </Link>
                 <span className='absolute border-t border-grey  w-[100%]'></span>
 

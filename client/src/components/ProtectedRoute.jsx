@@ -1,28 +1,29 @@
 import { useContext, useEffect } from 'react';
-import { Route, Navigate, useNavigate, Outlet } from 'react-router-dom';
+import { Navigate, useNavigate, Outlet } from 'react-router-dom';
 
 import { StoreContext } from '@/stores/Store';
 
 export const GeneralRoute = () => {
-  const { user } = useContext(StoreContext)
+  const { banned } = useContext(StoreContext)
 
-  if (user && user.ban) {
-    console.log("banned")
-  }
+  useEffect(() => {
+    if (banned.status === true) {
+      return navigate('/banned')
+    }
+  }, [banned])
 
-  /* if (isBanned) {
-    return <Navigate to="/banned" />
-  } */
   return <Outlet />
 }
 
 export const AuthRoute = () => {
-  const { user } = useContext(StoreContext)
+  const { user, banned } = useContext(StoreContext)
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (localStorage.getItem('ban')) return navigate('/banned')
-  })
+    if (banned.status === true) {
+      return navigate('/banned')
+    }
+  }, [banned])
 
   if (user) {
     return <Navigate to="/" />
@@ -31,34 +32,40 @@ export const AuthRoute = () => {
   return <Outlet />;
 }
 
-export const UsersOnlyRoute = ({ component: Component, ...rest }) => {
-  const { user } = useContext(StoreContext)
+export const UsersOnlyRoute = () => {
+  const { user, banned } = useContext(StoreContext)
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (localStorage.getItem('ban')) return navigate('/banned')
-  })
+    if (banned.status === true) {
+      return navigate('/banned')
+    }
+  }, [banned])
+
+  if (user) {
+    return <Outlet />
+  }
 
   return (
-    <Route
-      {...rest}
-      render={(props) => (user ? <Component {...props} /> : <Navigate to="/signup" />)}
-    />
+    <Navigate to="/login" />
   )
 }
 
 export const AdminsOnlyRoute = ({ component: Component, ...rest }) => {
-  const { user } = useContext(StoreContext)
+  const { user, banned } = useContext(StoreContext)
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (localStorage.getItem('ban')) return navigate('/banned')
-  })
+    if (banned.status === true) {
+      return navigate('/banned')
+    }
+  }, [banned])
+
+  if (user && user.role >= 2) {
+    return <Outlet />
+  }
 
   return (
-    <Route
-      {...rest}
-      render={(props) => (user && user.role >= 2 ? <Component {...props} /> : <Navigate to="/" />)}
-    />
+    <Navigate to="/" />
   )
 }

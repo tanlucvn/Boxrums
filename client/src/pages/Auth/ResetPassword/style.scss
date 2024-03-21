@@ -1,0 +1,245 @@
+@import "styles/global.scss";
+
+/* 
+* ==========================
+* LOGIN PAGES 
+* ==========================
+*/
+.resetPage {
+    padding: 30px 90px;
+    width: 550px;
+    text-align: center;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: auto;
+    margin-top: 1rem;
+    
+
+    /* 
+    * ==========================
+    * TITLE 
+    * ==========================
+    */
+    &__title{
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+
+    /* 
+    * ==========================
+    * FORM INPUT 
+    * ==========================
+    */
+    .form{
+        input {
+            width: 100%;
+            background: transparent;
+            border: 1.5px solid var(--actions-color);
+            outline: 0;
+            padding: 15px 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        ::placeholder {
+            font-weight: 500;
+            color: var(--actions-color);
+        }
+
+        &__input{
+            color: var(--secondary-text);
+
+            &:focus-within{
+                border-color: var(--accent-color);
+            }
+
+            &.error{
+                border-color: var(--main-danger-color);
+                animation: shake 300ms;
+            }
+
+            @keyframes shake {
+                0%, 100% {transform: translate(0);}
+                25% {transform: translate(0.125rem);}
+                75% {transform: translate(-0.125rem);}
+            }
+        }
+
+        &__button{
+            width: 100%;
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            border-radius: 30px;
+            font-weight: 400;
+            background: var(--color_background_primary);
+            color: var(--color_text_tertiary);
+            border: 0;
+            cursor: pointer;
+        }
+
+        .inputPassword-container {
+            position: relative;
+
+            input {
+                padding-right: 40px; 
+            }
+              
+            .eye-icon {
+                position: absolute;
+                right: 11px; 
+                top: 26px;
+                transform: translateY(-50%);
+                color: var(--actions-color);
+                cursor: pointer;
+            }
+        }
+        
+        .redirect-signup {
+            text-decoration: none;
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+        
+        .inputLabel{
+            color: var(--main-text);
+            font-weight: 500;
+            padding: .3rem .0rem;
+            user-select: none;
+            margin: .3rem .2rem;
+            justify-content: space-between;
+        
+            span{
+                font-size: var(--smallFontSize);
+                color: var(--main-danger-color);
+                font-weight: 400;
+            }
+        }
+        
+        .back-section{
+            color: var(--actions-color);
+            font-weight: 400;
+            padding: .3rem .0rem;
+            cursor: pointer;
+            justify-content: start;
+            align-items: center;
+        
+            &:hover{
+                color: var(--main-text);
+            }
+            svg{
+                margin-right: 5px;
+            }
+        }
+    }
+
+
+    /* 
+    * ==========================
+    * INTEGRATIONS BUTTON 
+    * ==========================
+    */
+    &__authBtn {
+        width: 100%;
+        padding: 10px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 20px 0;
+        border-radius: 30px;
+        background: transparent;
+        border: 1.5px solid var(--actions-color);
+        cursor: pointer;
+        gap: 1rem;
+        color: var(--color_text_primary);
+    
+        &__logo{
+            font-size: var(--h2FontSize);
+        }
+    
+        &__text{
+            font-weight: 400;
+        }
+    
+        &:hover{
+            border-color: var(--color_background_primary);
+        }
+    }
+
+
+    /* 
+    * ==========================
+    * TEXT DIVIDER 
+    * ==========================
+    */
+    .divider{
+        hr {
+            border: 0;
+            height: 1px;
+            background: var(--actions-color);
+            margin: 5px;    
+            width: 100%;
+        
+            @include sm_screen(){
+                height: 0.1px;
+            }
+        }
+        
+        &__or{
+            width: 40px;
+            margin: auto;
+            font-size: 14px;
+            transition: none !important;
+        }
+    }
+
+
+    /* 
+    * ==========================
+    * OTHER 
+    * ==========================
+    */
+    .forgotBtn{
+        width: 100%;
+        padding: 10px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 20px 0;
+        border-radius: 30px;
+        background: transparent;
+        border: 1px solid var(--actions-color);
+        font-weight: 400;
+        color: var(--actions-color);
+        cursor: pointer;
+    }
+
+    .dhaaTitle {
+        text-align: center;
+        font-size: 14px;
+        color: var(--actions-color);
+        margin: 40px 0 50px;
+    }
+    
+
+    /* 
+    * ==========================
+    * MEDIA QUERIES 
+    * ==========================
+    */
+    @include sm_screen(){
+        width: 100%;
+        padding: 30px 60px;
+    }
+
+    @include tn_screen(){
+        width: 100%;
+        padding: 30px 30px;
+    }
+}
+
+

@@ -4,7 +4,6 @@ import { toast } from 'react-hot-toast';
 import { BACKEND, imageTypes, videoTypes, fileExt } from '@/support/Constants';
 import { dateFormat, formatBytes } from '@/support/Utils';
 
-import Markdown from '@/components/Markdown';
 // import VideoLightbox, { ImageLightbox } from '@/components/VideoLightbox';
 
 const MessageItem = ({ data, groupId, user, token }) => {

@@ -10,10 +10,10 @@ import DataView from '@/components/DataView';
 import { ArticleCard } from '@/components/Card/Card2';
 
 const Threads = ({ userData }) => {
-    const { lang } = useContext(StoreContext)
+    const { user, lang } = useContext(StoreContext)
     document.title = 'Forum | ' + userData.displayName + ' / ' + Strings.threads[lang]
 
-    const { loading, moreLoading, noData, items } = useMoreFetch({ method: 'user/threads', params: { userId: userData.id }, auth: true })
+    const { loading, moreLoading, noData, items } = useMoreFetch({ method: 'user/threads', params: { userId: user.id === userData.id ? userData.id : userData._id }, auth: true })
 
     return (
         <DataView

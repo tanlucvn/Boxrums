@@ -12,7 +12,6 @@ import { Button } from '@/components/Button';
 import DataView from '@/components/DataView';
 
 import { BoardItem, NewBoardItem } from './BoardItem';
-import './style.css';
 
 const Boards = () => {
   const { token, lang } = useContext(StoreContext)

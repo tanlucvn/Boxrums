@@ -21,6 +21,7 @@ import Avatar from 'boring-avatars'
 
 import MessageItem from './MessageItem';
 import './style.css';
+import { LabelInputBox } from '@/components/Form/Input';
 
 const Dialogue = () => {
   const { user, token, lang } = useContext(StoreContext)
@@ -370,7 +371,14 @@ const Dialogue = () => {
     setChatWidth(contentSection.clientWidth)
   }
 
-  console.log("hooks")
+  // console.log("hooks")
+  useEffect(() => {
+    if (userName) {
+      document.body.classList.add('noscroll')
+    } else {
+      document.body.classList.remove('noscroll')
+    }
+  }, [userName])
 
   return (
     <Fragment>
@@ -420,7 +428,7 @@ const Dialogue = () => {
                 <>
                   {moreLoading && <Loader className="more_loader" color="#64707d" />}
 
-                  <div className="messages_list">
+                  <div className="messages_list mb-[5rem]">
                     {items.map(item => (
                       <div key={item.groupId} className="messages_group">
                         <div className="group_date_block">
@@ -444,17 +452,20 @@ const Dialogue = () => {
         </CustomScrollbar>
 
         {toUser.name && toUser.name !== 'deleted' && (
-          <form className="form_inner comments_form bg-purple z-20 left-0 max-w-0 m-0" /* style={{ width: `${chatWidth}px` }} */ onSubmit={onSubmit}>
-            <FormCardItem row>
-              <FileUploadForm
-                mini
-                sendFiles={getFile}
-                clearFiles={clearFiles}
-              />
+          <form className="w-full sticky comments_form bg-grey rounded-md z-50 max-w-none m-0" /* style={{ width: `${chatWidth}px` }} */ onSubmit={onSubmit}>
+            <div className='flex items-center gap-3'>
+              <div className='basis-1/4'>
+                <FileUploadForm
+                  mini
+                  sendFiles={getFile}
+                  clearFiles={clearFiles}
+                />
+              </div>
 
-              <div className={errors.body ? 'form_block error' : 'form_block'}>
+              <div className='w-full'>
+                <LabelInputBox errors={errors.body} />
                 <TextareaAutosize
-                  className="input-box w-auto"
+                  className="input-box w-full"
                   name="body"
                   value={values.body}
                   maxLength="1000"
@@ -466,13 +477,15 @@ const Dialogue = () => {
                 />
               </div>
 
-              <button className="btn-dark send_btn" disabled={uploading}>
-                {uploading
-                  ? <i class="fi fi-rr-circle"></i>
-                  : <i class="fi fi-rr-paper-plane-top"></i>
-                }
-              </button>
-            </FormCardItem>
+              <div className='basis-1/4 flex justify-center items-center'>
+                <button className="btn-dark send_btn" disabled={uploading}>
+                  {uploading
+                    ? <i class="fi fi-rr-circle"></i>
+                    : <i class="fi fi-rr-paper-plane-top"></i>
+                  }
+                </button>
+              </div>
+            </div>
           </form>
         )}
       </div>

@@ -13,10 +13,6 @@ export const useForm = (callback, initialState = {}) => {
         setValues({ ...values, [data.name]: data.value })
     }
 
-    const onQuillChange = (name, content) => {
-        setValues({ ...values, [name]: content });
-    };
-
     const onSubmit = (e) => {
         e.preventDefault()
 
@@ -26,7 +22,6 @@ export const useForm = (callback, initialState = {}) => {
     return {
         onChange,
         addValue,
-        onQuillChange,
         onSubmit,
         values,
         reset: () => setValues(initialState)

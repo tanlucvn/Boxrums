@@ -11,11 +11,11 @@
 }
 
 .messages_wrapper .comments_form {
-  @apply relative bg-transparent py-2 px-0;
+  @apply py-2 px-0;
 }
 
 .messages_wrapper .comments_form {
-  @apply fixed bottom-0 w-full max-w-none transition-all z-10;
+  @apply bottom-0 max-w-none transition-all z-10;
 }
 
 .messages_wrapper .form_block {

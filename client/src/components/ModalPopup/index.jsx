@@ -3,7 +3,7 @@ import { BACKEND, Strings } from '@/support/Constants';
 import { LabelInputBox, TextareaBox } from '../Form/Input';
 import { StoreContext } from '@/stores/Store';
 import AnimationWrapper from '@/common/page-animation';
-import { SentenceContext } from '../comment-field.component';
+import { SentenceContext } from '../Comments/Thread/comment-field.component';
 
 export const RegEmailVerifications = ({ open, data }) => {
     const [openModalPopup, setOpenModalPopup] = useState(open)

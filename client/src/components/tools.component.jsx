@@ -6,6 +6,7 @@ import Marker from '@editorjs/marker'
 import Embed from '@editorjs/embed'
 import InlineCode from '@editorjs/inline-code'
 import AttachesTool from '@editorjs/attaches';
+import CodeBox from '@bomdi/codebox';
 
 const uploadImageByURL = (e) => {
     let link = new Promise((resolve, reject) => {
@@ -35,7 +36,7 @@ export const tools = {
         class: List,
         inlineToolbar: true
     },
-    image: {
+    /* image: {
         class: Image,
         config: {
             uploader: {
@@ -43,7 +44,7 @@ export const tools = {
                 uploadByFile: uploadImageByFile,
             },
         }
-    },
+    }, */
     marker: Marker,
     header: {
         class: Header,
@@ -63,5 +64,12 @@ export const tools = {
         config: {
             endpoint: 'http://localhost:8008/uploadFile'
         }
-    }
+    },
+    codeBox: {
+        class: CodeBox,
+        config: {
+            themeName: 'atom-one-dark', // Optional
+            useDefaultTheme: 'dark' // Optional. This also determines the background color of the language select drop-down
+        }
+    },
 }

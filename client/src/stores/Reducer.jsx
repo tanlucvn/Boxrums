@@ -40,6 +40,11 @@ const Reducer = (state, action) => {
                 ...state,
                 fab: action.payload
             }
+        case 'SET_USER_BANNED':
+            return {
+                ...state,
+                banned: action.payload
+            }
         default:
             return state
     }

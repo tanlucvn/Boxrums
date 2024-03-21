@@ -9,7 +9,7 @@ import { Strings } from '@/support/Constants';
 
 import { SectionHeader } from '@/components/Section';
 import FormCardItem from '@/components/Card/FormCardItem';
-import { InputBox } from '@/components/Form/Input';
+import { InputBox, LabelInputBox } from '@/components/Form/Input';
 import DataView from '@/components/DataView';
 import { AuthHistoryCard } from '@/components/Card';
 
@@ -46,17 +46,14 @@ const SearchAuth = () => {
   return (
     <>
       <form className="form_inner" onSubmit={onSubmit}>
-        <FormCardItem>
-          <div className={errors.ip ? 'form_block error' : 'form_block'}>
-            <InputBox
-              name="ip"
-              value={values.ip}
-              placeholder={Strings.enterYourSearchTerm[lang] + '...'}
-              maxLength="50"
-              onChange={onChange}
-            />
-          </div>
-        </FormCardItem>
+        <LabelInputBox text="Search" errors={errors.ip} />
+        <InputBox
+          name="ip"
+          value={values.ip}
+          placeholder={Strings.enterYourSearchTerm[lang] + '...'}
+          maxLength="50"
+          onChange={onChange}
+        />
       </form>
 
       {ip && <SectionHeader title={Strings.searchResults[lang]} />}

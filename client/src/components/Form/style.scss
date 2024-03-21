@@ -1,19 +1,6 @@
 @import '@/color.scss';
 
 /* FORM INPUT */
-.input-label{
-        font-weight: 500;
-        padding: .3rem .0rem;
-        user-select: none;
-        margin: .3rem .2rem;
-        justify-content: space-between;
-    
-        .error-text{
-            font-size: var(--smallFontSize);
-            color: $red;
-            font-weight: 400;
-        }
-}
 .input-box{
     &.error{
         border-color: $red;
@@ -24,74 +11,5 @@
         0%, 100% {transform: translate(0);}
         25% {transform: translate(0.125rem);}
         75% {transform: translate(-0.125rem);}
-    }
-}
-
-.md-editor{
-    border-top-left-radius: 5px;
-    border: 2px solid var(--form-border-color);
-    border-radius: var(--border-radius);
-    background: var(--secondary-bg);
-
-    &:focus-within{
-        border-color: var(--form-border-color-active) !important;
-    }
-
-    .md-editor-toolbar-wrapper{
-        border: none;
-
-        .md-editor-toolbar{
-            overflow-x: scroll;
-        }
-
-        .md-editor-toolbar::-webkit-scrollbar {
-            width: 12px; 
-        }
-        
-        .md-editor-toolbar::-webkit-scrollbar-thumb {
-            background-color: #888; 
-            border-radius: 6px;
-        }
-        
-        .md-editor-toolbar::-webkit-scrollbar-track {
-            background-color: #f1f1f1;
-        }
-    }
-    
-    .cm-editor{
-        background: var(--secondary-bg);
-    }
-
-    .md-editor-resize-operate{
-        background-color: #888; 
-        width: 6px;
-        border-radius: 50px;
-    }
-
-    .md-editor-footer{
-        border-top: 1px solid #888;
-    }
-    .md-editor-checkbox{
-        border: 1px solid var(--actions-color);
-        background-color: var(--projects-section)
-    }
-    /* .has-preview{
-        background: red;
-        width: 100px;
-    } */
-
-    /* PREVIEW */
-    .md-editor-preview{
-        color: var(--main-text);
-
-        p{
-            word-break: break-word;
-        }
-    }
-    h1{
-        color: var(--accent-color);
-    }
-    em{
-        font-style: italic !important;
     }
 }

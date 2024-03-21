@@ -1,7 +1,7 @@
 import { useMoreFetch } from '@/hooks/useMoreFetch';
 
 import DataView from '@/components/DataView';
-import { BoardCard } from '@/components/Card';
+import { BoardsCard } from '@/components/Card/Card2';
 
 export default function Popular({ lang }) {
     const { loading, moreLoading, noData, items } = useMoreFetch({ method: 'boards', sort: 'popular' })
@@ -12,7 +12,7 @@ export default function Popular({ lang }) {
             noData={noData}
             loading={loading}
             moreLoading={moreLoading}
-            card={BoardCard}
+            card={BoardsCard}
             noDataMessage={"no boards yet"}
             errorMessage={"unable to display Boards"}
         />

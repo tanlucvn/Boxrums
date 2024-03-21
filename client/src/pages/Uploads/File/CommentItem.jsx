@@ -7,7 +7,7 @@ import { StoreContext } from '@/stores/Store';
 import { counter, declOfNum, dateFormat, deletedUser } from '@/support/Utils';
 import { BACKEND, Strings } from '@/support/Constants';
 
-import Markdown from '@/components/Markdown';
+// import Markdown from '@/components/Markdown';
 import { CardBody } from '@/components/Card';
 import Dropdown from '@/components/Card/Dropdown';
 import { UserRole, UserStatus, UserOnline } from '@/components/UserBadge';

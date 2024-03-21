@@ -35,7 +35,8 @@ const initialState = {
         data: ''
     },
     fab: true,
-    lang
+    lang,
+    banned: { status: false, userId: '' }
 }
 
 export const StoreContext = createContext(initialState)
@@ -101,9 +102,9 @@ const Store = ({ children }) => {
         })
     }
 
-    const setSiderbarCollapsed = (payload) => {
+    const setBanned = (payload) => {
         dispatch({
-            type: 'SET_SIDEBAR_COLLAPSED',
+            type: 'SET_USER_BANNED',
             payload
         })
     }
@@ -116,6 +117,8 @@ const Store = ({ children }) => {
         setUserPicture,
         modalOpen,
         setModalOpen,
+        banned: state.banned,
+        setBanned,
         postType: state.postType,
         setPostType,
         postRes: state.postRes,

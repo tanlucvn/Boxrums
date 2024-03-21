@@ -1,14 +1,14 @@
 import { io } from 'socket.io-client';
 import { BACKEND } from './Constants';
 
-const socket = io(BACKEND)
+const Socket = io(BACKEND)
 
 export const joinToRoom = (room, payload) => {
-    socket.emit('join', { room, payload })
+    Socket.emit('join', { room, payload })
 }
 
 export const leaveFromRoom = (room) => {
-    socket.emit('leave', { room })
+    Socket.emit('leave', { room })
 }
 
-export default socket;
+export default Socket;

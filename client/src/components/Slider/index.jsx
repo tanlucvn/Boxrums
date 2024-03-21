@@ -6,7 +6,7 @@ import { counter, declOfNum } from '@/support/Utils';
 
 /* import './style.css'; */
 
-const ControlledSlider = ({ items, card: Card }) => {
+const ControlledSlider = ({ items, card: Card, ref }) => {
     const slider = useRef()
     const [start, setStart] = useState(true)
     const [end, setEnd] = useState(false)
@@ -35,7 +35,7 @@ const ControlledSlider = ({ items, card: Card }) => {
     }
 
     return (
-        <div className="relative">
+        <div ref={ref} className="relative">
             <ul
                 ref={slider}
                 onScroll={handleScroll}
@@ -65,7 +65,7 @@ const ControlledSlider = ({ items, card: Card }) => {
 const PopularBoardsItem = ({ data, lang }) => {
     return (
         <li className="w-[122px] h-[122px] bg-grey snap-center snap-always rounded-xl">
-            <Link to={'/boards/' + data.name} className="flex flex-col w-full h-full p-3">
+            <Link to={'/board/' + data.name} className="flex flex-col w-full h-full p-3">
                 <span className="text-base font-medium overflow-hidden overflow-ellipsis line-clamp-2">{data.title}</span>
                 <span className="text-sm">
                     {counter(data.threadsCount)} {declOfNum(data.threadsCount, "thread", "threads", "threads")}

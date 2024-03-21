@@ -30,6 +30,12 @@ export const dateFormat = (date, type) => {
 
     let formatObj
 
+    if (lang === 'vi') {
+        moment.locale('vi');
+    } else {
+        moment.locale('en');
+    }
+
     if (type === 'short') {
         formatObj = {
             sameDay: timeFormat,

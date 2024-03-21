@@ -30,8 +30,6 @@ const Admins = () => {
 
     const { loading, moreLoading, noData, items } = useMoreFetch({ method: 'admins' })
 
-    console.log("Render")
-
     return (
         <Section>
             <DataView

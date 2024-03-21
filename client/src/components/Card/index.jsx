@@ -8,7 +8,7 @@ import { StoreContext } from '@/stores/Store';
 import { counter, declOfNum, dateFormat, deletedUser } from '@/support/Utils';
 import { BACKEND, Strings, imageTypes, videoTypes, fileExt } from '@/support/Constants';
 
-import Markdown from '@/components/Markdown';
+// import Markdown from '@/components/Markdown';
 import { UserRole, UserStatus, UserOnline } from '@/components/UserBadge';
 import VideoLightbox, { ImageLightbox } from '@/components/VideoLightbox';
 

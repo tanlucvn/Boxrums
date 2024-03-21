@@ -5,9 +5,7 @@ import { StoreContext } from '@/stores/Store';
 
 import { Section } from '@/components/Section';
 
-import Profile from './Profile';
 import Settings from './Settings';
-import './style.scss';
 import ProfilePage from './Profile/profile.page';
 
 const User = ({ match }) => {

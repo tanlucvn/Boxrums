@@ -1,12 +1,16 @@
-import { useMoreFetch } from 'hooks/useMoreFetch';
+import { useMoreFetch } from '@/hooks/useMoreFetch';
 
-import { Strings } from 'utils/Constants';
+import { Strings } from '@/support/Constants';
 
-import DataView from 'components/DataView';
-import { Card } from 'components/Card';
+import DataView from '@/components/DataView';
+import { ArticleCard } from '@/components/Card/Card2';
 
 const Answers = ({ boardId, lang }) => {
     const { loading, moreLoading, noData, items } = useMoreFetch({ method: 'threads', params: { boardId }, sort: 'answersCount' })
+
+    const previewArticleCard = (item) => {
+        return <ArticleCard {...item} preview="true" type="answersCount" />;
+    };
 
     return (
         <DataView
@@ -14,7 +18,7 @@ const Answers = ({ boardId, lang }) => {
             noData={noData}
             loading={loading}
             moreLoading={moreLoading}
-            card={(props) => <Card {...props} preview />}
+            card={previewArticleCard}
             noDataMessage={Strings.noThreadsYet[lang]}
             errorMessage={Strings.unableToDisplayThreads[lang]}
         />

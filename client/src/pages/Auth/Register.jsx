@@ -137,7 +137,7 @@ const Register = ({ type }) => {
             <LabelInputBox text={Strings.enterEmail[lang]} errors={errors.email} />
             <InputBox icon="fi-rr-user" className={`${errors.email ? 'error' : ''}`} type="text" name='email' id='email' placeholder={Strings.placeholderEmail[lang]} value={values.email} onChange={onChange} autoFocus={true} />
 
-            <LabelInputBox text={Strings.enterUsername[lang]} errors={errors.username} />
+            <LabelInputBox text={Strings.username[lang]} errors={errors.username} />
             <InputBox icon="fi-rr-user" className={`${errors.username ? 'error' : ''}`} type="text" name='username' id='username' placeholder={Strings.placeholderUsername[lang]} value={values.username} onChange={onChange} />
 
             <button className="btn-dark center mt-14" onClick={handleSetNextPage}>
@@ -148,7 +148,7 @@ const Register = ({ type }) => {
 
     const renderPage1Content = () => (
         <>
-            <LabelInputBox text={Strings.enterPassword[lang]} errors={errors.password} />
+            <LabelInputBox text={Strings.password[lang]} errors={errors.password} />
             <InputBox icon="fi-rr-lock" className={`${errors.password ? 'error' : ''}`} type="password" name='password' id='password' placeholder={Strings.placeholderPassword[lang]} value={values.password} onChange={onChange} autoFocus={true} />
 
             <LabelInputBox text={Strings.enterRePassword[lang]} errors={errors.repassword} />
@@ -156,7 +156,7 @@ const Register = ({ type }) => {
 
             <div className="back-section flex text-dark-grey cursor-pointer hover:opacity-80" onClick={handleSetPrevPage}>
                 <i className="fi fi-rr-arrow-small-left mr-3" />
-                {Strings.authFormBack[lang]}
+                {Strings.back[lang]}
             </div>
             <button className="btn-dark center mt-14" type='submit'>
                 {Strings.register[lang]}

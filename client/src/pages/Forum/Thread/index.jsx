@@ -2,10 +2,10 @@ import axios from 'axios'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import AnimationWrapper from '@/common/page-animation'
-import Loader from '@/components/loader.component'
-import BlogInteraction from '@/components/blog-interaction.component'
+import Loader from '@/components/Loader'
+import BlogInteraction from '@/components/Interaction/Thread/blog-interaction.component'
 import BlogContent from '@/components/blog-content.component'
-import CommentContainer from '@/components/comments.component'
+import CommentContainer from '@/components/Comments/Thread/comments.component'
 import { StoreContext } from '@/stores/Store'
 import { BACKEND, Strings } from '@/support/Constants'
 
@@ -13,91 +13,176 @@ import Avatar from 'boring-avatars';
 import Errorer from '@/components/Errorer'
 import { BlogPostCard } from '@/components/Card/Card2'
 import { dateFormat } from '@/support/Utils'
+import Socket, { joinToRoom, leaveFromRoom } from '@/support/Socket'
+import { toast } from 'react-hot-toast'
 
-
+const threadStructure = {
+    boardId: "",
+    banner: "",
+    title: "",
+    desc: "",
+    body: [],
+    tags: [],
+    author: {},
+    attach: {},
+    likes: [],
+    closed: false,
+    pined: false,
+    createdAt: "",
+    newestAnswer: "",
+    answersCount: 0
+}
 export const ThreadContext = createContext({})
 const Thread = () => {
-    const { user, lang } = useContext(StoreContext)
+    const { user, lang, token } = useContext(StoreContext)
     const { threadId } = useParams();
 
-    /* const [blog, setBlog] = useState */
-    // const [board, setBoard] = useState
-    const [thread, setThread] = useState()
+    const [thread, setThread] = useState(threadStructure)
     const [answers, setAnswers] = useState([])
+    const [joined, setJoined] = useState([])
 
-    const [likes, setLikes] = useState(thread?.likes)
-    const [liked, setLiked] = useState(user ? !!thread?.likes?.find(i => i === user.id) : false)
+    const [liked, setLiked] = useState()
 
     const [similarBlog, setSimilarBlog] = useState([])
     const [loading, setLoading] = useState(true)
     const [noData, setNoData] = useState(false)
     const [commentsWrapper, setCommentsWrapper] = useState(false);
+    const [subscribed, setSubscribed] = useState({})
 
     const filteredSimilarBlog = similarBlog.filter(blog => blog._id !== threadId);
 
     const fetchThreads = async () => {
         try {
-            const data = await fetch(`${BACKEND}/api/threads/recently?limit=${5}`)
-            const response = await data.json()
-
-            if (!response.error) {
-                if (response.docs.length) {
-                    setSimilarBlog(response.docs)
+            const response = await axios.get(`${BACKEND}/api/threads/recently`, {
+                params: {
+                    limit: 5
                 }
-            } else throw Error(response.error?.message || 'Error')
+            });
+
+            if (!response.data.error) {
+                if (response.data.docs.length) {
+                    setSimilarBlog(response.data.docs);
+                }
+            } else {
+                throw new Error(response.data.error?.message || 'Error');
+            }
         } catch (err) {
-            console.error(err)
+            console.error(err);
         }
     }
 
     const fetchThread = async () => {
         try {
-            const data = await fetch(`${BACKEND}/api/thread?threadId=${threadId}`)
-            const response = await data.json()
+            const response = await axios.get(`${BACKEND}/api/thread`, {
+                params: {
+                    threadId: threadId
+                }
+            });
 
-            if (!response.error) {
-                setThread(response.thread)
-                setLoading(false)
-                setNoData(false)
-                await fetchAnswers()
-            } else throw Error(response.error?.message || 'Error')
+            if (!response.data.error) {
+                setThread(response.data.thread);
+                setLoading(false);
+                setNoData(false);
+                await fetchAnswers();
+            } else {
+                throw new Error(response.data.error?.message || 'Error');
+            }
         } catch (err) {
-            setNoData(true)
-            setLoading(false)
+            setNoData(true);
+            setLoading(false);
         }
     }
 
     const fetchAnswers = async () => {
         try {
-            const data = await fetch(`${BACKEND}/api/answers?threadId=${threadId}&pagination=false`)
-            const response = await data.json()
+            const response = await axios.get(`${BACKEND}/api/answers`, {
+                params: {
+                    threadId: threadId,
+                    pagination: false
+                }
+            });
 
-            if (!response.error) {
-                setAnswers(response.docs)
-                setLoading(false)
-            } else throw Error(response.error?.message || 'Error')
+            if (!response.data.error) {
+                setAnswers(response.data.docs);
+                setLoading(false);
+            } else {
+                throw new Error(response.data.error?.message || 'Error');
+            }
         } catch (err) {
-            setLoading(false)
+            setLoading(false);
         }
     }
 
     useEffect(() => {
-        fetchThreads()
-        fetchThread()
-    }, [threadId])
+        fetchThreads();
+        fetchThread();
+    }, [threadId]);
 
     useEffect(() => {
-        setLikes(thread?.likes)
-        setLiked(user ? !!thread?.likes?.find(i => i === user.id) : false)
-    }, [user, thread?.likes])
+        if (thread && thread.likes.length >= 0) {
+            setLiked(user ? !!thread.likes.find(i => i === user.id) : false)
+        }
+    }, [user, thread])
 
-    // console.log(filteredSimilarBlog)
+    useEffect(() => {
+        if (threadId) joinToRoom('thread:' + threadId, { token })
+        return () => {
+            if (threadId) leaveFromRoom('thread:' + threadId)
+        }
+    }, [threadId, token])
+
+    useEffect(() => {
+        Socket.on('threadDeleted', (data) => {
+            toast.error("Thread has been deleted")
+            navigate('/boards/');
+        })
+        Socket.on('threadEdited', (data) => {
+            setThread(data)
+        })
+        Socket.on('threadLiked', (data) => {
+            setThread(data)
+        })
+        Socket.on('joinedList', (data) => {
+            setJoined(data)
+        })
+        Socket.on('answerCreated', (data) => {
+            setSubscribed({ type: 'answerCreated', payload: data })
+
+        })
+        Socket.on('answerDeleted', (data) => {
+            setSubscribed({ type: 'answerDeleted', payload: data })
+
+        })
+        Socket.on('answerEdited', (data) => {
+            setSubscribed({ type: 'answerEdited', payload: data })
+
+        })
+        Socket.on('answerLiked', (data) => {
+            setSubscribed({ type: 'answerLiked', payload: data })
+
+        })
+        Socket.on('threadCleared', (data) => {
+            setSubscribed({ type: 'threadCleared', payload: data })
+        })
+        // eslint-disable-next-line
+    }, [])
+
+    console.log(thread)
+
     return (
         <AnimationWrapper>
             {
                 !noData ? (
                     !loading ? <>
-                        <ThreadContext.Provider value={{ thread, setThread, likes, setLikes, liked, setLiked, loading, setLoading, answers, setAnswers, commentsWrapper, setCommentsWrapper, similarBlog }}>
+                        <ThreadContext.Provider value={{
+                            thread, setThread,
+                            liked, setLiked,
+                            loading, setLoading,
+                            answers, setAnswers,
+                            subscribed, setSubscribed,
+                            commentsWrapper, setCommentsWrapper,
+                            similarBlog
+                        }}>
                             <CommentContainer />
 
                             <div className="max-w-[900px] center py-10 max-lg:px-[5vw]">

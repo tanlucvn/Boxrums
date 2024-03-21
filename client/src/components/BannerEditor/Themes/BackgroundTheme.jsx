@@ -127,10 +127,7 @@ const BackgroundTheme = ({ config }) => {
                                             </button>
                                         </div>
                                     </form>
-
-
                                 </div>
-
 
                                 <div className="overflow-y-scroll overflow-x-hidden w-full h-96 max-w-5xl pb-10 mx-auto mb-10 gap-5 grid grid-cols-3">
                                     {imageList.map(image => (
@@ -140,6 +137,7 @@ const BackgroundTheme = ({ config }) => {
                                             alt={image.alt_description}
                                             className="rounded m-2 cursor-pointer w-full object-cover h-40"
                                             onClick={() => selectImage(image)}
+                                            loading='lazy'
                                         />
                                     ))}
                                 </div>

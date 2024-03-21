@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import AnimationWrapper from "../../common/page-animation";
-import InPageNavigaion, { activeTabRef } from "../../components/inpage-navigation.component";
+import InPageNavigaion, { activeTabRef } from "../../components/InpageNavigation";
 import axios from "axios";
-import Loader from "../../components/loader.component";
+import Loader from "../../components/Loader";
 import MinimulBlogPost from "../../components/nobanner-blog-post.component";
-import NoDataMessage from "../../components/nodata.component";
+import NoDataMessage from "../../components/NoData";
 import { filterPaginationData } from "../../common/filter-pagination-data";
 import LoadMoreDataBtn from "../../components/load-more.component";
 import Threads from "./Threads";

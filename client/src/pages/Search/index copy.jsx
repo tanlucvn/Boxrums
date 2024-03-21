@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import InPageNavigaion from "@/components/inpage-navigation.component";
+import InPageNavigaion from "@/components/InpageNavigation";
 import UserCard from "@/components/usercard.component";
 import { Strings } from "@/support/Constants";
 import { StoreContext } from "@/stores/Store";

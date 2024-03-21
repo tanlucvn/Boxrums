@@ -8,7 +8,7 @@ import { useMoreFetch } from '@/hooks/useMoreFetch';
 import { BACKEND, Strings } from '@/support/Constants';
 
 import DataView from '@/components/DataView';
-import { BannedCard } from '@/components/Card';
+import { BannedCard } from '@/components/Card/Card2';
 
 const Newest = () => {
   const { token, lang } = useContext(StoreContext)
@@ -42,7 +42,8 @@ const Newest = () => {
       noData={noData}
       loading={loading}
       moreLoading={moreLoading}
-      card={(props) => <BannedCard {...props} unBan={unBan} />}
+      // card={(props) => <BannedCard {...props} unBan={unBan} />}
+      card={BannedCard}
       noDataMessage={Strings.noBansYet[lang]}
       errorMessage={Strings.unableToDisplayBans[lang]}
     />

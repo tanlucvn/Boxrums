@@ -1,4 +1,5 @@
 const BACKEND = "http://localhost:8000"
+const CLIENT = "http://localhost:5173"
 
 /* TEMPLATES
 
@@ -26,6 +27,10 @@ const Strings = {
         vi: "Tiếp theo",
         en: "Next"
     },
+    "back": {
+        vi: "Quay lại",
+        en: "Back"
+    },
     "continueWithDiscord": {
         vi: "Tiếp tục với Discord",
         en: "Continue with Discord"
@@ -33,10 +38,6 @@ const Strings = {
     "continueWithFacebook": {
         vi: "Tiếp tục với Facebook",
         en: "Continue with Facebook"
-    },
-    "authFormBack": {
-        vi: "Quay lại",
-        en: "Back"
     },
     "login": {
         vi: "Đăng nhập",
@@ -66,7 +67,7 @@ const Strings = {
         vi: "Nhập tên người dùng...",
         en: "Please enter your username..."
     },
-    "enterUsername": {
+    "username": {
         vi: "Tên người dùng",
         en: "Username"
     },
@@ -90,9 +91,13 @@ const Strings = {
         vi: "Vui lòng nhập mật khẩu...",
         en: "Please enter your password..."
     },
-    "enterPassword": {
+    "password": {
         vi: "Mật khẩu",
         en: "Password"
+    },
+    "enterPassword": {
+        vi: "Nhập mật khẩu...",
+        en: "Enter password..."
     },
     "emptyPassword": {
         vi: "Nhập mật khẩu",
@@ -115,12 +120,44 @@ const Strings = {
         en: "Repeat Password"
     },
     "emptyRePassword": {
-        vi: "Chưa lại mật khẩu",
+        vi: "Chưa nhập lại mật khẩu",
         en: "Enter repeat password"
     },
     "passwordNotMatch": {
         vi: "Mật khẩu không khớp",
         en: "Password not match"
+    },
+    "newPassword": {
+        vi: "Mật khẩu mới",
+        en: "New password"
+    },
+    "enterNewPassword": {
+        vi: "Nhập mật khẩu mới...",
+        en: "Enter new password...",
+    },
+    "emptyNewPassword": {
+        vi: "Vui lòng nhập mật khẩu",
+        en: "Please enter new password",
+    },
+    "confirmPassword": {
+        vi: "Nhập lại mật khấu",
+        en: "Confirm password",
+    },
+    "enterConfirmPassword": {
+        vi: "Nhập lại mật khấu...",
+        en: "Confirm password...",
+    },
+    "emptyConfirmPassword": {
+        vi: "Vui lòng nhập lại mật khẩu",
+        en: "Please enter confirm password",
+    },
+    "passwordChanged": {
+        vi: "Mật khẩu đã được thay đổi",
+        en: "Password changed successfully",
+    },
+    "currentPasswordNotMatch": {
+        vi: "Mật khẩu cũ không chính xác",
+        en: "Your current password is not correct",
     },
     "failedToFetch": {
         vi: "Lỗi máy chủ",
@@ -136,7 +173,7 @@ const Strings = {
     },
     "usernameNotRegistered": {
         vi: "Người dùng chưa đăng ký",
-        en: "Username is registered"
+        en: "Username is not registered"
     },
     "loginNotValid": {
         vi: "Sai thông tin đăng nhập",
@@ -154,9 +191,9 @@ const Strings = {
         vi: "Bảng điều khiển",
         en: "Dashboard"
     },
-    "setting": {
+    "settings": {
         vi: "Cài đặt",
-        en: "Setting"
+        en: "Settings"
     },
     "logout": {
         vi: "Đăng xuất",
@@ -193,6 +230,18 @@ const Strings = {
     "all": {
         vi: "Tất cả",
         en: "All",
+    },
+    "popular": {
+        vi: "Phổ biến",
+        en: "Popular",
+    },
+    "newestAnswer": {
+        vi: "Bình luận mới nhất",
+        en: "Newest Answer",
+    },
+    "newestThread": {
+        vi: "Bài đăng mới nhất",
+        en: "Newest Thread",
     },
     "popularBoards": {
         vi: "Chủ đề chung",
@@ -563,9 +612,25 @@ const Strings = {
         vi: "Tải xuống",
         en: "Downloads",
     },
+    "downloading": {
+        vi: "Đang tải xuống...",
+        en: "Downloading...",
+    },
+    "writeTitle": {
+        vi: "Vui lòng nhập tiêu đề bài viết",
+        en: "Please write posts title to publish it",
+    },
+    "writeContent": {
+        vi: "Vui lòng viết một chút nội dung cho bài viết",
+        en: "Write something in your posts to publish it",
+    },
     "publish": {
         vi: "Duyệt",
         en: "Publish",
+    },
+    "publishOn": {
+        vi: "Đã đăng vào",
+        en: "Publish on",
     },
     "onModeration": {
         vi: "Đang chờ duyệt",
@@ -594,6 +659,14 @@ const Strings = {
     "linkCopied": {
         vi: "Đã sao chép",
         en: "Link copied",
+    },
+    "copied": {
+        vi: "Đã sao chép",
+        en: "Copied",
+    },
+    "copyCode": {
+        vi: "Sao chép mã",
+        en: "Copy code",
     },
     "failedToCopyLink": {
         vi: "Sao chép thất bại",
@@ -668,8 +741,8 @@ const Strings = {
         en: "Filter",
     },
     "select": {
-        vi: "Chọn",
-        en: "Select",
+        vi: "Chọn tuỳ chọn",
+        en: "Select option",
     },
     "selectBoards": {
         vi: "Chọn chủ đề",
@@ -847,6 +920,258 @@ const Strings = {
         vi: "Hết thời gian",
         en: "Time expired",
     },
+    "moderator": {
+        vi: "Người kiểm duyệt",
+        en: "Moderator",
+    },
+    "appointAsAModerator": {
+        vi: "Bổ nhiệm làm người kiểm duyệt",
+        en: "Appoint as a moderator",
+    },
+    "removeModerator": {
+        vi: "Xóa người kiểm duyệt",
+        en: "Remove moderator",
+    },
+    "deleteUser": {
+        vi: "Xóa người dùng",
+        en: "Delete user",
+    },
+    "joinedOn": {
+        vi: "Tham gia vào",
+        en: "Joined on",
+    },
+    "tryAnotherAcc": {
+        vi: "Thử tài khoản khác",
+        en: "Try another accounts",
+    },
+    "userBanned": {
+        vi: "Người dùng bị cấm",
+        en: "User banned",
+    },
+    "youAreBanned": {
+        vi: "Bạn đã bị chặn",
+        en: "You are banned",
+    },
+    "createdAt": {
+        vi: "Ngày tạo",
+        en: "Created at",
+    },
+    "topThreads": {
+        vi: "Xếp hạng bài đăng",
+        en: "Top threads",
+    },
+    "topAnswersAndComments": {
+        vi: "Xếp hạng trả lời và bình luận",
+        en: "Top answers and comments",
+    },
+    "topUploadFiles": {
+        vi: "Xếp hạng đăng tệp tin",
+        en: "Top upload files",
+    },
+    "topKarma": {
+        vi: "Xếp hạng điểm",
+        en: "Top karma",
+    },
+    "notifications": {
+        vi: "Thông báo",
+        en: "Notifications",
+    },
+    "yourThreads": {
+        vi: "Bài đăng của bạn",
+        en: "Your threads",
+    },
+    "editProfile": {
+        vi: "Chỉnh sửa cá nhân",
+        en: "Edit profile",
+    },
+    "changePassword": {
+        vi: "Đổi mật khẩu",
+        en: "Change password",
+    },
+    "report": {
+        vi: "Báo cáo",
+        en: "Report",
+    },
+    "like": {
+        vi: "yêu thích",
+        en: "like",
+    },
+    "likes": {
+        vi: "yêu thích",
+        en: "likes",
+    },
+    "upload": {
+        vi: "Tải lên",
+        en: "Upload",
+    },
+    "viewCode": {
+        vi: "Xem mã",
+        en: "View code",
+    },
+    "reportSent": {
+        vi: "Đã gửi báo cáo",
+        en: "Report sent",
+    },
+    "newNotification": {
+        vi: "Thông báo mới",
+        en: "New notification",
+    },
+    "answerToThread": {
+        vi: "đã trả lời bài đăng của bạn",
+        en: "answer on your thread",
+    },
+    "answerToAnswer": {
+        vi: "đã phản hồi trả lời của bạn",
+        en: "reply on your answer",
+    },
+    "likeThread": {
+        vi: "đã thích bài đăng của bạn",
+        en: "like your thread",
+    },
+    "likeAnswer": {
+        vi: "đã thích trả lời của bạn",
+        en: "like your answer",
+    },
+    "likeComment": {
+        vi: "đã thích bình luận của bạn",
+        en: "like your comment",
+    },
+    "commentToFile": {
+        vi: "đã bình luận vào tệp tin của bạn",
+        en: "comment to your file",
+    },
+    "commentToComment": {
+        vi: "đã phản hồi bình luận của bạn",
+        en: "reply to your comment",
+    },
+    "recentlyAnswered": {
+        vi: "Trả lời gần đây",
+        en: "Recently answered",
+    },
+    "default": {
+        vi: "Bình thường",
+        en: "Default",
+    },
+    "enterYourSearchTerm": {
+        vi: "Nhập cụm từ tìm kiếm của bạn",
+        en: "Enter your search term",
+    },
+    "customize": {
+        vi: "Tuỳ chỉnh",
+        en: "Customize",
+    },
+    "customizeLang": {
+        vi: "Tuỳ chỉnh ngôn ngữ",
+        en: "Customize Languages",
+    },
+    "vietnamese": {
+        vi: "Tiếng Việt",
+        en: "Vietnamese",
+    },
+    "english": {
+        vi: "Tiếng Anh",
+        en: "English",
+    },
+    "light": {
+        vi: "Sáng",
+        en: "Light",
+    },
+    "dark": {
+        vi: "Tối",
+        en: "Dark",
+    },
+    "verifyEmail": {
+        vi: "Xác thực Email",
+        en: "Verify Email",
+    },
+    "goToHomePage": {
+        vi: "Quay lại trang chủ",
+        en: "Go to home page",
+    },
+    "invalidToken": {
+        vi: "Token không hợp lệ",
+        en: "Invalid Token",
+    },
+    "dontTryThisAnymore": {
+        vi: "Đừng thử lại lần nào nữa!",
+        en: "Don't try this anymore!",
+    },
+    "verifyErrLine1": {
+        vi: "Có vẻ như bạn đang cố thay đổi mật khẩu của mình mà không có mã thông báo hợp lệ. Hãy đảm bảo rằng bạn đã làm theo đúng hướng dẫn đặt lại mật khẩu được cung cấp trong email của mình.",
+        en: "It appears that you are attempting to change your password without a valid token. Please make sure you have followed the proper password reset instructions provided in your email.",
+    },
+    "verifyErrLine2": {
+        vi: "Cảm ơn bạn đã lựa chọn dịch vụ của chúng tôi!",
+        en: "Thank you for choosing our services!",
+    },
+    "dontHaveAnAccount": {
+        vi: "Chưa có tài khoản?",
+        en: "Don't have an account?",
+    },
+    "joinUsNow": {
+        vi: "Tham gia ngay",
+        en: "Join us Now",
+    },
+    "verifiedSuccess": {
+        vi: "Xác Thực Thành Công",
+        en: "Verified Successfully",
+    },
+    "verifySuccessLine1": {
+        vi: "Email của bạn đã được xác minh thành công. Bây giờ bạn có thể đăng nhập vào tài khoản của mình.",
+        en: "Your email has been successfully verified. You can now log in to your account.",
+    },
+    "passwordChangeSuccess": {
+        vi: "Đã Thay Đổi Thành Công",
+        en: "Password Changed Successfully",
+    },
+    "passwordChangeSuccessLine1": {
+        vi: "Mật khẩu của bạn đã được đặt lại thành công. Bây giờ bạn có thể đăng nhập vào tài khoản của mình bằng mật khẩu mới.",
+        en: "Your password has been successfully reset. You can now log in to your account using the new password.",
+    },
+    "forgotPassword": {
+        vi: "Quên Mật Khẩu",
+        en: "Forgot Password"
+    },
+    "passwordRestRequested": {
+        vi: "Đã Yêu Cầu Đặt Lại Mật Khẩu",
+        en: "Password Reset Requested"
+    },
+    "passwordSendSuccessLine1": {
+        vi: "Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu của bạn. Vui lòng kiểm tra email của bạn",
+        en: "We've received your request to reset your password. Please check your email associated with"
+    },
+    "passwordSendSuccessLine2": {
+        vi: "Cảm ơn bạn đã lựa chọn dịch vụ của chúng tôi!",
+        en: "Thank you for choosing our services!",
+    },
+    "resetPassword": {
+        vi: "Thay Đổi Mật Khẩu",
+        en: "Reset Password",
+    },
+    "submit": {
+        vi: "Gửi",
+        en: "Submit",
+    },
+    "loginDiscord": {
+        vi: "Đăng nhập với Discord",
+        en: "Login with Discord"
+    },
+    "redirecting": {
+        vi: "Đang chuyển hướng tới trang chủ...",
+        en: "Redirecting to homepage..."
+    },
+    "nothingToRead": {
+        vi: "Không có gì ở đây...",
+        en: "Nothing to read here..."
+    },
+    "lastSeen": {
+        vi: "Lần cuối thấy",
+        en: "Last seen",
+    },
+    "profileSettings": {
+        vi: "Chỉnh sửa hồ sơ",
+        en: "Profile settings",
+    },
     "": {
         vi: "",
         en: ""
@@ -900,11 +1225,6 @@ const Strings = {
 
 
     /* OTHER */
-    'goToHomePage': {
-        ru: 'Вернуться на главную страницу',
-        en: 'Go to home page',
-        jp: 'ホームページへ'
-    },
     'error404PageNotFound': {
         ru: 'Ошибка 404. Страница не найдена',
         en: 'Error 404. Page not found',
@@ -915,30 +1235,10 @@ const Strings = {
         en: 'Not Found',
         jp: '見つかりません'
     },
-    'youAreBanned': {
-        ru: 'Вы забанены',
-        en: 'You are banned',
-        jp: 'あなたは禁止されています'
-    },
     'unableToDisplayUsers': {
         ru: 'Невозможно отобразить пользователей',
         en: 'Unable to display users',
         jp: 'ユーザーを表示できません'
-    },
-    'lastSeen': {
-        ru: 'Был онлайн',
-        en: 'Last seen',
-        jp: '最後に見た'
-    },
-    'settings': {
-        ru: 'Настройки',
-        en: 'Settings',
-        jp: '設定'
-    },
-    'profileSettings': {
-        ru: 'Настройки профиля',
-        en: 'Profile settings',
-        jp: 'プロフィール設定'
     },
     'uploadProfilePicture': {
         ru: 'Загрузка изображения профиля',
@@ -950,11 +1250,6 @@ const Strings = {
         en: 'Accepted',
         jp: '承認済み'
     },
-    'upload': {
-        ru: 'Загрузка',
-        en: 'Upload',
-        jp: 'アップロード'
-    },
     'recentlyThreads': {
         ru: 'Недавние треды',
         en: 'Recently threads',
@@ -964,21 +1259,6 @@ const Strings = {
         ru: 'Ошибка',
         en: 'Error',
         jp: 'エラー'
-    },
-    'default': {
-        ru: 'По умолчанию',
-        en: 'Default',
-        jp: 'デフォルトでは'
-    },
-    'popular': {
-        ru: 'Популярные',
-        en: 'Popular',
-        jp: '人気'
-    },
-    'recentlyAnswered': {
-        ru: 'Недавно отвеченные',
-        en: 'Recently answered',
-        jp: '最近答えした'
     },
     'unableToDisplayBoard': {
         ru: 'Невозможно отобразить доску',
@@ -1005,16 +1285,6 @@ const Strings = {
         en: 'Login account',
         jp: 'ログインアカウント'
     },
-    'username': {
-        ru: 'Логин',
-        en: 'Username',
-        jp: 'ユーザー名'
-    },
-    'password': {
-        ru: 'Пароль',
-        en: 'Password',
-        jp: 'パスワード'
-    },
     'ifYouDontHaveAnAccount': {
         ru: 'если у вас нет аккаунта',
         en: 'if you don\'t have an account',
@@ -1025,11 +1295,6 @@ const Strings = {
         en: 'Sign Up',
         jp: '登録'
     },
-    'passwordsNotMatch': {
-        ru: 'пароли не совпадают',
-        en: 'Passwords not match',
-        jp: 'パスワードが一致しません'
-    },
     'createYourAccount': {
         ru: 'Создать учетную запись',
         en: 'Create your account',
@@ -1039,11 +1304,6 @@ const Strings = {
         ru: 'Адрес электронной почты',
         en: 'Email address',
         jp: 'メールアドレス'
-    },
-    'confirmPassword': {
-        ru: 'Подтверждение пароля',
-        en: 'Confirm password',
-        jp: 'パスワードの確認'
     },
     'createAccount': {
         ru: 'Зарегистрироваться',
@@ -1168,34 +1428,6 @@ const Strings = {
         en: 'Text field supports Markdown',
         jp: 'テキストフィールドはMarkdownをサポートします'
     },
-    'report': {
-        ru: 'Пожаловаться',
-        en: 'Report',
-        jp: '不平を言う'
-    },
-    'like': {
-        vi: 'yêu thích',
-        en: 'like',
-    },
-    'likes': {
-        vi: 'yêu thích',
-        en: 'likes',
-    },
-    'userBanned': {
-        ru: 'Пользователь забанен',
-        en: 'User banned',
-        jp: 'ユーザー禁止'
-    },
-    'reportSent': {
-        ru: 'Жалоба отправлена',
-        en: 'Report sent',
-        jp: '苦情が送信されました'
-    },
-    'enterYourSearchTerm': {
-        ru: 'Введите запрос для поиска',
-        en: 'Enter your search term',
-        jp: '検索語を入力してください'
-    },
     'unableToDisplaySearchResults': {
         ru: 'Невозможно отобразить результаты поиска',
         en: 'Unable to display search results',
@@ -1281,16 +1513,6 @@ const Strings = {
         en: 'Enter your comment',
         jp: 'コメントを入力してください'
     },
-    'appointAsAModerator': {
-        ru: 'Назначить модератором',
-        en: 'Appoint as a moderator',
-        jp: 'モデレーターとして任命する'
-    },
-    'removeModerator': {
-        ru: 'Снять модератора',
-        en: 'Remove moderator',
-        jp: 'モデレーターを削除する'
-    },
     'unableToDisplayProfileInfo': {
         ru: 'Невозможно отобразить информацию профиля',
         en: 'Unable to display profile info',
@@ -1336,21 +1558,6 @@ const Strings = {
         en: 'Password change',
         jp: 'パスワードの変更'
     },
-    'changePassword': {
-        ru: 'Изменить пароль',
-        en: 'Change password',
-        jp: 'パスワードを変更する'
-    },
-    'newPassword': {
-        ru: 'Новый пароль',
-        en: 'New password',
-        jp: '新しいパスワード'
-    },
-    'enterNewPassword': {
-        ru: 'Введите новый пароль',
-        en: 'Enter new password',
-        jp: '新しいパスワードを入力してください'
-    },
     'searchIn': {
         ru: 'Искать в',
         en: 'Search in',
@@ -1377,4 +1584,4 @@ const imageTypes = ["image/jpeg", "image/pjpeg", "image/png", "image/gif", "imag
 const videoTypes = ["video/mp4", "video/webm", "video/avi", "video/msvideo", "video/x-msvideo", "video/mpeg", "video/3gpp", "video/quicktime"]
 const fileExt = /(?:\.([^.]+))?$/
 
-export { BACKEND, Strings, imageTypes, videoTypes, fileExt };
+export { BACKEND, CLIENT, Strings, imageTypes, videoTypes, fileExt };

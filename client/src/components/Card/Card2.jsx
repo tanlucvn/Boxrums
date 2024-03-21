@@ -4,9 +4,10 @@ import { Link } from "react-router-dom"
 import Avatar from 'boring-avatars'
 import { BACKEND, Strings, fileExt, imageTypes, videoTypes } from "@/support/Constants"
 import { StoreContext } from "@/stores/Store"
-import { UserOnline, UserRole, UserStatus } from "../UserBadge"
+import { UserOnline, UserRole, UserStatus } from "@/components/UserBadge"
+import BlogContent from "../blog-content.component"
 
-export const ArticleCard = ({ data, threadData, full = false, preview = false, type, joinedList }) => {
+export const ArticleCard = ({ data, preview = false, type, joinedList }) => {
     const { user, lang } = useContext(StoreContext)
     const [likes, setLikes] = useState(data.likes)
     const [liked, setLiked] = useState(user ? !!data.likes?.find(i => i._id === user.id) : false)
@@ -15,6 +16,8 @@ export const ArticleCard = ({ data, threadData, full = false, preview = false, t
         setLikes(data.likes)
         setLiked(user ? !!data.likes?.find(i => i._id === user.id) : false)
     }, [user, data.likes])
+
+    // console.log(data)
 
     return (
         <Link to={`/thread/${data._id}`} className='flex gap-8 items-center border-b border-grey pb-5 mb-4 hover:opacity-80'>
@@ -36,11 +39,27 @@ export const ArticleCard = ({ data, threadData, full = false, preview = false, t
                     {data.desc}
                 </p>
 
+                {(data.pined || data.closed) &&
+                    <div className="flex gap-3 mt-2">
+                        {data.pined &&
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-grey/80" title={Strings.pin[lang]}>
+                                <i class="fi fi-sr-thumbtack text-xl"></i>
+                            </div>
+                        }
+
+                        {data.closed &&
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-grey/80" title={Strings.close[lang]}>
+                                <i class="fi fi-sr-lock text-xl"></i>
+                            </div>
+                        }
+                    </div>
+                }
+
                 {/* IMG/VIDEO/FILE BOX */}
                 <AttachCard data={data} />
 
                 {/* LIKE COUNTER */}
-                <div className='flex gap-4 mt-7'>
+                <div className='flex flex-wrap gap-4 mt-7 items-center'>
                     {data.tags.length > 0 && <span className='btn-light py-1 px-4 capitalize'>{data.tags[0]}</span>}
                     {liked ?
                         <span className='ml-3 flex items-center gap-2 text-dark-grey'>
@@ -52,6 +71,25 @@ export const ArticleCard = ({ data, threadData, full = false, preview = false, t
                             <i className='fi fi-rr-heart text-xl'></i>
                             {counter(likes ? likes.length : 0)} {declOfNum(likes ? likes.length : 0, Strings.like[lang], Strings.likes[lang])}
                         </span>
+                    }
+
+                    {preview && type === "newestAnswer" &&
+                        <div className="flex items-center ml-auto gap-2 text-dark-grey max-sm:ml-3">
+                            <i class="fi fi-rr-comment-dots"></i>
+                            {dateFormat(data.newestAnswer)}
+                        </div>
+                    }
+
+                    {preview && type === "answersCount" &&
+                        <div className="flex items-center ml-auto gap-2 text-dark-grey max-sm:ml-3">
+                            <i class="fi fi-rr-comment-dots"></i>
+                            <p className="flex gap-1">
+                                {counter(data.answersCount)}
+                                <span>
+                                    {declOfNum(data.answersCount, Strings.answer[lang], Strings.answers[lang])}
+                                </span>
+                            </p>
+                        </div>
                     }
                 </div>
             </div>
@@ -147,7 +185,6 @@ export const AttachCard = ({ data, resized = false }) => {
         setVideoOpen(true)
     }
 
-
     return (
         <>
             <div
@@ -203,6 +240,87 @@ export const AttachCard = ({ data, resized = false }) => {
     )
 }
 
+export const BoardsCard = ({ data, preview = false, type }) => {
+    const { lang } = useContext(StoreContext)
+
+    // console.log(data)
+    return (
+        <Link to={`/board/${data.name}`} className='flex gap-8 items-center border-b border-grey pb-5 mb-4 hover:opacity-90'>
+            <div className='w-full'>
+                <h1 className='blog-title'>{data.title}</h1>
+                <p className='my-3 text-xl leading-7 max-sm:hidden md:max-[1100px]:hidden line-clamp-2'>{data.body}</p>
+
+                <div className="flex gap-x-10 justify-between items-center flex-wrap">
+                    <div className='flex gap-4 mt-7'>
+                        <span className='ml-3 flex items-center gap-2 text-dark-grey'>
+                            <i class="fi fi-rr-ballot"></i>
+                            {counter(data.threadsCount)} {declOfNum(data.threadsCount, Strings.thread[lang], Strings.threads[lang])}
+                        </span>
+
+                        <span className='ml-3 flex items-center gap-2 text-dark-grey'>
+                            <i class="fi fi-rr-comment-dots"></i>
+                            {counter(data.answersCount)} {declOfNum(data.answersCount, Strings.answer[lang], Strings.answers[lang])}
+                        </span>
+                    </div>
+
+                    {preview && type === "popular" &&
+                        <div className='flex flex-wrap gap-4 mt-7'>
+                            <span className='ml-3 flex items-center gap-2 text-dark-grey'>
+                                <i class="fi fi-rr-ballot"></i>
+                                {dateFormat(data.newestThread)}
+                            </span>
+
+                            <span className='ml-3 flex items-center gap-2 text-dark-grey'>
+                                <i class="fi fi-rr-comment-dots"></i>
+                                {dateFormat(data.newestAnswer)}
+                            </span>
+                        </div>
+                    }
+
+                    {preview && type === "newestAnswer" &&
+                        <div className="flex mt-7 items-center ml-auto gap-2 text-dark-grey max-sm:ml-3">
+                            <i class="fi fi-rr-comment-dots"></i>
+                            {dateFormat(data.newestAnswer)}
+                        </div>
+                    }
+
+                    {preview && type === "newestThread" &&
+                        <div className="flex mt-7 items-center ml-auto gap-2 text-dark-grey max-sm:ml-3">
+                            <i class="fi fi-rr-ballot"></i>
+                            {dateFormat(data.newestThread)}
+                        </div>
+                    }
+
+                    {preview && type === "answersCount" &&
+                        <div className="flex mt-7 items-center ml-auto gap-2 text-dark-grey max-sm:ml-3">
+                            <i class="fi fi-rr-comment-dots"></i>
+                            <p className="flex gap-1">
+                                {counter(data.answersCount)}
+                                <span>
+                                    {declOfNum(data.answersCount, Strings.answer[lang], Strings.answers[lang])}
+                                </span>
+                            </p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div className='h-28 aspect-square bg-grey'>
+                {
+                    data.banner ? <img src={data.banner} alt="Banner" className='w-full h-full aspect-square object-cover' /> :
+                        <Avatar
+                            size={"100%"}
+                            name={data.title}
+                            variant="marble"
+                            colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+                            square="true"
+                        />
+                }
+            </div>
+        </Link>
+    )
+}
+
 export const FolderCard = ({ data }) => {
     const { lang } = useContext(StoreContext)
 
@@ -241,7 +359,6 @@ export const FileCard = ({ data, deleteFile }) => {
     const { user, lang } = useContext(StoreContext)
     const [likes, setLikes] = useState(data.likes)
     const [liked, setLiked] = useState(user ? !!data.likes?.find(i => i._id === user.id) : false)
-    const [tagsParse, setTagsParse] = useState(data.tags && data.tags.length > 0 && JSON.parse(data.tags[0]))
 
     useEffect(() => {
         setLikes(data.likes)
@@ -289,7 +406,7 @@ export const FileCard = ({ data, deleteFile }) => {
 
                 {/* LIKE COUNTER */}
                 <div className='flex gap-4 mt-7'>
-                    {data.tags.length > 0 && <span className='btn-light py-1 px-4 capitalize'>{tagsParse}</span>}
+                    {data.tags.length > 0 && <span className='btn-light py-1 px-4 capitalize'>{data.tags[0]}</span>}
                     {liked ?
                         <span className='ml-3 flex items-center gap-2 text-dark-grey'>
                             <i className='fi fi-sr-heart text-xl text-red'></i>
@@ -403,6 +520,59 @@ export const SearchUserCard = ({ data }) => {
     )
 }
 
+export const BannedCard = ({ data, owner }) => {
+    const { lang } = useContext(StoreContext)
+
+    if (data.admin === null) {
+        data.admin = deletedUser
+    }
+
+    return (
+        <div className="block relative group p-6 bg-grey text-black border-2 border-grey rounded-lg shadow-sm my-4 max-w-lg max-md:max-w-none">
+            <div className="card_head">
+                <div className="card_head_inner">
+                    {!owner && <div className="card_title full">{Strings.userBanned[lang]}</div>}
+                    <div className="flex items-center gap-3 font-medium">
+                        <div className="w-8 h-8">
+                            <Avatar
+                                size={"100%"}
+                                name={data.ban.admin.name}
+                                variant="marble"
+                                colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+                            />
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                            <p>{data.ban.admin.displayName}</p>
+
+                            <UserRole role={data.ban.admin.role} />
+                        </div>
+
+                        <span className="font-normal">/</span>
+
+                        <p>{dateFormat(data.createdAt)}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div className="mt-5">
+                <p className="my-2">
+                    <span className="mr-2 font-medium">{Strings.reason[lang]}:</span>
+                    <span className="font-normal">{data.ban.reason}</span>
+                </p>
+                <p className="my-2">
+                    <span className="mr-2 font-medium">{Strings.createdAt[lang]}:</span>
+                    <span className="font-normal">{dateFormat(data.ban.createdAt)}</span>
+                </p>
+                <p className="my-2">
+                    <span className="mr-2 font-medium">{Strings.banExpires[lang]}:</span>
+                    <span className="font-normal">{dateFormat(data.ban.expiresAt)}</span>
+                </p>
+            </div>
+        </div>
+    )
+}
+
 export const BannedAll = ({ data, deleteBan }) => {
     const { lang } = useContext(StoreContext)
 
@@ -486,6 +656,59 @@ export const BannedAll = ({ data, deleteBan }) => {
                 </div>
             </div>
         </>
+    )
+}
+
+export const BanInfoCard = ({ data, owner }) => {
+    const { lang } = useContext(StoreContext)
+
+    if (data.admin === null) {
+        data.admin = deletedUser
+    }
+
+    return (
+        <div className="block relative group p-6 bg-grey text-black border-2 border-grey rounded-lg shadow-sm my-4 max-w-lg max-md:max-w-none">
+            <div className="card_head">
+                <div className="card_head_inner">
+                    {!owner && <div className="card_title full">{Strings.userBanned[lang]}</div>}
+                    <div className="flex items-center gap-3 font-medium">
+                        <div className="w-8 h-8">
+                            <Avatar
+                                size={"100%"}
+                                name={data.admin.name}
+                                variant="marble"
+                                colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+                            />
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                            <p>{data.admin.displayName}</p>
+
+                            <UserRole role={data.admin.role} />
+                        </div>
+
+                        <span className="font-normal">/</span>
+
+                        <p>{dateFormat(data.createdAt)}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div className="mt-5">
+                <p className="my-2">
+                    <span className="mr-2 font-medium">{Strings.reason[lang]}:</span>
+                    <span className="font-normal">{data.reason}</span>
+                </p>
+                <p className="my-2">
+                    <span className="mr-2 font-medium">{Strings.createdAt[lang]}:</span>
+                    <span className="font-normal">{dateFormat(data.createdAt)}</span>
+                </p>
+                <p className="my-2">
+                    <span className="mr-2 font-medium">{Strings.banExpires[lang]}:</span>
+                    <span className="font-normal">{dateFormat(data.expiresAt)}</span>
+                </p>
+            </div>
+        </div>
     )
 }
 
@@ -617,6 +840,61 @@ export const DialoqueCard = ({ data }) => {
                     <span className="message_time">{dateFormat(data.lastMessage.createdAt, 'mini')}</span>
                 </div>
             </header>
+        </div>
+    )
+}
+
+export const NotificationCard = ({ data }) => {
+    const { lang } = useContext(StoreContext)
+    const [collapsed, setCollapsed] = useState(true)
+
+    if (data.from === null) {
+        data.from = deletedUser
+    }
+
+    let pagePath = '/thread/' + data.threadId
+    if (data.type === 'answerToThread' || data.type === 'answerToAnswer') {
+        pagePath = '/thread/' + data.pageId
+    }
+    if (data.type === 'commentToFile' || data.type === 'commentToComment') {
+        pagePath = '/file/' + data.pageId
+    }
+
+    return (
+        <div className="card_item">
+            <div className="card_body">
+                <div className={data.read ? 'card_block' : 'card_block noread'}>
+                    <header className="card_head">
+                        <div className="card_head_inner">
+                            <Link to={pagePath} className="card_title">
+                                {data.title}
+                            </Link>
+
+                            <div className="card_info">
+                                <Link to={'/user/' + data.from.name} className="head_text bold">
+                                    {data.from.displayName}
+                                    <UserRole role={data.from.role} />
+                                    {data.from.ban && <UserStatus status="ban" />}
+                                </Link>
+                                <span className="bullet">•</span>
+                                <span className="head_text">
+                                    <time>{dateFormat(data.createdAt)}</time>
+                                </span>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div className="card_content markdown">
+                        {data.body}
+                    </div>
+
+                    {data.body.length > 200 && (
+                        <div className="text_show_more" onClick={() => setCollapsed(!collapsed)}>
+                            {collapsed ? Strings.showMore[lang] : Strings.showLess[lang]}
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
     )
 }

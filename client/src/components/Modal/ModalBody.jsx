@@ -1,9 +1,27 @@
+import { useEffect, useRef } from "react";
+
 const ModalBody = ({ children, title, subtitle, onClick, childrenBtn }) => {
+  const modalRef = useRef()
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onClick();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onClick]);
+
   return (
     <div class="bg-gray flex items-center justify-center h-screen">
       <div class="fixed z-10 inset-0 flex items-center justify-center">
         <div class="absolute inset-0 bg-gray-500 opacity-40" />
-        <div class="relative bg-white rounded-lg overflow-hidden shadow-xl max-w-screen-md m-4 w-full max-sm:h-full max-sm:m-0">
+        <div ref={modalRef} class="relative bg-white rounded-lg overflow-hidden shadow-xl max-w-screen-md m-4 w-full max-sm:h-full max-sm:m-0">
           <div class="flex items-center justify-between px-6 py-4">
             <div>
               <h1 className='text-xl font-medium'>{title}</h1>

@@ -7,20 +7,21 @@ import './style.scss'
 
 export const LabelInputBox = ({ text, errors, className }) => {
     return (
-        <div className={`input-label flex ${className}`}>
+        <div className={`font-medium p-[.3rem_.0rem] select-none m-[.3rem_.2rem] justify-between flex ${className}`}>
             {text}
-            <span className='error-text'>
+            <span className='text-red font-normal text-sm'>
                 {errors}
             </span>
         </div>
     )
 }
 
-export const InputBox = ({ name, type, id, value, placeholder, icon, disable = false, onChange, className, autoFocus }) => {
+export const InputBox = ({ ref, name, type, id, value, placeholder, icon, disable = false, onChange, className, autoFocus }) => {
     const [passwordVisible, setPasswordVisible] = useState(false)
     return (
         <div className="relative w-[100%] mb-4 ">
-            <input name={name}
+            <input ref={ref}
+                name={name}
                 type={type === "password" ? passwordVisible ? "text" : "password" : type}
                 placeholder={placeholder}
                 defaultValue={value}
@@ -228,7 +229,7 @@ export const SelectBox = ({ options, onChange, value, className, onClick }) => {
                 <div className="absolute left-0 z-20 mt-3 w-full max-w-md transform px-2 sm:px-0">
                     <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-white">
                         <div className="bg-grey px-5 py-3">
-                            <p className="text-sm font-medium">Select option</p>
+                            <p className="text-sm font-medium">{Strings.select[lang]}</p>
                         </div>
                         <div className="relative grid gap-6 px-5 py-6 sm:gap-8 sm:p-8 overflow-y-scroll max-h-[150px]">
                             {options.map((option, index) => (

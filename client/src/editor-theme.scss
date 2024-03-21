@@ -61,3 +61,16 @@ body[data-theme="dark"] .ce-popover-item:hover,
 body[data-theme="dark"] .ce-conversion-tool:hover{
     background: #3c3c3c;
 }
+
+body[data-theme="light"] .hljs-selector-tag{
+    color: #C271B4;
+}
+body[data-theme="dark"] .hljs-selector-tag{
+    color: #C20D90;
+}
+body[data-theme="light"] .hljs-attribute{
+    color: #92A1C6;
+}
+body[data-theme="dark"] .hljs-attribute{
+    color: #146A7C;
+}

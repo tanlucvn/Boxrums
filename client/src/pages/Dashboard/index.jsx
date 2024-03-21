@@ -2,11 +2,10 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { NavLink, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import Chart from 'chart.js/auto';
-import { Bar } from 'react-chartjs-2';
 
 import { StoreContext } from '@/stores/Store';
 import { BACKEND, Strings } from '@/support/Constants';
-import { Section, SectionHeader } from '@/components/Section';
+import { Section } from '@/components/Section';
 import { ControlledSlider, SlideItem } from '@/components/Slider';
 
 import Boards from './Boards';
@@ -16,7 +15,6 @@ import Bans from './Bans';
 import Folders from './Folders';
 import Files from './Files';
 import SearchAuth from './SearchAuth';
-import { Doughnut } from 'react-chartjs-2';
 import { LabelInputBox, SelectBox } from '@/components/Form/Input';
 import Loader from '@/components/Loader';
 

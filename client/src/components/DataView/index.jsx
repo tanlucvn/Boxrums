@@ -1,5 +1,5 @@
 import Loader from '@/components/Loader';
-import NoDataMessage from '../nodata.component';
+import NoDataMessage from '../NoData';
 
 const DataView = ({ data, noData, loading, moreLoading, card: Card, noDataMessage, errorMessage, children }) => {
     return !noData ? (

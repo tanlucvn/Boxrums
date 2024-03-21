@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import InPageNavigaion from "@/components/inpage-navigation.component";
-import Loader from "@/components/loader.component";
-import NoDataMessage from "@/components/nodata.component";
+import InPageNavigaion from "@/components/InpageNavigation";
+import Loader from "@/components/Loader";
+import NoDataMessage from "@/components/NoData";
 import AnimationWrapper from "@/common/page-animation";
 import LoadMoreDataBtn from "@/components/load-more.component";
 import { BACKEND, Strings } from "@/support/Constants";

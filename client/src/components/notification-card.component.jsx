@@ -1,9 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom';
-import { getDay } from '../common/date';
 import NotificationCommentField from './notification-comment-field.component';
-import { UserContext } from '../App';
-import axios from 'axios';
 import Avatar from 'boring-avatars'
 import { dateFormat } from '@/support/Utils';
 import { Strings } from '@/support/Constants';
@@ -12,33 +9,6 @@ import { StoreContext } from '@/stores/Store';
 const NotificationCard = ({ data, index, notificationState }) => {
     const { lang } = useContext(StoreContext)
     const [isReplying, setRepling] = useState(false)
-
-    /* let {seen, type, reply ,replied_on_comment, comment, createdAt,user,  user: {personal_info: {profile_img, fullname, username}}, blog: {_id ,blog_id,title },_id: notification_id} = data;
-
-    let {userAuth: {username: author_username, profile_img: author_profile_img, access_token}} = useContext(UserContext)
-
-    let {notifications ,notifications: {results, totalDocs}, setNotifications } = notificationState
-
-    const handleDeleteClick = (comment_id, type, target) => {
-        target.setAttribute('disabled', true)
-        axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/delete-comment", {_id: comment_id} , {headers: {
-            'Authorization' : `Bearer ${access_token}`
-        }})
-        .then(() => {
-            if(type == 'comment'){
-                results.splice(index, 1)
-            }
-            else{
-                delete results[index].reply
-
-            }
-            target.removeAttribute('disabled')
-            setNotifications({...notifications, results, totalDocs: totalDocs-1, deletedDocCount: notifications.deletedDocCount + 1 })
-        })
-        .catch(err => {
-            console.log(err)
-        })
-    }    */
 
     const handleReplyClick = () => {
         setRepling(preVal => !preVal)
@@ -128,7 +98,7 @@ const NotificationCard = ({ data, index, notificationState }) => {
                                 !reply && <button onClick={handleReplyClick} className='underline hover:text-black'>Reply</button>
                             } */}
 
-                        <button onClick={handleReplyClick} className='underline hover:text-black'>Reply</button>
+                        {/* <button onClick={handleReplyClick} className='underline hover:text-black'>Reply</button> */}
                     </>
                 }
             </div>

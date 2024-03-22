@@ -1168,9 +1168,33 @@ const Strings = {
         vi: "Lần cuối thấy",
         en: "Last seen",
     },
-    "profileSettings": {
-        vi: "Chỉnh sửa hồ sơ",
-        en: "Profile settings",
+    "msgAppointAsAModerator": {
+        vi: "Bạn có chắc chắn về việc xoá hoặc chỉ định người dùng này làm người kiểm duyệt không",
+        en: "Are you certain about removing or appointing this user as a moderator",
+    },
+    "msgDeleteBan": {
+        vi: "Bạn có chắc chắn về việc xóa lệnh cấm đối với người dùng này không?",
+        en: "Are you certain about removing this history ban for this user",
+    },
+    "msgDeleteUser": {
+        vi: "Bạn có chắc chắn về việc xóa người dùng này không?",
+        en: "Are you certain about deleting this user?",
+    },
+    "msgReport": {
+        vi: "Vui lòng nhập lý do báo cáo bài viết này",
+        en: "Please provide the reason for reporting the posts.",
+    },
+    "postIsReported": {
+        vi: "Bài viết này đã bị báo cáo trước đó",
+        en: "This post has been reported previously.",
+    },
+    "editedRoleSuccess": {
+        vi: "Đã chỉnh sửa vai trò thành công",
+        en: "The role has been successfully edited.",
+    },
+    "accept": {
+        vi: "Đồng ý",
+        en: "Accept",
     },
     "": {
         vi: "",

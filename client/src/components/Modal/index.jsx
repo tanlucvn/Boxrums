@@ -85,7 +85,7 @@ const Modal = ({ open, close }) => {
   const { onChange: reportChange, onSubmit: reportSubmit, values: reportValues } = useForm(callBackStored().reportCallback, {
     threadId: postType.threadId,
     postId: postType.threadId,
-    body: postType.someData.body || ''
+    body: postType.someData?.body || ''
   })
 
   const onBan = () => {
@@ -139,6 +139,9 @@ const Modal = ({ open, close }) => {
       })
       .catch(error => {
         close();
+        if (error.response.data.error.message === "Report to the post already has") {
+          return toast.error(Strings.postIsReported[lang])
+        }
         toast.error(error.message === '[object Object]' ? 'Error' : error.message);
       });
   };
@@ -187,6 +190,29 @@ const Modal = ({ open, close }) => {
       toast.error(err.message === '[object Object]' ? 'Error' : err.message);
     }
   };
+
+  const onEditRole = async () => {
+    const role = postType.someData.moder ? 1 : 2;
+
+    try {
+      const response = await axios.put(`${BACKEND}/api/role/edit`, { userId: postType.id, role }, {
+        headers: {
+          Authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.data.error) {
+        close()
+        toast.success(Strings.editedRoleSuccess[lang])
+        setPostRes({ editedRole: { message: response.data.message } });
+      } else {
+        throw new Error(response.data.error?.message || 'Error');
+      }
+    } catch (err) {
+      toast.error(err.message === '[object Object]' ? 'Error' : err.message);
+    }
+  }
 
   const banContent = (
     <ModalBody title={Strings.banUser[lang]} subtitle={Strings.banUser[lang]} onClick={close}>
@@ -242,14 +268,15 @@ const Modal = ({ open, close }) => {
   const deleteBanContent = (
     <ModalBody title={Strings.unbanUser[lang]} subtitle={Strings.unbanUser[lang]} onClick={close}>
       <div className=''>
-        Có đồng ý xoá trường này không?
+        {Strings.msgDeleteBan[lang]}
+
         <div className='flex justify-end items-center gap-3 max-sm:absolute max-sm:bottom-7 max-sm:right-7'>
           <button className='btn-light' onClick={onDeleteBan}>
-            Có
+            {Strings.accept[lang]}
           </button>
 
           <button className='btn-dark' onClick={close}>
-            Huỷ
+            {Strings.cancel[lang]}
           </button>
         </div>
       </div>
@@ -259,14 +286,15 @@ const Modal = ({ open, close }) => {
   const deleteUserContent = (
     <ModalBody title={Strings.deleteUser[lang]} subtitle={Strings.deleteUser[lang]} onClick={close}>
       <div className=''>
-        Có đồng ý xoá người dùng này không?
+        {Strings.msgDeleteUser[lang]}
+
         <div className='flex justify-end items-center gap-3 max-sm:absolute max-sm:bottom-7 max-sm:right-7'>
           <button className='btn-light' onClick={onDeleteUser}>
-            Có
+            {Strings.accept[lang]}
           </button>
 
           <button className='btn-dark' onClick={close}>
-            Huỷ
+            {Strings.cancel[lang]}
           </button>
         </div>
       </div>
@@ -277,7 +305,7 @@ const Modal = ({ open, close }) => {
     <ModalBody title={Strings.report[lang]} subtitle={Strings.report[lang]} onClick={close}>
       <form onSubmit={reportSubmit}>
         <div className=''>
-          <p className='mb-5'>Có đồng ý xoá người dùng này không?</p>
+          <p className='mb-5'>{Strings.msgReport[lang]}</p>
 
           <LabelInputBox text={Strings.reason[lang]} errors={errors.reason} />
           <InputBox
@@ -290,15 +318,32 @@ const Modal = ({ open, close }) => {
           />
           <div className='flex justify-end items-center gap-3 max-sm:absolute max-sm:bottom-7 max-sm:right-7'>
             <button className='btn-light' type="submit">
-              Có
+              {Strings.accept[lang]}
             </button>
 
             <button className='btn-dark' onClick={close}>
-              Huỷ
+              {Strings.cancel[lang]}
             </button>
           </div>
         </div>
       </form>
+    </ModalBody>
+  )
+
+  const editRole = (
+    <ModalBody title={Strings.appointAsAModerator[lang]} subtitle={Strings.appointAsAModerator[lang]} onClick={close}>
+      <div className=''>
+        {Strings.msgAppointAsAModerator[lang]}
+        <div className='flex justify-end items-center gap-3 max-sm:absolute max-sm:bottom-7 max-sm:right-7'>
+          <button className='btn-light' onClick={onEditRole}>
+            {Strings.accept[lang]}
+          </button>
+
+          <button className='btn-dark' onClick={close}>
+            {Strings.cancel[lang]}
+          </button>
+        </div>
+      </div>
     </ModalBody>
   )
 
@@ -307,6 +352,7 @@ const Modal = ({ open, close }) => {
     deleteBan: deleteBanContent,
     deleteUser: deleteUserContent,
     createReport: createReportContent,
+    editRole: editRole,
   }
 
   const content = modalContent[postType.type]

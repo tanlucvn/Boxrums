@@ -43,6 +43,37 @@ const userSchema = new Schema({
     expires: Date
   },
   passwordReset: Date,
+  bio: {
+    type: String,
+    maxlength: [200, 'Bio should not be more than 200'],
+    default: "",
+  },
+  socialLinks: {
+    youtube: {
+      type: String,
+      default: "",
+    },
+    instagram: {
+      type: String,
+      default: "",
+    },
+    facebook: {
+      type: String,
+      default: "",
+    },
+    twitter: {
+      type: String,
+      default: "",
+    },
+    github: {
+      type: String,
+      default: "",
+    },
+    website: {
+      type: String,
+      default: "",
+    }
+  },
 })
 
 /** Sử dụng plugin mongoosePaginate cho Schema User để hỗ trợ phân trang dữ liệu */

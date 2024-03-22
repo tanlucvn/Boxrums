@@ -3,7 +3,7 @@ import { useMoreFetch } from '@/hooks/useMoreFetch';
 import { Strings } from '@/support/Constants';
 
 import DataView from '@/components/DataView';
-import { FileCard } from '@/components/Card';
+import { FileCard } from '@/components/Card/Card2';
 
 const Items = ({ folderId, lang }) => {
     const { loading, moreLoading, noData, items } = useMoreFetch({ method: 'files', params: { folderId } })

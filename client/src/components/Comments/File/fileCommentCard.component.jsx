@@ -6,7 +6,7 @@ import { counter, dateFormat } from '@/support/Utils'
 import { BACKEND, Strings } from '@/support/Constants'
 import { AttachCard } from '../../Card/Card2'
 import FileCommentField from './fileCommentField.component'
-import { FileContext } from '@/pages/Uploads/File/FilePage'
+import { FileContext } from '@/pages/Uploads/File'
 import axios from 'axios'
 
 const FileCommentCard = ({ index, leftVal, commentData }) => {

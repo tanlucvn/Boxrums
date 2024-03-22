@@ -17,11 +17,13 @@ const apiRouter = express.Router();
 apiRouter.get('/search', GeneralController.search)
 apiRouter.get('/stats', GeneralController.getStats)
 apiRouter.get('/users', GeneralController.getUsers)
+apiRouter.get('/users/stats', GeneralController.getUsersStats)
 apiRouter.get('/admins', GeneralController.getAdmins)
 
 apiRouter.get('/user', verifyAccessToken, GeneralController.getUser)
 apiRouter.get('/user/stats', verifyAccessToken, GeneralController.getUserStats)
 apiRouter.get('/user/threads', verifyAccessToken, GeneralController.getUserThreads)
+apiRouter.get('/user/uploads', verifyAccessToken, GeneralController.getUserUploads)
 apiRouter.get('/user/answers', verifyAccessToken, GeneralController.getUserAnswers)
 apiRouter.get('/user/bans', verifyAccessToken, GeneralController.getUserBans)
 apiRouter.get('/user/authHistory', verifyAccessToken, GeneralController.getAuthHistory)
@@ -46,8 +48,10 @@ apiRouter.delete('/reports/delete', verifyAccessToken, GeneralController.deleteR
  * ==========================
  */
 apiRouter.get('/profile', verifyAccessToken, ProfileController.getProfile)
+apiRouter.put('/profile/edit', verifyAccessToken, ProfileController.editProfile)
+apiRouter.put('/profile/password/edit', verifyAccessToken, ProfileController.editPassword)
 apiRouter.post('/profile/upload/picture', verifyAccessToken, ProfileController.uploadUserPicture)
-apiRouter.post('/profile/setOnline', verifyAccessToken, ProfileController.setOnline)
+apiRouter.put('/profile/setOnline', verifyAccessToken, ProfileController.setOnline)
 
 apiRouter.get('/notifications', verifyAccessToken, ProfileController.getNotifications)
 apiRouter.delete('/notifications/delete', verifyAccessToken, ProfileController.deleteNotifications)

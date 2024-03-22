@@ -6,7 +6,7 @@ import { StoreContext } from '@/stores/Store';
 import { Section } from '@/components/Section';
 
 import Settings from './Settings';
-import ProfilePage from './Profile/profile.page';
+import Profile from './Profile';
 
 const User = ({ match }) => {
     const { setFabVisible } = useContext(StoreContext)
@@ -25,7 +25,7 @@ const User = ({ match }) => {
     return (
         <Section>
             {type.route === "#settings" && <Settings userName={type.user} />}
-            {type.user && <ProfilePage userName={type.user} type={type} />}
+            {type.user && <Profile userName={type.user} type={type} />}
         </Section>
     )
 }

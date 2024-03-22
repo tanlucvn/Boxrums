@@ -256,5 +256,21 @@ const resetPassword = async (req, res, next) => {
     }
 }
 
+const checkResetPasswordToken = async (req, res, next) => {
+    try {
+        const result = req.body
+        const user = await User.findOne({
+            'resetToken.token': result.token,
+            'resetToken.expires': { $gt: Date.now() }
+        });
 
-export { register, login, verifyEmail, forgotPassword, resetPassword, resendVerificationEmail }
+        if (!user) throw createHttpError.BadRequest('Invalid token');
+
+        res.json({ message: 'Token correctly' });
+    } catch (err) {
+        res.json({ message: err.message });
+    }
+}
+
+
+export { register, login, verifyEmail, forgotPassword, resetPassword, checkResetPasswordToken, resendVerificationEmail }

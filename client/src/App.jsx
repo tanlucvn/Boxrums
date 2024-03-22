@@ -18,7 +18,7 @@ import Folders from "./pages/Uploads/Folders";
 import Folder from "./pages/Uploads/Folder";
 import Boards from "./pages/Forum/Boards";
 import Dashboard from "./pages/Dashboard";
-import FilePage from "./pages/Uploads/File/FilePage";
+import FilePage from "./pages/Uploads/File";
 import Users from "./pages/Users";
 import User from "./pages/User";
 import Messages from "./pages/Messages";
@@ -124,13 +124,10 @@ const App = () => {
                             </Route>
 
                             <Route path="search/:query" element={<SearchPage />} />
-                            {/* <Route path="user/:id" element={<ProfilePage />} /> */}
-                            {/* <Route path="blog/:blog_id" element={<BlogPage />} /> */}
 
                             <Route path="reset-password" element={<ResetPassword />} />
                             <Route path="forgot-password" element={<ForgotPassword />} />
                             <Route path="verify-email" element={<VerifyEmail />} />
-
 
                             <Route path="*" element={<PageNotFound />} />
                         </Route>

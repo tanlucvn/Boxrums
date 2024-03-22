@@ -183,23 +183,10 @@ const getTrendingThreads = async (req, res, next) => {
 
         const threads = await Thread.aggregate([
             {
-                $group: {
-                    _id: null,
-                    totalLikes: { $sum: { $size: "$likes" } },
-                    threads: { $push: "$$ROOT" }
-                }
+                $sort: { likesCount: -1 } // sort from higher to lower
             },
             {
-                $sort: { totalLikes: -1 }
-            },
-            {
-                $unwind: "$threads"
-            },
-            {
-                $replaceRoot: { newRoot: "$threads" }
-            },
-            {
-                $skip: (page - 1) * limit
+                $skip: (page - 1) * parseInt(limit)
             },
             {
                 $limit: parseInt(limit)
@@ -231,7 +218,8 @@ const getTrendingThreads = async (req, res, next) => {
                     board: 1,
                     title: 1,
                     author: 1,
-                    createdAt: 1
+                    createdAt: 1,
+                    likesCount: { $size: "$likes" } // count likes in thread
                 }
             }
         ]);
@@ -241,8 +229,6 @@ const getTrendingThreads = async (req, res, next) => {
         next(createHttpError.InternalServerError({ message: err.message }));
     }
 };
-
-
 
 const getThreads = async (req, res, next) => {
     try {
@@ -312,15 +298,19 @@ const createThread = async (req, res, next) => {
         upload(req, res, async (err) => {
             if (err) return next(createHttpError.BadRequest({ upload: err.message }))
 
-            const postDataString = JSON.stringify(req.body);
-            let { boardId, banner, title, body, desc, tags } = JSON.parse(postDataString);
+            let { boardId, banner, title, body, desc, tags } = req.body
 
             if (!boardId) return next(createHttpError.BadRequest('boardId must not be empty'))
             if (!title) return next(createHttpError.BadRequest('Thread title must not be empty'))
             if (!body) return next(createHttpError.BadRequest('Thread body must not be empty'))
 
             if (tags) {
+                tags = JSON.parse(tags)
                 tags = tags.map(tag => tag.toLowerCase())
+            }
+
+            if (body) {
+                body = JSON.parse(body)
             }
 
             const now = new Date().toISOString()
@@ -535,7 +525,7 @@ const editThread = async (req, res, next) => {
             if (err) return next(createHttpError.BadRequest(err.message))
 
             const postDataString = JSON.stringify(req.body);
-            const { threadId, title, body, closed } = JSON.parse(postDataString);
+            let { threadId, banner, desc, title, body, tags, closed } = JSON.parse(postDataString);
             let thread;
 
             if (!threadId) return next(createHttpError.BadRequest('threadId must not be empty'))
@@ -557,7 +547,7 @@ const editThread = async (req, res, next) => {
                     }
                 }
 
-                if (req.files.length && thread.attach && thread.attach.length) {
+                if (req.files && req.files.length && thread.attach && thread.attach.length) {
                     const files = thread.attach.reduce((array, item) => {
                         if (item.thumb) {
                             return [
@@ -579,7 +569,7 @@ const editThread = async (req, res, next) => {
                 }
 
                 let files = thread.attach
-                if (req.files.length) {
+                if (req.files && req.files.length) {
                     files = []
                     await Promise.all(req.files.map(async (item) => {
                         if (videoTypes.find(i => i === item.mimetype)) {
@@ -604,9 +594,16 @@ const editThread = async (req, res, next) => {
                     }))
                 }
 
+                if (tags) {
+                    tags = tags.map(tag => tag.toLowerCase())
+                }
+
                 const obj = {
+                    banner: banner,
                     title: title.trim().substring(0, 100),
-                    body: body.substring(0, 1000),
+                    desc: desc,
+                    body: body,
+                    tags: tags,
                     closed: closed === undefined ? thread.closed : closed,
                     attach: files
                 }
@@ -631,7 +628,7 @@ const editThread = async (req, res, next) => {
 
                 req.io.to('thread:' + threadId).emit('threadEdited', editedThread)
             } catch (error) {
-                return next(createHttpError.BadRequest({ message: "threadId not found" }))
+                return next(createHttpError.BadRequest({ message: error.message }))
             }
         })
     } catch (err) {
@@ -744,22 +741,27 @@ const adminEditThread = async (req, res, next) => {
 
 const likeThread = async (req, res, next) => {
     try {
-        const { threadId } = req.body
+        const { threadId } = req.body;
 
-        if (!threadId) return next(createHttpError.BadRequest('threadId must not be empty'))
+        if (!threadId) return next(createHttpError.BadRequest('threadId must not be empty'));
 
-        const thread = await Thread.findById(threadId)
+        const thread = await Thread.findById(threadId);
+
+        if (!thread) return next(createHttpError.BadRequest('Thread not found'));
 
         if (thread.closed) {
-            return next(createHttpError.BadRequest('thread is closed'))
+            return next(createHttpError.BadRequest('Thread is closed'));
         }
 
-        if (thread.likes.find(like => like.toString() === req.payload.id)) {
-            thread.likes = thread.likes.filter(like => like.toString() !== req.payload.id) // unlike
+        const userLiked = thread.likes.some(like => like.toString() === req.payload.id);
+
+        if (userLiked) {
+            thread.likes = thread.likes.filter(like => like.toString() !== req.payload.id); // Unlike
         } else {
-            thread.likes.push(req.payload.id) // like
+            thread.likes.push(req.payload.id); // Like
         }
-        await thread.save()
+
+        await thread.save();
 
         const populate = [{
             path: 'author',
@@ -767,16 +769,52 @@ const likeThread = async (req, res, next) => {
         }, {
             path: 'likes',
             select: '_id name displayName picture'
-        }]
-        const likedThread = await Thread.findById(threadId).populate(populate)
+        }];
 
-        res.json(likedThread)
+        const likedThread = await Thread.findById(threadId).populate(populate);
 
-        req.io.to('thread:' + threadId).emit('threadLiked', likedThread)
+        const existingNotification = await Notification.findOne({
+            type: 'likeThread',
+            from: req.payload.id,
+            pageId: threadId
+        });
+
+        if (!userLiked && !existingNotification) {
+            const newNotification = new Notification({
+                type: 'likeThread',
+                to: thread.author,
+                from: req.payload.id,
+                pageId: threadId,
+                title: thread.title,
+                createdAt: new Date().toISOString(),
+                read: false
+            });
+
+            await newNotification.save();
+
+            const populateNotification = [{
+                path: 'to',
+                select: '_id name displayName onlineAt picture role ban'
+            }, {
+                path: 'from',
+                select: '_id name displayName onlineAt picture role ban'
+            }];
+
+            const populatedNotification = await Notification.findById(newNotification._id).populate(populateNotification);
+
+            req.io.to('notification:' + thread.author).emit('newNotification', populatedNotification);
+        }
+
+        res.json(likedThread);
+
+        req.io.to('thread:' + threadId).emit('threadLiked', likedThread);
     } catch (err) {
-        next(createHttpError.InternalServerError({ message: err.message }))
+        next(createHttpError.InternalServerError({ message: err.message }));
     }
-}
+};
+
+
+
 
 
 /* ========================== ANSWERS */
@@ -931,22 +969,15 @@ const createAnswer = async (req, res, next) => {
 const deleteAnswer = async (req, res, next) => {
     try {
         const { answerId } = req.body
-        const moder = req.payload.role >= 2
 
-        if (!moder) return next(createHttpError.Unauthorized('Action not allowed'))
         if (!answerId) return next(createHttpError.BadRequest('answerId must not be empty'))
 
-        let answer
-        try {
-            answer = await Answer.findById(answerId).populate({ path: 'author', select: 'role' })
+        const answer = await Answer.findById(answerId).populate({ path: 'author', select: 'role' })
 
-            if (!answer.author) {
-                answer.author = {
-                    role: 1
-                }
+        if (!answer.author) {
+            answer.author = {
+                role: 1
             }
-        } catch (err) {
-            return next(createHttpError.BadRequest('answerId not found'))
         }
 
         if (req.payload.role < answer.author.role) return next(createHttpError.Unauthorized('Action not allowed'))
@@ -1103,6 +1134,38 @@ const likeAnswer = async (req, res, next) => {
             select: '_id name displayName picture'
         }]
         const likedAnswer = await Answer.findById(answerId).populate(populate)
+
+        const existingNotification = await Notification.findOne({
+            type: 'likeAnswer',
+            from: req.payload.id,
+            pageId: answerId
+        });
+
+        if (!answer.author.equals(req.payload.id) && !existingNotification) {
+            const newNotification = new Notification({
+                type: 'likeAnswer',
+                to: answer.author,
+                from: req.payload.id,
+                pageId: answerId,
+                title: 'Your answer received a like',
+                createdAt: new Date().toISOString(),
+                read: false
+            });
+
+            await newNotification.save();
+
+            const populateNotification = [{
+                path: 'to',
+                select: '_id name displayName onlineAt picture role ban'
+            }, {
+                path: 'from',
+                select: '_id name displayName onlineAt picture role ban'
+            }];
+
+            const populatedNotification = await Notification.findById(newNotification._id).populate(populateNotification);
+
+            req.io.to('notification:' + answer.author).emit('newNotification', populatedNotification);
+        }
 
         res.json(likedAnswer)
 

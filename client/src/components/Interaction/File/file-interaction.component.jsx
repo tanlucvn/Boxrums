@@ -5,7 +5,7 @@ import { counter, declOfNum } from '@/support/Utils';
 import { BACKEND, Strings } from '@/support/Constants';
 import { StoreContext } from '@/stores/Store';
 import Dropdown from '../../Dropdown';
-import { FileContext } from '@/pages/Uploads/File/FilePage';
+import { FileContext } from '@/pages/Uploads/File';
 import { DeletePopup } from '../../ModalPopup';
 
 const FileInteraction = ({ dropdown = false, share = false }) => {

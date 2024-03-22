@@ -5,7 +5,6 @@ import Avatar from 'boring-avatars'
 import { BACKEND, Strings, fileExt, imageTypes, videoTypes } from "@/support/Constants"
 import { StoreContext } from "@/stores/Store"
 import { UserOnline, UserRole, UserStatus } from "@/components/UserBadge"
-import BlogContent from "../blog-content.component"
 
 export const ArticleCard = ({ data, preview = false, type, joinedList }) => {
     const { user, lang } = useContext(StoreContext)
@@ -415,18 +414,24 @@ export const FileCard = ({ data, deleteFile }) => {
                         :
                         <span className='ml-3 flex items-center gap-2 text-dark-grey'>
                             <i className='fi fi-rr-heart text-xl'></i>
-                            {counter(likes ? likes.length : 0)} {declOfNum(likes ? likes.length : 0, Strings.like[lang], Strings.likes[lang])}
+                            {counter(likes ? likes.length : 0)}
+                            <p className="max-sm:hidden">
+                                {declOfNum(likes ? likes.length : 0, Strings.like[lang], Strings.likes[lang])}
+                            </p>
                         </span>
                     }
 
                     <span className='ml-3 flex items-center gap-2 text-dark-grey'>
                         <i className='fi fi-rr-download text-xl'></i>
-                        {counter(data.downloads ? data.downloads : 0)} {declOfNum(data.downloads ? data.downloads.length : 0, Strings.download[lang], Strings.downloads[lang])}
+                        {counter(data.downloads ? data.downloads : 0)}
+                        <p className="max-sm:hidden">
+                            {declOfNum(data.downloads ? data.downloads.length : 0, Strings.download[lang], Strings.downloads[lang])}
+                        </p>
                     </span>
                 </div>
             </div>
 
-            <div className="h-28 aspect-square flex justify-center items-center">
+            <div className="h-28 aspect-square flex justify-center items-center max-sm:hidden">
                 {imageTypes.find(i => i === data.file.type) ? (
                     <div
                         className="card_left"

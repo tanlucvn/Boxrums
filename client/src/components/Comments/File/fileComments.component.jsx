@@ -3,7 +3,7 @@ import NoDataMessage from '../../NoData';
 import AnimationWrapper from '../../../common/page-animation';
 import { Strings } from '@/support/Constants';
 import { StoreContext } from '@/stores/Store';
-import { FileContext } from '@/pages/Uploads/File/FilePage';
+import { FileContext } from '@/pages/Uploads/File';
 import FileCommentField from './fileCommentField.component';
 import FileCommentCard from './fileCommentCard.component';
 

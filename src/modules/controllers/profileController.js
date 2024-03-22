@@ -1,4 +1,5 @@
 import fs from 'fs';
+import bcrypt from 'bcrypt';
 import path from 'path';
 import { Types } from 'mongoose';
 import createHttpError from 'http-errors';
@@ -63,12 +64,40 @@ const getProfile = async (req, res, next) => {
             createdAt: user.createdAt,
             onlineAt: user.onlineAt,
             picture: user.picture,
-            role: user.role
+            role: user.role,
+            bio: user.bio,
+            socialLinks: user.socialLinks
         })
     } catch (err) {
         next(createHttpError.InternalServerError({ message: err.message }))
     }
 }
+
+const editProfile = async (req, res, next) => {
+    const { userId, displayName, bio, socialLinks } = req.body;
+    const bioLimit = 150;
+
+    if (!userId) return next(createHttpError.BadRequest('userId must not be empty'));
+    if (displayName.length < 3) return next(createHttpError.BadRequest('Display name should be at least 3 letters long'));
+    if (bio.length > bioLimit) return next(createHttpError.BadRequest(`Bio should not be more than ${bioLimit} characters`));
+
+    try {
+        const user = await User.findById(userId);
+
+        if (!user) return next(createHttpError.BadRequest({ error: 'User not found' }));
+
+        user.displayName = displayName;
+        user.bio = bio;
+        user.socialLinks = socialLinks;
+
+        await user.save();
+
+        res.json({ user: user, message: 'User updated successfully' });
+    } catch (err) {
+        next(createHttpError.InternalServerError({ message: err.message }))
+    }
+};
+
 
 /**
  * uploadUserPicture - Tải lên và cập nhật ảnh người dùng.
@@ -182,4 +211,4 @@ const deleteNotifications = async (req, res, next) => {
     }
 }
 
-export { getProfile, uploadUserPicture, setOnline, editPassword, getNotifications, deleteNotifications }
+export { getProfile, editProfile, uploadUserPicture, setOnline, editPassword, getNotifications, deleteNotifications }

@@ -65,18 +65,18 @@ const Notification = () => {
         setNotifications(null)
     }
 
-    console.log(notifications)
+    // console.log(notifications)
 
     return (
         <div>
             <h1 className="max-md:hidden">Recent Notification</h1>
-            <div className="my-8 flex gap-6 ">
+            {/* <div className="my-8 flex gap-6 ">
                 {
                     filters.map((filterName, i) => {
                         return <button key={i} className={"py-2 " + (filter == filterName ? "btn-dark" : "btn-light")} onClick={handleFilter}>{filterName}</button>
                     })
                 }
-            </div>
+            </div> */}
 
             {
                 notifications == null ? <Loader /> :

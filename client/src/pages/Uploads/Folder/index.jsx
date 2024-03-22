@@ -52,7 +52,7 @@ const Folder = ({ match }) => {
         init && fetchFolder()
     }, [init, folder, folderName, lang])
 
-    console.log(folder)
+    // console.log(folder)
 
     return (
         <Section>

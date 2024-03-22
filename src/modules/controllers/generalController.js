@@ -111,7 +111,6 @@ const getStats = async (req, res, next) => {
     }
 };
 
-
 const getUsers = async (req, res, next) => {
     try {
         const { limit = 10, page = 1, sort } = req.query
@@ -141,7 +140,6 @@ const getUsers = async (req, res, next) => {
                 }
             }
         }
-
 
         res.json(users)
     } catch (err) {
@@ -347,6 +345,36 @@ const deleteBan = async (req, res, next) => {
     }
 }
 
+const getUsersStats = async (req, res, next) => {
+    try {
+        const users = await User.find();
+
+        const usersStats = [];
+
+        for (const user of users) {
+            const threads = await Thread.find({ author: user._id });
+            const answers = await Answer.find({ author: user._id });
+            const bans = await Ban.find({ user: user._id });
+            const files = await File.find({ author: user._id });
+            const comments = await Comment.find({ author: user._id });
+
+            usersStats.push({
+                user: user,
+                threadsCount: threads.length,
+                answersCount: answers.length,
+                bansCount: bans.length,
+                filesCount: files.length,
+                fileCommentsCount: comments.length,
+                karma: user.karma
+            });
+        }
+
+        res.json(usersStats);
+    } catch (err) {
+        next(createHttpError.InternalServerError({ message: err.message }));
+    }
+};
+
 const getUserStats = async (req, res, next) => {
     try {
         const { userId } = req.query
@@ -392,6 +420,27 @@ const getUserThreads = async (req, res, next) => {
         const threads = await Thread.paginate({ author: userId }, { sort: { createdAt: -1 }, page, limit, populate })
 
         res.json(threads)
+    } catch (err) {
+        next(createHttpError.InternalServerError({ message: err.message }))
+    }
+}
+
+const getUserUploads = async (req, res, next) => {
+    try {
+        const { userId, limit = 10, page = 1 } = req.query
+
+        if (!userId) return next(createHttpError.BadRequest('userId must not be empty'))
+
+        const populate = [{
+            path: 'author',
+            select: '_id name displayName onlineAt picture role ban'
+        }, {
+            path: 'likes',
+            select: '_id name displayName picture'
+        }]
+        const files = await File.paginate({ author: userId }, { sort: { createdAt: -1 }, page, limit, populate })
+
+        res.json(files)
     } catch (err) {
         next(createHttpError.InternalServerError({ message: err.message }))
     }
@@ -656,10 +705,10 @@ const deleteUser = async (req, res, next) => {
 
         await user.deleteOne()
 
-        res.json({ message: 'User successfully deleted' })
+        res.json({ user: user, message: 'User deleted successfully' })
     } catch (err) {
         next(createHttpError.InternalServerError({ message: err.message }))
     }
 }
 
-export { getStats, getUsers, getUser, getAdmins, getBans, getUserBans, getBan, createBan, unBan, deleteBan, getUserStats, getUserThreads, getUserAnswers, getAuthHistory, searchAuthHistory, getReports, createReport, deleteReports, search, editRole, deleteUser }
+export { getStats, getUsers, getUser, getAdmins, getBans, getUserBans, getBan, createBan, unBan, deleteBan, getUsersStats, getUserStats, getUserThreads, getUserUploads, getUserAnswers, getAuthHistory, searchAuthHistory, getReports, createReport, deleteReports, search, editRole, deleteUser }

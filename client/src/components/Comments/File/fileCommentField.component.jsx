@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Toaster, toast } from 'react-hot-toast'
 import { BACKEND, Strings } from '@/support/Constants'
 import { StoreContext } from '@/stores/Store'
-import { FileContext } from '@/pages/Uploads/File/FilePage'
+import { FileContext } from '@/pages/Uploads/File'
 
 const FileCommentField = ({ action, index = undefined, replyingTo = undefined, setReplying, placeholder, defaultValue, type }) => {
     const { user, token, lang } = useContext(StoreContext)

@@ -1,5 +1,5 @@
 import express from 'express';
-import { register, login, verifyEmail, forgotPassword, resetPassword, resendVerificationEmail } from '../modules/controllers/authController.js'
+import { register, login, verifyEmail, forgotPassword, resetPassword, checkResetPasswordToken, resendVerificationEmail } from '../modules/controllers/authController.js'
 import { dcLogin, fbLogin } from '../modules/controllers/integrationsAuthController.js';
 const authRouter = express.Router();
 
@@ -10,6 +10,7 @@ authRouter.post('/resend-verify-email', resendVerificationEmail)
 authRouter.post('/verify-email', verifyEmail)
 authRouter.post('/forgot-password', forgotPassword);
 authRouter.post('/reset-password', resetPassword);
+authRouter.post('/check-resetpassword-token', checkResetPasswordToken);
 authRouter.post('/discord', dcLogin)
 authRouter.post('/facebook', fbLogin)
 

@@ -254,13 +254,13 @@ const createFile = async (req, res, next) => {
             if (!body) return next(createHttpError.BadRequest('File body must not be empty'))
 
             if (tags) {
-                if (typeof tags === 'string') {
-                    tags = tags.split(',').map(tag => tag.trim().toLowerCase());
-                } else if (Array.isArray(tags)) {
-                    tags = tags.map(tag => tag.toLowerCase());
-                }
+                tags = JSON.parse(tags)
+                tags = tags.map(tag => tag.toLowerCase())
             }
 
+            if (body) {
+                body = JSON.parse(body)
+            }
 
             const now = new Date().toISOString()
 
@@ -348,11 +348,11 @@ const deleteFile = async (req, res, next) => {
 
 const editFile = async (req, res, next) => {
     try {
-        const { fileId, title, body } = req.body
+        let { fileId, banner, title, desc, body, tags } = req.body
 
         if (!fileId) return next(createHttpError.BadRequest('fileId must not be empty'))
         if (title.trim() === '') return next(createHttpError.BadRequest('File title must not be empty'))
-        if (body.trim() === '') return next(createHttpError.BadRequest('File body must not be empty'))
+        if (!body) return next(createHttpError.BadRequest('File body must not be empty'))
 
         const file = await File.findById(fileId).populate({ path: 'author', select: 'role' })
 
@@ -367,9 +367,22 @@ const editFile = async (req, res, next) => {
             }
         }
 
+        if (tags) {
+            tags = JSON.parse(tags)
+            tags = tags.map(tag => tag.toLowerCase())
+        }
+
+        if (body) {
+            body = JSON.parse(body)
+            body = body.blocks.map(block => block)
+        }
+
         await File.updateOne({ _id: new Types.ObjectId(fileId) }, {
+            banner: banner,
             title: title.trim().substring(0, 100),
-            body: body.substring(0, 1000)
+            body: body,
+            desc: desc,
+            tags: tags
         })
 
         const populate = [{
@@ -578,18 +591,20 @@ const deleteComment = async (req, res, next) => {
 
 const likeComment = async (req, res, next) => {
     try {
-        const { commentId } = req.body
+        const { commentId } = req.body;
 
-        if (!commentId) return next(createHttpError.BadRequest('commentId must not be empty'))
+        if (!commentId) return next(createHttpError.BadRequest('commentId must not be empty'));
 
-        const comment = await Comment.findById(commentId)
+        const comment = await Comment.findById(commentId);
+
+        if (!comment) return next(createHttpError.NotFound('Comment not found'));
 
         if (comment.likes.find(like => like.toString() === req.payload.id)) {
-            comment.likes = comment.likes.filter(like => like.toString() !== req.payload.id) // unlike
+            comment.likes = comment.likes.filter(like => like.toString() !== req.payload.id); // unlike
         } else {
-            comment.likes.push(req.payload.id) // like
+            comment.likes.push(req.payload.id); // like
         }
-        await comment.save()
+        await comment.save();
 
         const populate = [{
             path: 'author',
@@ -597,16 +612,52 @@ const likeComment = async (req, res, next) => {
         }, {
             path: 'likes',
             select: '_id name displayName picture'
-        }]
-        const likedComment = await Comment.findById(commentId).populate(populate)
+        }];
 
-        res.json(likedComment)
+        const likedComment = await Comment.findById(commentId).populate(populate);
 
-        req.io.to('file:' + comment.fileId).emit('commentLiked', likeComment)
+        if (!comment.author.equals(req.payload.id)) {
+            const existingNotification = await Notification.findOne({
+                type: 'likeComment',
+                from: req.payload.id,
+                pageId: commentId
+            });
+
+            if (!existingNotification) {
+                const newNotification = new Notification({
+                    type: 'likeComment',
+                    to: comment.author,
+                    from: req.payload.id,
+                    pageId: commentId,
+                    title: 'Your comment received a like',
+                    createdAt: new Date().toISOString(),
+                    read: false
+                });
+
+                await newNotification.save();
+
+                const populateNotification = [{
+                    path: 'to',
+                    select: '_id name displayName onlineAt picture role ban'
+                }, {
+                    path: 'from',
+                    select: '_id name displayName onlineAt picture role ban'
+                }];
+
+                const populatedNotification = await Notification.findById(newNotification._id).populate(populateNotification);
+
+                req.io.to('notification:' + comment.author).emit('newNotification', populatedNotification);
+            }
+        }
+
+        res.json(likedComment);
+
+        req.io.to('file:' + comment.fileId).emit('commentLiked', likedComment);
     } catch (err) {
-        next(createHttpError.InternalServerError({ message: err.message }))
+        next(createHttpError.InternalServerError({ message: err.message }));
     }
-}
+};
+
 
 
 /**

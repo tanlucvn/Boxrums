@@ -431,7 +431,7 @@ export const FileCard = ({ data, deleteFile }) => {
                 </div>
             </div>
 
-            <div className="h-28 aspect-square flex justify-center items-center max-sm:hidden">
+            <div className="h-28 aspect-square flex justify-center items-center max-lg:hidden">
                 {imageTypes.find(i => i === data.file.type) ? (
                     <div
                         className="card_left"
@@ -468,7 +468,7 @@ export const UserCard = ({ data, online, karma }) => {
     const { lang } = useContext(StoreContext)
 
     return (
-        <div className="block relative group p-6 bg-grey text-black border-2 border-grey rounded-lg shadow-sm my-4 max-w-lg max-md:max-w-none">
+        <div className="block relative group p-6 bg-grey text-black border-2 border-grey rounded-lg shadow-sm my-4">
             <Link to={'/user/' + data.name}>
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10">
@@ -608,59 +608,57 @@ export const BannedAll = ({ data, deleteBan }) => {
     }
 
     return (
-        <>
-            <div class="block relative group p-6 bg-grey text-black border-2 border-grey rounded-lg shadow-sm my-4">
-                {/* <h5 class="mb-2 text-2xl font-bold tracking-tight">Noteworthy technology acquisitions 2021</h5> */}
-                <div className="flex font-medium">
-                    <Link to={'/user/' + data.user.name}>
-                        <span>{data.user.displayName}</span>
-                    </Link>
-                    <span className="mx-2 font-normal">/</span>
-                    <p>
-                        <time>{dateFormat(data.createdAt)}</time>
-                    </p>
-                </div>
-
-                <div className="mt-5">
-                    <p className="my-2">
-                        <span className="mr-2 font-medium">{Strings.reason[lang]}:</span>
-                        <span className="font-normal">{data.reason}</span>
-                    </p>
-                    <p className="my-2">
-                        <span className="mr-2 font-medium">Ngày tạo:</span>
-                        <span className="font-normal">{dateFormat(data.createdAt)}</span>
-                    </p>
-                    <p className="my-2">
-                        <span className="mr-2 font-medium">{Strings.banExpires[lang]}:</span>
-                        <span className="font-normal">{dateFormat(data.expiresAt)}</span>
-                    </p>
-                    <p className="my-2">
-                        <span className="mr-2 font-medium">Tình trạng:</span>
-                        <span className="font-normal">{calculateCooldown(data.expiresAt)}</span>
-                    </p>
-                </div>
-
-                <div className="flex items-center gap-3 mt-5">
-                    <Link to={'/user/' + data.admin.name} reloadDocument="true" className="flex items-center gap-3 border-2 border-light-grey px-3 py-2 rounded-full cursor-pointer hover:bg-light-grey">
-                        <div className="w-8 h-8">
-                            <Avatar
-                                size={'100%'}
-                                name={data.admin.name}
-                                variant="marble"
-                                colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
-                            />
-                        </div>
-
-                        <span className='text-purple'>{data.admin.displayName}</span>
-                    </Link>
-                    {deleteBan && (
-                        <div className="btn-delete" onClick={() => deleteBan(data._id)}>
-                            <i class="fi fi-rr-trash"></i>
-                        </div>
-                    )}
-                </div>
+        <div class="block relative group p-6 bg-grey text-black border-2 border-grey rounded-lg shadow-sm my-4">
+            {/* <h5 class="mb-2 text-2xl font-bold tracking-tight">Noteworthy technology acquisitions 2021</h5> */}
+            <div className="flex font-medium">
+                <Link to={'/user/' + data.user.name}>
+                    <span>{data.user.displayName}</span>
+                </Link>
+                <span className="mx-2 font-normal">/</span>
+                <p>
+                    <time>{dateFormat(data.createdAt)}</time>
+                </p>
             </div>
-        </>
+
+            <div className="mt-5">
+                <p className="my-2">
+                    <span className="mr-2 font-medium">{Strings.reason[lang]}:</span>
+                    <span className="font-normal">{data.reason}</span>
+                </p>
+                <p className="my-2">
+                    <span className="mr-2 font-medium">Ngày tạo:</span>
+                    <span className="font-normal">{dateFormat(data.createdAt)}</span>
+                </p>
+                <p className="my-2">
+                    <span className="mr-2 font-medium">{Strings.banExpires[lang]}:</span>
+                    <span className="font-normal">{dateFormat(data.expiresAt)}</span>
+                </p>
+                <p className="my-2">
+                    <span className="mr-2 font-medium">Tình trạng:</span>
+                    <span className="font-normal">{calculateCooldown(data.expiresAt)}</span>
+                </p>
+            </div>
+
+            <div className="flex items-center gap-3 mt-5">
+                <Link to={'/user/' + data.admin.name} reloadDocument="true" className="flex items-center gap-3 border-2 border-light-grey px-3 py-2 rounded-full cursor-pointer hover:bg-light-grey">
+                    <div className="w-8 h-8">
+                        <Avatar
+                            size={'100%'}
+                            name={data.admin.name}
+                            variant="marble"
+                            colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+                        />
+                    </div>
+
+                    <span className='text-purple'>{data.admin.displayName}</span>
+                </Link>
+                {deleteBan && (
+                    <div className="btn-delete" onClick={() => deleteBan(data._id)}>
+                        <i class="fi fi-rr-trash"></i>
+                    </div>
+                )}
+            </div>
+        </div>
     )
 }
 
@@ -738,8 +736,10 @@ export const AnswerCard = ({ data }) => {
                     {data.body}
                 </div>
 
-                <div className="flex items-center gap-3 mt-5">
-                    <Link to={'/thread/' + data.threadId} className="border-2 border-light-grey px-3 py-2 rounded-full cursor-pointer hover:bg-light-grey">{Strings.open[lang]} {Strings.thread[lang]}</Link>
+                <div className="flex items-center gap-3 mt-5 justify-end">
+                    <Link to={'/thread/' + data.threadId} className="border-2 border-light-grey px-3 py-2 rounded-md cursor-pointer hover:bg-light-grey">
+                        {Strings.open[lang]} {Strings.thread[lang]}
+                    </Link>
                 </div>
             </div>
         </>
@@ -806,6 +806,8 @@ export const DialoqueCard = ({ data }) => {
         data[key] = deletedUser
     }
 
+    // console.log(data.lastMessage?.body.length)
+
     return (
         <div className={data.lastMessage.read ? 'card_block' : 'card_block noread'}>
             <header className="card_head user_head">
@@ -825,20 +827,22 @@ export const DialoqueCard = ({ data }) => {
                         <div className="user_info">
                             <div className="user_info_top">
                                 {data[key].displayName}
-                                <UserOnline onlineAt={data[key].onlineAt} dot />
+                                <UserOnline onlineAt={data[key].onlineAt} />
                                 <UserRole role={data[key].role} />
                                 {data[key].ban && <UserStatus status="ban" />}
                             </div>
-                            <div className="head_text">
+                            <div className="flex items-center gap-2 text-dark-grey">
                                 {data.lastMessage?.from === user.id && <span>{Strings.you[lang]}: </span>}
-                                {data.lastMessage?.body.length ? data.lastMessage.body : data.lastMessage?.file.length
-                                    ? (
-                                        <>
-                                            <File weight='bold' />
-                                            {Strings.file[lang]}
-                                        </>
-                                    ) : Strings.message[lang]
-                                }
+                                <span>
+                                    {data.lastMessage?.body.length ? data.lastMessage.body : data.lastMessage?.file.length
+                                        ? (
+                                            <span className="flex items-center gap-1">
+                                                <i class="fi fi-rr-file"></i>
+                                                {Strings.file[lang]}
+                                            </span>
+                                        ) : Strings.message[lang]
+                                    }
+                                </span>
                             </div>
                         </div>
                     </Link>
@@ -866,39 +870,78 @@ export const NotificationCard = ({ data }) => {
     }
 
     return (
-        <div className="card_item">
-            <div className="card_body">
-                <div className={data.read ? 'card_block' : 'card_block noread'}>
-                    <header className="card_head">
-                        <div className="card_head_inner">
-                            <Link to={pagePath} className="card_title">
-                                {data.title}
-                            </Link>
-
-                            <div className="card_info">
-                                <Link to={'/user/' + data.from.name} className="head_text bold">
-                                    {data.from.displayName}
-                                    <UserRole role={data.from.role} />
-                                    {data.from.ban && <UserStatus status="ban" />}
-                                </Link>
-                                <span className="bullet">•</span>
-                                <span className="head_text">
-                                    <time>{dateFormat(data.createdAt)}</time>
-                                </span>
-                            </div>
-                        </div>
-                    </header>
-
-                    <div className="card_content markdown">
-                        {data.body}
-                    </div>
-
-                    {data.body.length > 200 && (
-                        <div className="text_show_more" onClick={() => setCollapsed(!collapsed)}>
-                            {collapsed ? Strings.showMore[lang] : Strings.showLess[lang]}
-                        </div>
-                    )}
+        <>
+            <div class="block relative group p-6 bg-grey text-black border-2 border-grey rounded-lg shadow-sm my-4">
+                <div className="flex font-medium">
+                    <Link to={'/user/' + data.from.name}>
+                        <span>{data.from.displayName}</span>
+                        <UserRole role={data.from.role} />
+                        {data.from.ban && <UserStatus status="ban" />}
+                    </Link>
+                    <span className="mx-2 font-normal">/</span>
+                    <p>
+                        <time>{dateFormat(data.createdAt)}</time>
+                    </p>
                 </div>
+
+                <h5 class="mb-2 text-2xl font-bold tracking-tight">
+                    <Link to={pagePath}>
+                        {data.title}
+                    </Link>
+                </h5>
+
+                <div className="mt-5">
+                    <p className="my-2">
+                        <span className="mr-2 font-medium">{Strings.reason[lang]}:</span>
+                        <span className="font-normal">{data.body}</span>
+                    </p>
+                </div>
+            </div>
+        </>
+    )
+}
+
+export const AuthHistoryCard = ({ data }) => {
+    const { lang } = useContext(StoreContext)
+
+    if (data.user === null) {
+        data.user = deletedUser
+    }
+
+    return (
+        <div className="block relative group p-6 bg-grey text-black border-2 border-grey rounded-lg shadow-sm my-4">
+            <div className="card_head">
+                <div className="card_head_inner">
+                    <div className="flex items-center gap-3 font-medium">
+                        <div className="w-8 h-8">
+                            <Avatar
+                                size={"100%"}
+                                name={data.user.name}
+                                variant="marble"
+                                colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+                            />
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                            <p>{data.user.displayName}</p>
+                        </div>
+
+                        <span className="font-normal">/</span>
+
+                        <p>{dateFormat(data.createdAt)}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div className="mt-5">
+                <p className="my-2">
+                    <span className="mr-2 font-medium">{Strings.ipAddress[lang]}:</span>
+                    <span className="font-normal">{data.ip}</span>
+                </p>
+                <p className="my-2">
+                    <span className="mr-2 font-medium">{Strings.userAgent[lang]}:</span>
+                    <span className="font-normal">{data.ua}</span>
+                </p>
             </div>
         </div>
     )

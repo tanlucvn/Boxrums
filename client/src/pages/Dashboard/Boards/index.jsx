@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
 import { toast } from 'react-hot-toast';
+import axios from 'axios';
 
 import { StoreContext } from '@/stores/Store';
 
@@ -22,72 +23,82 @@ const Boards = () => {
   const [fetchErrors, setFetchErros] = useState({})
 
   const createBoard = (data) => {
-    fetch(BACKEND + '/api/board/create', {
-      method: 'POST',
+    axios.post(`${BACKEND}/api/board/create`, data, {
       headers: {
         Authorization: 'Bearer ' + token,
         'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
+      }
     })
-      .then(response => response.json())
-      .then(data => {
-        if (!data.error) {
-          setNoData(false)
-          setCreate(false)
-          setItems(prev => [data, ...prev])
-        } else throw Error(data.error?.message || 'Error')
+      .then(response => {
+        const createdBoard = response.data.newBoard;
+        if (!createdBoard.error) {
+          setNoData(false);
+          setCreate(false);
+          setItems(prev => [createdBoard, ...prev]);
+          toast.success(Strings.created[lang])
+        } else {
+          throw new Error(createdBoard.error?.message || 'Error');
+        }
       })
       .catch(err => {
-        setFetchErros({ generalCreate: err.message === '[object Object]' ? 'Error' : err.message })
-      })
-  }
+        setFetchErrors({ generalCreate: err.message === '[object Object]' ? 'Error' : err.message });
+      });
+  };
 
   const editBoard = (data) => {
-    fetch(BACKEND + '/api/board/edit', {
-      method: 'PUT',
+    axios.put(BACKEND + '/api/board/edit', data, {
       headers: {
         Authorization: 'Bearer ' + token,
         'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
+      }
     })
-      .then(response => response.json())
-      .then(data => {
-        if (!data.error) {
-          let newArray = [...items]
-          newArray[newArray.findIndex(item => item._id === data._id)] = data
-
-          setItems(newArray)
-        } else throw Error(data.error?.message || 'Error')
+      .then(response => {
+        const updatedBoard = response.data.newBoard;
+        if (!updatedBoard.error) {
+          const updatedItems = items.map(item => {
+            if (item._id === updatedBoard._id) {
+              return updatedBoard;
+            }
+            return item;
+          });
+          setItems(updatedItems);
+          toast.success(Strings.edited[lang])
+        } else {
+          throw new Error(updatedBoard.error?.message || 'Error');
+        }
       })
       .catch(err => {
-        setFetchErros({ [data.boardId]: err.message === '[object Object]' ? 'Error' : err.message })
-      })
-  }
+        setFetchErrors({ [data.boardId]: err.message === '[object Object]' ? 'Error' : err.message });
+      });
+  };
 
   const deleteBoard = (boardId) => {
-    fetch(BACKEND + '/api/board/delete', {
-      method: 'DELETE',
+    axios.delete(`${BACKEND}/api/board/delete`, {
       headers: {
         Authorization: 'Bearer ' + token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ boardId })
+      data: { boardId }
     })
-      .then(response => response.json())
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         if (!data.error) {
-          setItems(items.filter(item => item._id !== boardId))
-          if (items.filter(item => item._id !== boardId).length === 0) {
-            setItems([])
-            setNoData(true)
-          }
-        } else throw Error(data.error?.message || 'Error')
-      })
-      .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message))
-  }
+          const updatedItems = items.filter(item => item._id !== boardId);
+          setItems(updatedItems);
+          toast.success(Strings.deleted[lang]);
 
+          if (updatedItems.length === 0) {
+            setItems([]);
+            setNoData(true);
+          }
+        } else {
+          throw new Error(data.error?.message || 'Error');
+        }
+      })
+      .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message));
+  };
+
+  // console.log("now items", items)
   return (
     <>
       <Breadcrumbs current={Strings.manageBoards[lang]} links={[
@@ -97,7 +108,7 @@ const Boards = () => {
 
       <div className="card_item">
         <Button
-          className="mt-5"
+          className="my-5"
           text={Strings.createNewBoard[lang]}
           onClick={() => setCreate(!create)}
         />

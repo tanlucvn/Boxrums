@@ -160,7 +160,7 @@ const FileUploadForm = ({ mini, title, hint, sendFiles, clearFiles, multiple = t
                     onChange={handleFile}
                     disabled={files.length >= maxCount}
                 />
-                <label htmlFor="miniFileInput" className="message_action_item send_file" title={Strings.chooseAFile[lang]}>
+                <label htmlFor="miniFileInput" className="message_action_item" title={Strings.chooseAFile[lang]}>
                     <i class="fi fi-rr-clip"></i>
                 </label>
             </Fragment>

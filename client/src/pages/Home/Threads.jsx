@@ -37,7 +37,11 @@ const Threads = ({ lang }) => {
     }, [init])
 
     return (
-        <>
+        <Section>
+            <SectionHeader
+                title={Strings.threads[lang]}
+                link={{ title: Strings.all[lang], url: '/boards' }}
+            />
             {!noData ? (
                 threads.length ? (
                     threads.map(item => (
@@ -47,7 +51,7 @@ const Threads = ({ lang }) => {
             ) : (
                 <Errorer message={Strings.noThreadsYet[lang]} />
             )}
-        </>
+        </Section>
     )
 }
 

@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
 import { toast } from 'react-hot-toast';
+import axios from 'axios'
 
 import { StoreContext } from '@/stores/Store';
 
@@ -22,71 +23,80 @@ const Folders = () => {
   const [fetchErrors, setFetchErros] = useState({})
 
   const createFolder = (data) => {
-    fetch(BACKEND + '/api/folder/create', {
-      method: 'POST',
+    axios.post(`${BACKEND}/api/folder/create`, data, {
       headers: {
         Authorization: 'Bearer ' + token,
         'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
+      }
     })
-      .then(response => response.json())
-      .then(data => {
-        if (!data.error) {
-          setNoData(false)
-          setCreate(false)
-          setItems(prev => [data, ...prev])
-        } else throw Error(data.error?.message || 'Error')
+      .then(response => {
+        const createdFolder = response.data;
+        if (!createdFolder.error) {
+          setNoData(false);
+          setCreate(false);
+          setItems(prev => [createdFolder, ...prev]);
+          toast.success(Strings.created[lang])
+        } else {
+          throw new Error(createdFolder.error?.message || 'Error');
+        }
       })
       .catch(err => {
-        setFetchErros({ generalCreate: err.message === '[object Object]' ? 'Error' : err.message })
-      })
-  }
+        setFetchErrors({ generalCreate: err.message === '[object Object]' ? 'Error' : err.message });
+      });
+  };
 
   const editFolder = (data) => {
-    fetch(BACKEND + '/api/folder/edit', {
-      method: 'PUT',
+    axios.put(`${BACKEND}/api/folder/edit`, data, {
       headers: {
         Authorization: 'Bearer ' + token,
         'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
+      }
     })
-      .then(response => response.json())
-      .then(data => {
-        if (!data.error) {
-          let newArray = [...items]
-          newArray[newArray.findIndex(item => item._id === data._id)] = data
-
-          setItems(newArray)
-        } else throw Error(data.error?.message || 'Error')
+      .then(response => {
+        const updatedFolder = response.data;
+        if (!updatedFolder.error) {
+          const updatedItems = items.map(item => {
+            if (item._id === updatedFolder._id) {
+              return updatedFolder;
+            }
+            return item;
+          });
+          setItems(updatedItems);
+          toast.success(Strings.edited[lang])
+        } else {
+          throw new Error(updatedFolder.error?.message || 'Error');
+        }
       })
       .catch(err => {
-        setFetchErros({ [data.folderId]: err.message === '[object Object]' ? 'Error' : err.message })
-      })
-  }
+        setFetchErrors({ [data.folderId]: err.message === '[object Object]' ? 'Error' : err.message });
+      });
+  };
 
   const deleteFolder = (folderId) => {
-    fetch(BACKEND + '/api/board/delete', {
-      method: 'DELETE',
+    axios.delete(`${BACKEND}/api/folder/delete`, {
       headers: {
         Authorization: 'Bearer ' + token,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ folderId })
+      data: { folderId }
     })
-      .then(response => response.json())
-      .then(data => {
+      .then(response => {
+        const data = response.data;
         if (!data.error) {
-          setItems(items.filter(item => item._id !== folderId))
-          if (items.filter(item => item._id !== folderId).length === 0) {
-            setItems([])
-            setNoData(true)
+          const updatedItems = items.filter(item => item._id !== folderId);
+          setItems(updatedItems);
+          toast.success(Strings.deleted[lang]);
+
+          if (updatedItems.length === 0) {
+            setItems([]);
+            setNoData(true);
           }
-        } else throw Error(data.error?.message || 'Error')
+        } else {
+          throw new Error(data.error?.message || 'Error');
+        }
       })
-      .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message))
-  }
+      .catch(err => toast.error(err.message === '[object Object]' ? 'Error' : err.message));
+  };
 
   return (
     <>
@@ -95,7 +105,7 @@ const Folders = () => {
         { title: Strings.dashboard[lang], link: '/dashboard' }
       ]} />
 
-      <div className="card_item">
+      <div className="card_item my-5">
         <Button
           className="main hollow"
           text={Strings.createNewFolder[lang]}

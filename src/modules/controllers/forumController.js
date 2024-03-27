@@ -595,7 +595,12 @@ const editThread = async (req, res, next) => {
                 }
 
                 if (tags) {
+                    tags = JSON.parse(tags)
                     tags = tags.map(tag => tag.toLowerCase())
+                }
+
+                if (body) {
+                    body = JSON.parse(body)
                 }
 
                 const obj = {

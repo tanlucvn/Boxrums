@@ -19,6 +19,8 @@ import { toast } from 'react-hot-toast'
 import AboutUser from "@/components/about.component";
 import AuthHistory from "./AuthHistory";
 import { UserOnline } from "@/components/UserBadge";
+import Uploads from "./Uploads";
+import { LinkButton } from "@/components/Button";
 
 const Profile = ({ userName, type }) => {
   const { user, token, lang, setModalOpen, setPostType, postRes } = useContext(StoreContext)
@@ -159,6 +161,8 @@ const Profile = ({ userName, type }) => {
     }
   }, [postRes])
 
+  // console.log(userStats)
+
   return (
     <AnimationWrapper>
       {!noData ? (
@@ -190,7 +194,7 @@ const Profile = ({ userName, type }) => {
                     to={`/settings/edit-profile`}
                     className="btn-light rounded-md"
                   >
-                    {Strings.profileSettings[lang]}
+                    {Strings.editProfile[lang]}
                   </Link>
                 ) : (
                   ""
@@ -209,6 +213,12 @@ const Profile = ({ userName, type }) => {
               </div> */}
 
               <div className="flex gap-4 mt-2 flex-wrap break-words">
+                <LinkButton
+                  link={'/messages/' + userData.name}
+                  className="hollow"
+                  text={Strings.message[lang]}
+                />
+
                 {user.role >= 2 && user.id !== userData._id ?
                   <>
                     {user.role === 3 && user.name !== userName && (
@@ -252,6 +262,7 @@ const Profile = ({ userName, type }) => {
               <InPageNavigaion
                 routes={[
                   `${Strings.threads[lang]} (${counter(userStats.threadsCount)})`,
+                  `${Strings.upload[lang]} (${counter(userStats.filesCount)})`,
                   `${Strings.answers[lang]} (${counter(userStats.answersCount)})`,
                   `${Strings.bans[lang]} (${counter(userStats.bansCount)})`,
                   user.role >= 2 && Strings.authorizationsHistory[lang]
@@ -260,6 +271,7 @@ const Profile = ({ userName, type }) => {
               >
                 {[
                   <Threads userData={userData} />,
+                  <Uploads userData={userData} />,
                   <Answers userData={userData} />,
                   <Bans userData={userData} />,
                   user.role >= 2 && <AuthHistory userData={userData} />

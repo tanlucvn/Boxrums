@@ -981,7 +981,7 @@ const Strings = {
         en: "Your threads",
     },
     "editProfile": {
-        vi: "Chỉnh sửa cá nhân",
+        vi: "Chỉnh sửa hồ sơ",
         en: "Edit profile",
     },
     "changePassword": {
@@ -1196,6 +1196,98 @@ const Strings = {
         vi: "Đồng ý",
         en: "Accept",
     },
+    "pleaseSelectBoard": {
+        vi: "Vui lòng chọn chủ đề",
+        en: "Please seletect a board",
+    },
+    "pleaseSelectFolder": {
+        vi: "Vui lòng chọn thư mục",
+        en: "Please seletect a folder",
+    },
+    "emptyDesc": {
+        vi: "Hãy viết mô tả cho bài đăng của bạn",
+        en: "Write a description about your posts",
+    },
+    "writeDesc": {
+        vi: "Viết mô tả về bài đăng của bạn trong vòng {charLength} ký tự để đăng bài",
+        en: "Write a description about your posts within {charLength} characters to publish",
+    },
+    "emptyTags": {
+        vi: "Hãy thêm vài thẻ cho bài đăng của bạn",
+        en: "Write some tags about your posts",
+    },
+    "writeTags": {
+        vi: "Thêm một số thẻ về bài đăng trong vòng {tag} thẻ để đăng bài",
+        en: "Write some tags about post within {tag} tags to publish",
+    },
+    "addMaxTags": {
+        vi: "Bạn chỉ có thể thêm tối đa {tag} thẻ",
+        en: "You can add max {tag} tags",
+    },
+    "publishing": {
+        vi: "Đang đăng bài viết...",
+        en: "Publishing...",
+    },
+    "published": {
+        vi: "Đã đăng bài viết thành công",
+        en: "Published successfully",
+    },
+    "published": {
+        vi: "Đã đăng bài viết thành công",
+        en: "Published successfully",
+    },
+    "edited": {
+        vi: "Đã chỉnh sửa thành công",
+        en: "Edited successfully",
+    },
+    "deleted": {
+        vi: "Đã xoá thành công",
+        en: "Deleted successfully",
+    },
+    "created": {
+        vi: "Đã tạo thành công",
+        en: "Created successfully",
+    },
+    "fileUploadFailed": {
+        vi: "Tệp tin không tìm thấy hoặc tải lên thất bại",
+        en: "File not found or upload failed",
+    },
+    "ipAddress": {
+        vi: "Địa chỉ IP",
+        en: "IP Address",
+    },
+    "userAgent": {
+        vi: "Thông tin",
+        en: "User Agent",
+    },
+    "storiesInterest": {
+        vi: "Câu chuyện từ mọi sở thích",
+        en: "Stories from all interest",
+    },
+    "message": {
+        vi: "Nhắn tin",
+        en: "Message",
+    },
+    "you": {
+        vi: "Bạn",
+        en: "You",
+    },
+    "enterYourMessage": {
+        vi: "Nhập nội dung...",
+        en: "Enter your message...",
+    },
+    "dialogueWith": {
+        vi: "Trò chuyện với",
+        en: "Dialogue with",
+    },
+    "error404PageNotFound": {
+        vi: "Lỗi 404. Trang không tìm thấy",
+        en: "Error 404. Page not found",
+    },
+    "error404PageNotFoundDesc": {
+        vi: "Trang bạn đang tìm kiếm không tồn tại, bạn có muốn",
+        en: "The page you are looking for does not exixts, do you want",
+    },
     "": {
         vi: "",
         en: ""
@@ -1225,35 +1317,11 @@ const Strings = {
         vi: "Không có tệp tin",
         en: "No uploads yet",
     },
-    /* 
-    "unableToDisplayUsers": {
-        vi: "Không tìm thấy người dùng",
-        en: "Unable to display users",
-    },
-    "newest": {
-        vi: "Mới",
-        en: "Newest",
-    },
-    "oldest": {
-        vi: "Cũ",
-        en: "Oldest",
-    },
-    "online": {
-        vi: "Trực tuyến",
-        en: "Online",
-    },
-    "karma": {
-        vi: "Điểm",
-        en: "Karma",
-    }, */
+
+
 
 
     /* OTHER */
-    'error404PageNotFound': {
-        ru: 'Ошибка 404. Страница не найдена',
-        en: 'Error 404. Page not found',
-        jp: 'エラー404ページが見つかりません'
-    },
     'notFound': {
         ru: 'Не найдено',
         en: 'Not Found',
@@ -1551,26 +1619,6 @@ const Strings = {
         ru: 'Невозможно отобразить сообщения',
         en: 'Unable to display messages',
         jp: 'メッセージを表示できません'
-    },
-    'message': {
-        ru: 'Сообщение',
-        en: 'Message',
-        jp: 'メッセージ'
-    },
-    'you': {
-        ru: 'Вы',
-        en: 'You',
-        jp: '君は'
-    },
-    'dialogueWith': {
-        ru: 'Диалог с',
-        en: 'Dialogue with',
-        jp: 'との対話'
-    },
-    'enterYourMessage': {
-        ru: 'Введите сообщение',
-        en: 'Enter your message',
-        jp: 'メッセージを入力してください'
     },
     'noInternetConnection': {
         ru: 'Нет подключения к интернету',

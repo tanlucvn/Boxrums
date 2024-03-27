@@ -5,7 +5,7 @@ import { useMoreFetch } from '@/hooks/useMoreFetch';
 import { Strings } from '@/support/Constants';
 
 import DataView from '@/components/DataView';
-import { BoardCard } from '@/components/Card';
+import { BoardsCard } from '@/components/Card/Card2';
 
 const Boards = ({ lang, query, type }) => {
   const { loading, moreLoading, noData, items, refetch } = useMoreFetch({ method: 'search', params: { query, type } })
@@ -26,7 +26,7 @@ const Boards = ({ lang, query, type }) => {
       noData={noData}
       loading={loading}
       moreLoading={moreLoading}
-      card={BoardCard}
+      card={BoardsCard}
       noDataMessage={Strings.noResults[lang]}
       errorMessage={Strings.unableToDisplaySearchResults[lang]}
     />

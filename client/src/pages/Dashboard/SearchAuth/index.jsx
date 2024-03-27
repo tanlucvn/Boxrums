@@ -11,7 +11,7 @@ import { SectionHeader } from '@/components/Section';
 import FormCardItem from '@/components/Card/FormCardItem';
 import { InputBox, LabelInputBox } from '@/components/Form/Input';
 import DataView from '@/components/DataView';
-import { AuthHistoryCard } from '@/components/Card';
+import { AuthHistoryCard } from '@/components/Card/Card2';
 
 const SearchAuth = () => {
   const { lang } = useContext(StoreContext)

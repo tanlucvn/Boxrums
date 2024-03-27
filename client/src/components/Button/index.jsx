@@ -1,7 +1,5 @@
 import { Link } from 'react-router-dom';
 
-import './style.scss';
-
 const InputButton = ({ text, className }) => {
     return (
         <input className={className ? 'btn-dark ' + className : 'btn-dark'} type="submit" value={text} />

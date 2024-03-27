@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getDay } from '../common/date'
 import { UserContext } from '../App'
 import axios from 'axios'
 import { dateFormat } from '@/support/Utils'

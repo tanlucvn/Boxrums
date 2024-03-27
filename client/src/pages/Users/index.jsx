@@ -84,17 +84,12 @@ const Users = () => {
         fetchStats();
     }, []);
 
-    console.log(topList)
+    // console.log(topList)
 
     return (
         <Section>
             <section className='h-cover p-0 grid grid-cols-8 gap-10 max-md:flex max-md:flex-wrap max-md:justify-center'>
                 <div className='w-full col-span-3 max-md:col-span-12 max-lg:col-span-8'>
-                    <Breadcrumbs
-                        current={Strings.users[lang]}
-                        links={[{ title: Strings.home[lang], link: '/' }]}
-                    />
-
                     <SortNav links={sortItems} setSort={setSort} state={sort} />
 
                     <Routes>

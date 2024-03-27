@@ -1,10 +1,9 @@
+import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import AnimationWrapper from '../../common/page-animation'
 import { Toaster, toast } from 'react-hot-toast'
 import { EditorContext } from '../../pages/editor.pages'
 import Tag from '../tags.component'
-import axios from 'axios'
-import { UserContext } from '../../App'
 import { useNavigate, useParams } from 'react-router-dom'
 import { StoreContext } from '@/stores/Store'
 import { BACKEND, Strings } from '@/support/Constants'
@@ -14,15 +13,16 @@ import FileUploadForm from '../Form/FileUploadForm'
 
 const PublishForm = () => {
   const { lang, postType } = useContext(StoreContext)
-  const charLength = 200
-  const tagLimit = 10
-  const navigate = useNavigate()
   const { token } = useContext(StoreContext)
   const { blog, setBlog, setEditorState } = useContext(EditorContext)
   const [boards, setBoards] = useState([])
   const [folders, setFolders] = useState([])
   const [files, setFiles] = useState([])
+  const [errors, setErrors] = useState({})
   const [clearFiles, setClearFiles] = useState(false)
+  const navigate = useNavigate()
+  const charLength = 200
+  const tagLimit = 10
 
   const getFile = (files) => {
     setClearFiles(false)
@@ -55,7 +55,7 @@ const PublishForm = () => {
         }
       }
       else {
-        toast.error(`You can add max ${tagLimit} tags`)
+        toast.error(Strings.addMaxTags[lang].replace('{tag}', `${tagLimit}`))
       }
 
       e.target.value = ""
@@ -66,29 +66,36 @@ const PublishForm = () => {
     if (e.target.className.includes('disable')) {
       return
     }
-    if (!blog.title) {
-      return toast.error("Write Blog Title befor publising")
-    }
 
     if (postType.type === "thread") {
       if (!blog.boards) {
-        return toast.error("Please seletect a board")
+        setErrors({ boards: Strings.pleaseSelectBoard[lang] })
+        return toast.error(Strings.pleaseSelectBoard[lang])
       }
     }
 
     if (postType.type === "upload") {
       if (!blog.folders) {
-        return toast.error("Please seletect a folders")
+        setErrors({ folders: Strings.pleaseSelectFolder[lang] })
+        return toast.error(Strings.pleaseSelectFolder[lang])
       }
     }
 
-    if (!blog.desc.length || blog.desc.length > charLength)
-      return toast.error(`Write a description about your blog within ${charLength} characters to publish`)
-    if (!blog.tags.length || blog.tags.length > 10) {
-      return toast.error(`Write some tags about blog within ${tagLimit} taglimit to publish`)
+    if (!blog.title) {
+      setErrors({ title: Strings.writeTitle[lang] })
+      return toast.error(Strings.writeTitle[lang])
     }
 
-    const loadingToast = toast.loading("Publishing...")
+    if (!blog.desc.length || blog.desc.length > charLength) {
+      setErrors({ desc: Strings.emptyDesc[lang] })
+      return toast.error(Strings.writeDesc[lang].replace('{charLength}', `${charLength}`))
+    }
+    if (!blog.tags.length || blog.tags.length > 10) {
+      setErrors({ tags: Strings.emptyTags[lang] })
+      return toast.error(Strings.writeTags[lang].replace('{tag}', `${tagLimit}`))
+    }
+
+    const loadingToast = toast.loading(Strings.publishing[lang])
 
 
     e.target.classList.add('disable');
@@ -114,7 +121,7 @@ const PublishForm = () => {
         e.target.classList.remove('disable');
 
         toast.dismiss(loadingToast)
-        toast.success("Published successfully");
+        toast.success(Strings.published[lang]);
 
         navigate(`/thread/${res.data._id}`)
 
@@ -145,8 +152,11 @@ const PublishForm = () => {
         }
       }).then((res) => {
         e.target.classList.remove('disable');
+
         toast.dismiss(loadingToast);
-        toast.success("Published successfully");
+        toast.success(Strings.published[lang]);
+
+        navigate(`/file/${res.data._id}`)
       }).catch((error) => {
         e.target.classList.remove('disable');
         toast.dismiss(loadingToast);
@@ -155,11 +165,19 @@ const PublishForm = () => {
     }
 
     if (postType.type === "threadEdit") {
-      const threadObj = {
-        title: blog.title, desc: blog.desc, banner: blog.banner, body: blog.body, tags: blog.tags, attach: files
-      }
+      const formData = new FormData();
+      formData.append('title', blog.title);
+      formData.append('desc', blog.desc);
+      formData.append('banner', blog.banner);
+      formData.append('body', JSON.stringify(blog.body));
+      formData.append('tags', JSON.stringify(blog.tags));
+      formData.append('threadId', blog._id);
 
-      axios.put(BACKEND + '/api/thread/edit', { ...threadObj, threadId: blog._id }, {
+      files.forEach(file => {
+        formData.append('attach', file);
+      });
+
+      axios.put(BACKEND + '/api/thread/edit', formData, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -167,10 +185,9 @@ const PublishForm = () => {
         e.target.classList.remove('disable');
 
         toast.dismiss(loadingToast)
-        toast.success("Edited successfully");
+        toast.success(Strings.edited[lang]);
 
         navigate(`/thread/${res.data._id}`)
-
       }).catch(({ response }) => {
         e.target.classList.remove('disable');
         toast.dismiss(loadingToast)
@@ -179,63 +196,78 @@ const PublishForm = () => {
     }
 
     if (postType.type === "fileEdit") {
-      const fileObj = {
-        title: blog.title, desc: blog.desc, banner: blog.banner, body: JSON.stringify(blog.body), tags: JSON.stringify(blog.tags), attach: files
-      }
+      const formData = new FormData();
+      formData.append('title', blog.title);
+      formData.append('desc', blog.desc);
+      formData.append('banner', blog.banner);
+      formData.append('body', JSON.stringify(blog.body));
+      formData.append('tags', JSON.stringify(blog.tags));
+      formData.append('fileId', blog._id);
 
-      axios.put(BACKEND + '/api/file/edit', { ...fileObj, fileId: blog._id }, {
+      files.forEach(file => {
+        formData.append('file', file);
+      });
+
+      axios.put(BACKEND + '/api/file/edit', formData, {
         headers: {
           'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         }
       }).then((res) => {
         e.target.classList.remove('disable');
 
         toast.dismiss(loadingToast)
-        toast.success("Edited successfully");
+        toast.success(Strings.edited[lang]);
 
         navigate(`/file/${res.data._id}`)
-
       }).catch(({ response }) => {
         e.target.classList.remove('disable');
         toast.dismiss(loadingToast)
+
+        if (response.data.error.message === "File upload failed") {
+          return toast.error(Strings.fileUploadFailed[lang])
+        }
         return toast.error(response)
       })
     }
   }
 
-  // console.log(postType)
-
   const loadBoards = () => {
-    if (boards.length) return
+    if (boards.length) return;
 
-    fetch(`${BACKEND}/api/boards?pagination=true`)
-      .then(response => response.json())
-      .then(data => {
+    axios.get(`${BACKEND}/api/boards?pagination=true`)
+      .then(response => {
+        const data = response.data;
         if (data.docs?.length) {
-          setBoards(data.docs)
-        } else throw Error(Strings.boardsNotLoaded[lang])
+          setBoards(data.docs);
+        } else {
+          throw new Error(Strings.boardsNotLoaded[lang]);
+        }
       })
       .catch(err => {
-        setErrors({ general: err.message === '[object Object]' ? 'Error' : err.message })
-      })
+        setErrors({ general: err.message === '[object Object]' ? 'Error' : err.message });
+      });
   }
 
   const loadFolders = () => {
-    if (boards.length) return
+    if (boards.length) return;
 
-    fetch(`${BACKEND}/api/folders?pagination=true`)
-      .then(response => response.json())
-      .then(data => {
+    axios.get(`${BACKEND}/api/folders?pagination=true`)
+      .then(response => {
+        const data = response.data;
         if (data.docs?.length) {
-          setFolders(data.docs)
-        } else throw Error(Strings.boardsNotLoaded[lang])
+          setFolders(data.docs);
+        } else {
+          throw new Error(Strings.boardsNotLoaded[lang]);
+        }
       })
       .catch(err => {
-        setErrors({ general: err.message === '[object Object]' ? 'Error' : err.message })
-      })
+        setErrors({ general: err.message === '[object Object]' ? 'Error' : err.message });
+      });
   }
 
   // console.log(blog)
+  // console.log(postType)
 
   return (
     <AnimationWrapper >
@@ -259,13 +291,15 @@ const PublishForm = () => {
           <p className='line-clamp-3 text-xl leading-7 mt-4 break-words'>{blog.desc}</p>
         </div>
         <div className='border-grey lg:border-1 lg:pl-4'>
-          {postType.type === "thread" && <SelectBox options={boards} className="mt-5" onClick={loadBoards} value={blog?.boards ? blog.boards.title : Strings.selectBoards[lang]} onChange={(value) => setBlog({ ...blog, boards: { boardId: value._id, title: value.title, threadsCount: value.threadsCount, answersCount: value.answersCount } })} />}
-          {postType.type === "upload" && <SelectBox options={folders} className="mt-5" onClick={loadFolders} value={blog?.folders ? blog.folders.title : Strings.selectFolders[lang]} onChange={(value) => setBlog({ ...blog, folders: { folderId: value._id, title: value.title, filesCount: value.filesCount } })} />}
+          {postType.type === "thread" && <LabelInputBox text={Strings.selectBoards[lang]} errors={errors.boards} />}
+          {postType.type === "upload" && <LabelInputBox text={Strings.selectFolders[lang]} errors={errors.folders} />}
+          {postType.type === "thread" && <SelectBox options={boards} onClick={loadBoards} value={blog?.boards ? blog.boards.title : Strings.selectBoards[lang]} onChange={(value) => setBlog({ ...blog, boards: { boardId: value._id, title: value.title, threadsCount: value.threadsCount, answersCount: value.answersCount } })} />}
+          {postType.type === "upload" && <SelectBox options={folders} onClick={loadFolders} value={blog?.folders ? blog.folders.title : Strings.selectFolders[lang]} onChange={(value) => setBlog({ ...blog, folders: { folderId: value._id, title: value.title, filesCount: value.filesCount } })} />}
 
-          <LabelInputBox text={Strings.title[lang]} className="mb-2 mt-9" />
+          <LabelInputBox text={Strings.title[lang]} className="mb-2 mt-9" errors={errors.title} />
           <input type="text" placeholder={Strings.enterTitle[lang]} defaultValue={blog.title} className='input-box pl-4' onChange={handleBlogTitleChange} />
 
-          <LabelInputBox text={Strings.shortDesc[lang]} className="mb-2 mt-9" />
+          <LabelInputBox text={Strings.shortDesc[lang]} className="mb-2 mt-9" errors={errors.desc} />
           <textarea
             maxLength={charLength}
             placeholder={Strings.enterDesc[lang]}
@@ -291,7 +325,7 @@ const PublishForm = () => {
             clearFiles={clearFiles}
           />
 
-          <p className='text-dark-grey mb-2 mt-9'>{Strings.tags[lang]} {Strings.tagsInformation[lang]}</p>
+          <LabelInputBox text={`${Strings.tags[lang]} ${Strings.tagsInformation[lang]}`} errors={errors.tags} />
           <div className='relative input-box pl-2 py-2 pb-4'>
             <input type="text" placeholder={Strings.enterTags[lang]} onKeyDown={handleTagsKeyDown} className='sticky input-box bg-white top-0 lef0 pl-4 mb-3 focus:bg-white' />
             {

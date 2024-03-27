@@ -68,7 +68,7 @@ const PopularBoardsItem = ({ data, lang }) => {
             <Link to={'/board/' + data.name} className="flex flex-col w-full h-full p-3">
                 <span className="text-base font-medium overflow-hidden overflow-ellipsis line-clamp-2">{data.title}</span>
                 <span className="text-sm">
-                    {counter(data.threadsCount)} {declOfNum(data.threadsCount, "thread", "threads", "threads")}
+                    {counter(data.threadsCount)} {declOfNum(data.threadsCount, Strings.thread[lang], Strings.threads[lang])}
                 </span>
             </Link>
         </li>

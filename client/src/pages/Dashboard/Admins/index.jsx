@@ -7,7 +7,7 @@ import { useMoreFetch } from '@/hooks/useMoreFetch';
 import { Strings } from '@/support/Constants';
 
 import DataView from '@/components/DataView';
-import { UserCard } from '@/components/Card';
+import { UserCard } from '@/components/Card/Card2';
 import Breadcrumbs from '@/components/Breadcrumbs';
 
 const Admins = () => {

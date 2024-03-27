@@ -81,23 +81,27 @@ const SideNavForum = () => {
                         {Strings.allBoards[lang]}
                     </NavLink>
 
-                    <NavLink to={'/users'} onClick={(e) => setPageState(e.target.innerText)} className='sidebar-link'>
-                        <i class="fi fi-rr-users"></i>
-                        {Strings.users[lang]}
-                    </NavLink>
-
                     <NavLink to={'/uploads'} onClick={(e) => setPageState(e.target.innerText)} className='sidebar-link'>
                         <i class="fi fi-rr-cube"></i>
                         {Strings.uploads[lang]}
                     </NavLink>
 
-                    <h1 className='text-xl text-dark-grey mb-3 mt-20 select-none'>{Strings.mores[lang]}</h1>
-                    <hr className='border-grey ml-6 mb-8 mr-6' />
-
-                    <NavLink to={'/messages'} onClick={(e) => setPageState(e.target.innerText)} className='sidebar-link'>
-                        <i class="fi fi-rr-comments"></i>
-                        {Strings.messages[lang]}
+                    <NavLink to={'/users'} onClick={(e) => setPageState(e.target.innerText)} className='sidebar-link'>
+                        <i class="fi fi-rr-users"></i>
+                        {Strings.users[lang]}
                     </NavLink>
+
+                    {user &&
+                        <>
+                            <h1 className='text-xl text-dark-grey mb-3 mt-20 select-none'>{Strings.mores[lang]}</h1>
+                            <hr className='border-grey ml-6 mb-8 mr-6' />
+
+                            <NavLink to={'/messages'} onClick={(e) => setPageState(e.target.innerText)} className='sidebar-link'>
+                                <i class="fi fi-rr-comments"></i>
+                                {Strings.messages[lang]}
+                            </NavLink>
+                        </>
+                    }
                 </div>
 
             </div>

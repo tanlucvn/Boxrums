@@ -8,7 +8,7 @@ import { useMoreFetch } from '@/hooks/useMoreFetch';
 import { Strings } from '@/support/Constants';
 
 import DataView from '@/components/DataView';
-import { AuthHistoryCard } from '@/components/Card';
+import { AuthHistoryCard } from '@/components/Card/Card2';
 
 const AuthHistory = ({ userData }) => {
     const { user, lang } = useContext(StoreContext)

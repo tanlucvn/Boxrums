@@ -5,7 +5,6 @@ import { useMoreFetch } from '@/hooks/useMoreFetch';
 import { Strings } from '@/support/Constants';
 
 import DataView from '@/components/DataView';
-import { Card } from '@/components/Card';
 import { AnswerCard } from '@/components/Card/Card2';
 
 const Answers = ({ lang, query, type }) => {

@@ -12,7 +12,7 @@ export const Section = ({ children }) => {
 export const SectionHeader = ({ title, link }) => {
     return link ? (
         <div className="mb-3 flex items-center select-none">
-            <p className='text-2xl font-bold select-none'>{title}</p>
+            <p className='text-2xl font-bold select-none capitalize'>{title}</p>
             <div className="flex ml-auto">
                 <Link to={link.url} className='flex gap-2'>
                     {link.title}

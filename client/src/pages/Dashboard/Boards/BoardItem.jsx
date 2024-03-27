@@ -5,11 +5,9 @@ import { Strings } from '@/support/Constants';
 import { counter, declOfNum } from '@/support/Utils';
 
 import { useForm } from '@/hooks/useForm';
-
-import { CardBody } from '@/components/Card';
-import FormCardItem from '@/components/Card/FormCardItem';
-import { InputBox } from '@/components/Form/Input';
+import { InputBox, LabelInputBox } from '@/components/Form/Input';
 import { Button, InputButton } from '@/components/Button';
+import Avatar from 'boring-avatars'
 
 const BoardItem = ({ lang, data, editBoard, deleteBoard, fetchErrors, setFetchErros }) => {
   const [edit, setEdit] = useState(false)
@@ -63,114 +61,108 @@ const BoardItem = ({ lang, data, editBoard, deleteBoard, fetchErrors, setFetchEr
   }
 
   return (
-    <div className='card_block'>
-      <header className="card_head">
-        <div className="card_head_inner">
-          <Link to={'/boards/' + data.name} className="card_title">{data.title}</Link>
+    <div className='bg-grey flex gap-8 px-7 py-3 items-center border-b border-grey pb-5 mb-4 hover:opacity-90'>
+      <div className='w-full'>
+        <Link to={`/board/${data.name}`} className='blog-title'>{data.title}</Link>
+        <p className='my-3 text-xl leading-7 max-sm:hidden md:max-[1100px]:hidden line-clamp-2'>{data.body}</p>
+
+        <div className='flex justify-between flex-wrap'>
+          <div className="flex gap-x-10 justify-between items-center flex-wrap">
+            <div className='flex gap-4 mt-7'>
+              <p className='ml-3 flex items-center gap-2 text-dark-grey'>
+                <i class="fi fi-rr-ballot"></i>
+                {counter(data.threadsCount)}
+                <span className='max-sm:hidden'>{declOfNum(data.threadsCount, Strings.thread[lang], Strings.threads[lang])}</span>
+              </p>
+
+              <p className='ml-3 flex items-center gap-2 text-dark-grey'>
+                <i class="fi fi-rr-comment-dots"></i>
+                {counter(data.answersCount)}
+                <span className='max-sm:hidden'>{declOfNum(data.answersCount, Strings.answer[lang], Strings.answers[lang])}</span>
+              </p>
+            </div>
+          </div>
+
+          {!edit ? (
+            <div className="flex items-center justify-end gap-3 mt-7">
+              <button onClick={() => setEdit(true)} className="p-2 px-3 rounded-md border border-grey hover:bg-sky-500/30 hover:text-sky-500 flex items-center">
+                <i class="fi fi-rr-pencil" title="Chỉnh sửa"></i>
+              </button>
+              <button onClick={deleteClick} className="p-2 px-3 rounded-md border border-grey hover:bg-red/30 hover:text-red flex items-center">
+                <i class="fi fi-rr-trash" title="Xoá"></i>
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center justify-end gap-3 mt-7">
+              <button onClick={close} className="p-2 px-3 rounded-md border border-grey bg-sky-500/30 text-sky-500 flex items-center">
+                <i class="fi fi-rr-pencil" title="Chỉnh sửa"></i>
+              </button>
+              <button onClick={deleteClick} className="p-2 px-3 rounded-md border border-grey hover:bg-red/30 hover:text-red flex items-center">
+                <i class="fi fi-rr-trash" title="Xoá"></i>
+              </button>
+            </div>
+          )}
+
+          {edit &&
+            <form className="form_inner" onSubmit={onSubmit}>
+              <LabelInputBox text={Strings.boardShortName[lang] + '*'} errors={errors.name} />
+              <InputBox
+                className="bg-light-grey"
+                name="name"
+                value={values.name}
+                placeholder={Strings.enterShortName[lang]}
+                maxLength="21"
+                onChange={onChange}
+              />
+
+              <LabelInputBox text={Strings.boardTitle[lang] + '*'} errors={errors.title} />
+              <InputBox
+                className="bg-light-grey"
+                name="title"
+                value={values.title}
+                placeholder={Strings.enterTitle[lang]}
+                maxLength="50"
+                onChange={onChange}
+              />
+
+              <LabelInputBox text={Strings.boardDescription[lang]} errors={errors.body} />
+              <InputBox
+                className="bg-light-grey"
+                name="body"
+                value={values.body}
+                placeholder={Strings.enterDescription[lang]}
+                maxLength="100"
+                onChange={onChange}
+              />
+
+              <LabelInputBox text={Strings.boardPosition[lang] + '*'} errors={errors.position} />
+              <InputBox
+                className="bg-light-grey"
+                type="number"
+                name="position"
+                value={values.position}
+                placeholder={Strings.enterPosition[lang]}
+                onChange={onChange}
+              />
+
+              <InputButton text={Strings.save[lang]} />
+            </form>
+          }
         </div>
+      </div>
 
-        {!edit ? (
-          <div className="edit_action_menu">
-            <button onClick={() => setEdit(true)} className="p-2 px-3 rounded-md border border-grey ml-auto hover:bg-sky-500/30 hover:text-sky-500 flex items-center">
-              <i class="fi fi-rr-pencil" title="Chỉnh sửa"></i>
-            </button>
-            <button onClick={deleteClick} className="p-2 px-3 rounded-md border border-grey ml-auto hover:bg-red/30 hover:text-red flex items-center">
-              <i class="fi fi-rr-trash" title="Xoá"></i>
-            </button>
-          </div>
-        ) : (
-          <div className="edit_action_menu">
-            <button onClick={close} className="p-2 px-3 rounded-md border border-grey ml-auto bg-sky-500/30 text-sky-500 flex items-center">
-              <i class="fi fi-rr-pencil" title="Chỉnh sửa"></i>
-            </button>
-            <button onClick={deleteClick} className="p-2 px-3 rounded-md border border-grey ml-auto hover:bg-red/30 hover:text-red flex items-center">
-              <i class="fi fi-rr-trash" title="Xoá"></i>
-            </button>
-          </div>
-        )}
-      </header>
-
-      <footer className="card_foot">
-        {!edit ? (
-          <>
-            <div className="flex items-center m-3 gap-2">
-              <i class="fi fi-rr-document"></i>
-              <span>{counter(data.threadsCount)}</span>
-              <span>
-                {declOfNum(data.threadsCount, [Strings.thread[lang], Strings.threads[lang]])}
-                Test
-              </span>
-            </div>
-
-            <div className="flex items-center m-3 gap-2">
-              <i className="fi fi-rr-comment-dots" />
-              <span className="card_count">{counter(data.answersCount)}</span>
-              <span className="count_title">
-                {declOfNum(data.answersCount, [Strings.answer[lang], Strings.answers[lang]])}
-                Test
-              </span>
-            </div>
-          </>
-        ) : (
-          <form className="form_inner" onSubmit={onSubmit}>
-            <FormCardItem title={Strings.boardShortName[lang] + '*'} error={errors.name}>
-              <div className={errors.name ? 'form_block error' : 'form_block'}>
-                <InputBox
-                  name="name"
-                  value={values.name}
-                  placeholder={Strings.enterShortName[lang]}
-                  maxLength="21"
-                  onChange={onChange}
-                />
-              </div>
-            </FormCardItem>
-
-            <FormCardItem title={Strings.boardTitle[lang] + '*'} error={errors.title}>
-              <div className={errors.title ? 'form_block error' : 'form_block'}>
-                <InputBox
-                  name="title"
-                  value={values.title}
-                  placeholder={Strings.enterTitle[lang]}
-                  maxLength="50"
-                  onChange={onChange}
-                />
-              </div>
-            </FormCardItem>
-
-            <FormCardItem title={Strings.boardDescription[lang]} error={errors.body}>
-              <div className={errors.body ? 'form_block error' : 'form_block'}>
-                <InputBox
-                  name="body"
-                  value={values.body}
-                  placeholder={Strings.enterDescription[lang]}
-                  maxLength="100"
-                  onChange={onChange}
-                />
-              </div>
-            </FormCardItem>
-
-            <FormCardItem title={Strings.boardPosition[lang] + '*'} error={errors.position}>
-              <div className={errors.position ? 'form_block error' : 'form_block'}>
-                <InputBox
-                  type="number"
-                  name="position"
-                  value={values.position}
-                  placeholder={Strings.enterPosition[lang]}
-                  onChange={onChange}
-                />
-              </div>
-            </FormCardItem>
-
-            {fetchErrors[data._id] && (
-              <div className="card_item">
-                <span className="form_error">{fetchErrors[data._id]}</span>
-              </div>
-            )}
-
-            <InputButton text={Strings.save[lang]} />
-          </form>
-        )}
-      </footer>
+      <div className='h-28 aspect-square bg-grey max-sm:hidden'>
+        {
+          data.banner ? <img src={data.banner} alt="Banner" className='w-full h-full aspect-square object-cover' /> :
+            <Avatar
+              size={"100%"}
+              name={data.title}
+              variant="marble"
+              colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
+              square="true"
+            />
+        }
+      </div>
     </div>
   )
 }
@@ -214,55 +206,47 @@ const NewBoardItem = ({ lang, createBoard, setCreate, fetchErrors, setFetchErros
 
   return (
     <>
-      <footer className="card_foot">
+      <div className="bg-grey flex gap-8 px-7 py-3 items-center border-b border-grey pb-5 mb-4 hover:opacity-90">
         <form className="form_inner" onSubmit={onSubmit}>
-          <FormCardItem title={Strings.boardShortName[lang] + '*'} error={errors.name}>
-            <div className={errors.name ? 'form_block error' : 'form_block'}>
-              <InputBox
-                name="name"
-                value={values.name}
-                placeholder={Strings.enterShortName[lang]}
-                maxLength="21"
-                onChange={onChange}
-              />
-            </div>
-          </FormCardItem>
+          <LabelInputBox text={Strings.boardShortName[lang] + '*'} errors={errors.name} />
+          <InputBox
+            className="bg-light-grey"
+            name="name"
+            value={values.name}
+            placeholder={Strings.enterShortName[lang]}
+            maxLength="21"
+            onChange={onChange}
+          />
 
-          <FormCardItem title={Strings.boardTitle[lang] + '*'} error={errors.title}>
-            <div className={errors.title ? 'form_block error' : 'form_block'}>
-              <InputBox
-                name="title"
-                value={values.title}
-                placeholder={Strings.enterTitle[lang]}
-                maxLength="50"
-                onChange={onChange}
-              />
-            </div>
-          </FormCardItem>
+          <LabelInputBox text={Strings.boardTitle[lang] + '*'} errors={errors.title} />
+          <InputBox
+            className="bg-light-grey"
+            name="title"
+            value={values.title}
+            placeholder={Strings.enterTitle[lang]}
+            maxLength="50"
+            onChange={onChange}
+          />
 
-          <FormCardItem title={Strings.boardDescription[lang]} error={errors.body}>
-            <div className={errors.body ? 'form_block error' : 'form_block'}>
-              <InputBox
-                name="body"
-                value={values.body}
-                placeholder={Strings.enterDescription[lang]}
-                maxLength="100"
-                onChange={onChange}
-              />
-            </div>
-          </FormCardItem>
+          <LabelInputBox text={Strings.boardDescription[lang]} errors={errors.body} />
+          <InputBox
+            className="bg-light-grey"
+            name="body"
+            value={values.body}
+            placeholder={Strings.enterDescription[lang]}
+            maxLength="100"
+            onChange={onChange}
+          />
 
-          <FormCardItem title={Strings.boardPosition[lang] + '*'} error={errors.position}>
-            <div className={errors.position ? 'form_block error' : 'form_block'}>
-              <InputBox
-                type="number"
-                name="position"
-                value={values.position}
-                placeholder={Strings.enterPosition[lang]}
-                onChange={onChange}
-              />
-            </div>
-          </FormCardItem>
+          <LabelInputBox text={Strings.boardPosition[lang] + '*'} errors={errors.position} />
+          <InputBox
+            className="bg-light-grey"
+            type="number"
+            name="position"
+            value={values.position}
+            placeholder={Strings.enterPosition[lang]}
+            onChange={onChange}
+          />
 
           {fetchErrors.generalCreate && (
             <div className="card_item">
@@ -275,7 +259,7 @@ const NewBoardItem = ({ lang, createBoard, setCreate, fetchErrors, setFetchErros
             <Button className="btn-light" text={Strings.cancel[lang]} onClick={close} />
           </div>
         </form>
-      </footer>
+      </div>
     </>
   )
 }

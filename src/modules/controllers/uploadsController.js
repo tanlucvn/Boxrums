@@ -348,55 +348,79 @@ const deleteFile = async (req, res, next) => {
 
 const editFile = async (req, res, next) => {
     try {
-        let { fileId, banner, title, desc, body, tags } = req.body
+        singleUpload(req, res, async (err) => {
+            if (err) return next(createHttpError.BadRequest(err.message))
 
-        if (!fileId) return next(createHttpError.BadRequest('fileId must not be empty'))
-        if (title.trim() === '') return next(createHttpError.BadRequest('File title must not be empty'))
-        if (!body) return next(createHttpError.BadRequest('File body must not be empty'))
-
-        const file = await File.findById(fileId).populate({ path: 'author', select: 'role' })
-
-        if (!file.author) {
-            file.author = {
-                role: 1
+            if (!req.file) {
+                return next(createHttpError.BadRequest('File upload failed'))
             }
-        }
-        if (req.payload.id !== file.author._id) {
-            if (req.payload.role < file.author.role) {
-                return next(createHttpError.Unauthorized('Action not allowed'))
+
+            let { fileId, banner, title, desc, body, tags } = req.body
+
+            if (!fileId) return next(createHttpError.BadRequest('fileId must not be empty'))
+            if (title.trim() === '') return next(createHttpError.BadRequest('File title must not be empty'))
+            if (!body) return next(createHttpError.BadRequest('File body must not be empty'))
+
+            const file = await File.findById(fileId).populate({ path: 'author', select: 'role' })
+
+            if (!file.author) {
+                file.author = {
+                    role: 1
+                }
             }
-        }
+            if (req.payload.id !== file.author._id) {
+                if (req.payload.role < file.author.role) {
+                    return next(createHttpError.Unauthorized('Action not allowed'))
+                }
+            }
 
-        if (tags) {
-            tags = JSON.parse(tags)
-            tags = tags.map(tag => tag.toLowerCase())
-        }
+            if (tags) {
+                tags = JSON.parse(tags)
+                tags = tags.map(tag => tag.toLowerCase())
+            }
 
-        if (body) {
-            body = JSON.parse(body)
-            body = body.blocks.map(block => block)
-        }
+            if (body) {
+                body = JSON.parse(body)
+            }
 
-        await File.updateOne({ _id: new Types.ObjectId(fileId) }, {
-            banner: banner,
-            title: title.trim().substring(0, 100),
-            body: body,
-            desc: desc,
-            tags: tags
+            const now = new Date().toISOString()
+
+            let thumb = null
+            if (videoTypes.find(i => i === req.file.mimetype)) {
+                const thumbFilename = req.file.filename.replace(path.extname(req.file.filename), '.jpg')
+
+                await createThumbnail(req.file.path, 'uploads', thumbFilename)
+
+                thumb = `/uploads/thumbnails/${thumbFilename}`
+            }
+
+            await File.updateOne({ _id: new Types.ObjectId(fileId) }, {
+                banner: banner,
+                title: title.trim().substring(0, 100),
+                body: body,
+                desc: desc,
+                tags: tags,
+                file: {
+                    url: `/uploads/${req.file.filename}`,
+                    thumb,
+                    type: req.file.mimetype,
+                    size: req.file.size
+                },
+            })
+
+            const populate = [{
+                path: 'author',
+                select: '_id name displayName onlineAt picture role ban'
+            }, {
+                path: 'likes',
+                select: '_id name displayName picture'
+            }]
+            const editedFile = await File.findById(fileId).populate(populate)
+
+            res.json(editedFile)
+
+            req.io.to('file:' + fileId).emit('fileEdited', editedFile)
         })
-
-        const populate = [{
-            path: 'author',
-            select: '_id name displayName onlineAt picture role ban'
-        }, {
-            path: 'likes',
-            select: '_id name displayName picture'
-        }]
-        const editedFile = await File.findById(fileId).populate(populate)
-
-        res.json(editedFile)
-
-        req.io.to('file:' + fileId).emit('fileEdited', editedFile)
     } catch (err) {
         next(createHttpError.InternalServerError({ message: err.message }))
     }

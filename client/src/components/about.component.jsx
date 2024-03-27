@@ -1,9 +1,7 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { getFullDay } from "../common/date";
 import { Strings } from "@/support/Constants";
 import { dateFormat } from "@/support/Utils";
-import { StoreContext } from "@/stores/Store";
 
 const AboutUser = ({ className, bio, social_links, joinedAt, lang }) => {
 

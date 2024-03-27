@@ -428,7 +428,7 @@ const Dialogue = () => {
                 <>
                   {moreLoading && <Loader className="more_loader" color="#64707d" />}
 
-                  <div className="messages_list mb-[5rem]">
+                  <div className="messages_list mb-[5rem] max-md:mb-[9rem]">
                     {items.map(item => (
                       <div key={item.groupId} className="messages_group">
                         <div className="group_date_block">
@@ -454,30 +454,28 @@ const Dialogue = () => {
         {toUser.name && toUser.name !== 'deleted' && (
           <form className="w-full sticky comments_form bg-grey rounded-md z-50 max-w-none m-0" /* style={{ width: `${chatWidth}px` }} */ onSubmit={onSubmit}>
             <div className='flex items-center gap-3'>
-              <div className='basis-1/4'>
-                <FileUploadForm
-                  mini
-                  sendFiles={getFile}
-                  clearFiles={clearFiles}
-                />
-              </div>
-
-              <div className='w-full'>
-                <LabelInputBox errors={errors.body} />
+              <div className='w-full flex items-center basis-full'>
+                {/* <LabelInputBox errors={errors.body} /> */}
                 <TextareaAutosize
-                  className="input-box w-full"
+                  className="input-box w-full pl-3 resize-none bg-light-grey"
                   name="body"
                   value={values.body}
                   maxLength="1000"
                   minRows={1}
-                  maxRows={5}
+                  maxRows={1}
                   onChange={onChange}
                   onBlur={onBlur}
                   placeholder={Strings.enterYourMessage[lang]}
                 />
               </div>
 
-              <div className='basis-1/4 flex justify-center items-center'>
+              <div className='flex gap-3 justify-center items-center basis-1/12'>
+                <FileUploadForm
+                  mini
+                  sendFiles={getFile}
+                  clearFiles={clearFiles}
+                />
+
                 <button className="btn-dark send_btn" disabled={uploading}>
                   {uploading
                     ? <i class="fi fi-rr-circle"></i>

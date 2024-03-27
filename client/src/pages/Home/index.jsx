@@ -79,7 +79,6 @@ const Home = () => {
   }, [searchTags])
 
   // console.log(tagsResult)
-
   return (
     <AnimationWrapper>
       <section className="h-cover p-0 grid grid-cols-8 gap-10 max-md:flex max-md:justify-center">
@@ -90,9 +89,14 @@ const Home = () => {
             defaultHidden={["trending"]}
           >
             <>
-              <Boards lang={lang} />
-              <Threads lang={lang} />
-              <Uploads lang={lang} />
+              {pageState !== "home" ?
+                <Threads lang={tagsResult} /> :
+                <>
+                  <Boards lang={lang} />
+                  <Threads lang={lang} />
+                  <Uploads lang={lang} />
+                </>}
+
             </>
             <>
               {tagsResult.map(item => (
@@ -125,7 +129,7 @@ const Home = () => {
           <div className="w-full flex flex-col gap-10">
             <div>
               <h1 className="font-medium text-xl mb-8">
-                Stories from all interest
+                {Strings.storiesInterest[lang]}
               </h1>
               <div className="flex gap-3 flex-wrap">
                 {/* GET 10 TAGS */}

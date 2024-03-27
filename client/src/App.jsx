@@ -127,7 +127,7 @@ const App = () => {
 
                             <Route path="reset-password" element={<ResetPassword />} />
                             <Route path="forgot-password" element={<ForgotPassword />} />
-                            <Route path="verify-email" element={<VerifyEmail />} />
+                            <Route exact path="verify-email" element={<VerifyEmail />} />
 
                             <Route path="*" element={<PageNotFound />} />
                         </Route>

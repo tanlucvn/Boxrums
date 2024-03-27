@@ -6,8 +6,6 @@ import { counter, declOfNum } from '@/support/Utils';
 
 import { useForm } from '@/hooks/useForm';
 
-import { CardBody } from '@/components/Card';
-import FormCardItem from '@/components/Card/FormCardItem';
 import { InputBox, LabelInputBox } from '@/components/Form/Input';
 import { Button, InputButton } from '@/components/Button';
 import Avatar from 'boring-avatars'

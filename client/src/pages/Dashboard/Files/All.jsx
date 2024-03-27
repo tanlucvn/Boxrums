@@ -8,7 +8,7 @@ import { useMoreFetch } from '@/hooks/useMoreFetch';
 import { BACKEND, Strings } from '@/support/Constants';
 
 import DataView from '@/components/DataView';
-import { FileCard } from '@/components/Card';
+import { FileCard } from '@/components/Card/Card2';
 
 const All = () => {
   const { lang, token } = useContext(StoreContext)

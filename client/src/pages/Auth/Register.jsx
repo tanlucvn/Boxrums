@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Toaster, toast } from 'react-hot-toast'
 import validator from 'validator';
 
-import { BACKEND, Strings } from '@/support/Constants';
+import { BACKEND, CLIENT, Strings } from '@/support/Constants';
 import { useForm } from "@/hooks/useForm"
 import { StoreContext } from "@/stores/Store"
 
@@ -125,11 +125,11 @@ const Register = ({ type }) => {
     }
 
     const handleDiscordAuth = () => {
-        window.location.href = 'https://discord.com/api/oauth2/authorize?client_id=1193082815420575745&redirect_uri=http://localhost:3000/auth/discord&response_type=code&scope=email+identify';
+        window.location.href = `https://discord.com/api/oauth2/authorize?client_id=1193082815420575745&redirect_uri=${CLIENT}/auth/discord&response_type=code&scope=email+identify`;
     };
 
     const handleFacebookAuth = () => {
-        window.location.href = 'https://www.facebook.com/v18.0/dialog/oauth?client_id=1044853073435724&redirect_uri=http://localhost:3000/auth/facebook&scope=email';
+        window.location.href = `https://www.facebook.com/v18.0/dialog/oauth?client_id=1044853073435724&redirect_uri=${CLIENT}/auth/facebook&scope=email`;
     };
 
     const renderPage0Content = () => (

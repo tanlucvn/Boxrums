@@ -1,5 +1,5 @@
-const BACKEND = "http://localhost:8000"
-const CLIENT = "http://localhost:5173"
+const BACKEND = "https://boxrums.onrender.com"
+const CLIENT = "https://boxrums.vercel.app"
 
 /* TEMPLATES
 

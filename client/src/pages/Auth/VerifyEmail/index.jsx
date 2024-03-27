@@ -5,7 +5,7 @@ import { BACKEND, Strings } from '@/support/Constants';
 import { StoreContext } from '@/stores/Store';
 import AnimationWrapper from '@/common/page-animation';
 
-export default function VerifyEmail() {
+const VerifyEmail = () => {
     const { lang } = useContext(StoreContext);
     document.title = `Boxrum | ${Strings.verifyEmail[lang]}`;
 
@@ -97,3 +97,6 @@ export default function VerifyEmail() {
         </AnimationWrapper>
     );
 }
+
+
+export default VerifyEmail

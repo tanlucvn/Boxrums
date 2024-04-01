@@ -216,7 +216,7 @@ const BlogInteraction = ({ dropdown = false, share = false }) => {
 
                 <div className='flex gap-6 items-center'>
                     {
-                        thread === thread.author.name ?
+                        thread.author && thread === thread.author.name ?
                             <Link to={`/editor/${thread._id}`} className='underline hover:text-purple'>Edit</Link> : ""
                     }
 

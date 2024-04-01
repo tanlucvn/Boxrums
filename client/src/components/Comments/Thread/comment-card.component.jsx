@@ -128,7 +128,7 @@ const CommentCard = ({ index, leftVal, answerData }) => {
 
             {
               user?.name === answerData.author?.name ||
-                user?.name === thread.author.name ?
+                user?.name === thread.author?.name ?
                 <button onClick={deleteAnswer} className='p-2 px-3 rounded-md border border-grey ml-auto hover:bg-red/30 hover:text-red flex items-center'>
                   <i className='fi fi-rr-trash pointer-events-auto' title={Strings.delete[lang]}></i>
                 </button>

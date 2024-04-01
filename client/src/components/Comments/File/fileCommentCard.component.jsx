@@ -99,7 +99,7 @@ const FileCommentCard = ({ index, leftVal, commentData }) => {
                     <div className='flex gap-2 ml-auto'>
                         {
                             user?.name === commentData.author?.name ||
-                                user?.name === file.author.name ?
+                                user?.name === file.author?.name ?
                                 <button onClick={deleteComment} className='p-2 px-3 rounded-md border border-grey ml-auto hover:bg-red/30 hover:text-red flex items-center'>
                                     <i className='fi fi-rr-trash pointer-events-auto' title={Strings.delete[lang]}></i>
                                 </button>

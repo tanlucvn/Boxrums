@@ -12,7 +12,7 @@ import { BACKEND, Strings } from '@/support/Constants'
 import Avatar from 'boring-avatars';
 import Errorer from '@/components/Errorer'
 import { BlogPostCard } from '@/components/Card/Card2'
-import { dateFormat } from '@/support/Utils'
+import { dateFormat, deletedUser } from '@/support/Utils'
 import Socket, { joinToRoom, leaveFromRoom } from '@/support/Socket'
 import { toast } from 'react-hot-toast'
 
@@ -224,15 +224,15 @@ const Thread = () => {
                                         <div className='flex gap-5 items-start '>
                                             <Avatar
                                                 size={40}
-                                                name={thread.author.name}
+                                                name={thread.author ? thread.author.name : deletedUser.name}
                                                 variant="marble"
                                                 colors={['#92A1C6', '#146A7C', '#F0AB3D', '#C271B4', '#C20D90']}
                                             />
                                             <p className='capitalize '>
-                                                {thread.author.name}
+                                                {thread.author ? thread.author.name : deletedUser.name}
                                                 <br />
                                                 @
-                                                <Link className="underline" to={`/user/${thread.author.name}`}>{thread.author.name}</Link>
+                                                <Link className="underline" to={`/user/${thread.author ? thread.author.name : deletedUser.name}`}>{thread.author ? thread.author.name : deletedUser.name}</Link>
                                             </p>
                                         </div>
                                         <p className='text-dark-grey opacity-75 max-sm:mt-6 mx-sm:ml-12 max-sm:pl-5'>{dateFormat(thread.createdAt)}</p>

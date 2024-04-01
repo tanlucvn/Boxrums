@@ -20,7 +20,12 @@ import socket from './modules/socket/index.js';
 
 const app = express();
 const httpServer = http.createServer(app);
-const io = socket(httpServer)
+const server = app.listen(process.env.PORT || 8000);
+const io = socket(httpServer)(server, {
+    cors: {
+        origin: '*',
+    }
+})
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

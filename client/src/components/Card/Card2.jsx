@@ -16,6 +16,10 @@ export const ArticleCard = ({ data, preview = false, type, joinedList }) => {
         setLiked(user ? !!data.likes?.find(i => i._id === user.id) : false)
     }, [user, data.likes])
 
+    if (data.author === null) {
+        data.author = deletedUser
+    }
+
     // console.log(data)
 
     return (
@@ -112,6 +116,10 @@ export const ArticleCard = ({ data, preview = false, type, joinedList }) => {
 export const BlogPostCard = ({ data, lang }) => {
     const { user } = useContext(StoreContext)
     const [liked, setLiked] = useState(false)
+
+    if (data.author === null) {
+        data.author = deletedUser
+    }
 
     useEffect(() => {
         setLiked(user ? !!data.likes?.find(i => i._id === user.id) : false)
@@ -363,6 +371,10 @@ export const FileCard = ({ data, deleteFile }) => {
         setLikes(data.likes)
         setLiked(user ? !!data.likes?.find(i => i._id === user.id) : false)
     }, [user, data.likes])
+
+    if (data.author === null) {
+        data.author = deletedUser
+    }
 
     return (
         <Link to={`/file/${data._id}`} className='flex gap-8 items-center border-b border-grey pb-5 mb-4 hover:opacity-80'>
@@ -717,6 +729,10 @@ export const BanInfoCard = ({ data, owner }) => {
 
 export const AnswerCard = ({ data }) => {
     const { lang } = useContext(StoreContext)
+
+    if (data.author === null) {
+        data.author = deletedUser
+    }
 
     return (
         <>
